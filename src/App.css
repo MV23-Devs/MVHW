@@ -1,0 +1,171 @@
+html,body {
+  height:100%;
+  outline: none;
+}
+
+.main {
+  height: 100%;
+}
+
+#fullQuestion {
+  min-height: 100vh;
+}
+
+#title {
+  text-align: center;
+  float: left;
+  margin-bottom: none !important;
+}
+
+#searchBar {
+  margin-left: 15%;
+  display: inline-block;
+  padding: 10px;
+  width: 50%;
+  border: black;
+  border: 1px solid;
+  border-radius: 5px;
+  outline: none;
+  margin-right: 10px;
+}
+
+#titleArea {
+  padding: 20px;
+  margin: none;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+.sidePanel {
+  display: block;
+  float: right;
+  position: absolute;
+  right: 0;
+  color: white;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 20%;
+  margin-right: 10%;
+}
+
+.sbox {
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #222;
+  border: white;
+  border: 1px solid;
+}
+
+
+
+button {
+  outline: none;
+}
+.questionBox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: left;
+  padding-bottom: 2px;
+  display: block;
+  padding: 10px;
+  border: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  width: 70%;
+}
+
+#answerBox {
+  border: solid;
+  padding: 10px;  
+  border-width: 1px;
+  border-radius: 5px;
+  outline: none !important;
+  
+}
+
+#replyBox {
+  border: solid;
+  padding: 10px;  
+  border-width: 1px;
+  border-radius: 5px;
+  height: 100px;
+  width: 100%;
+}
+
+.questionBox:hover {
+  cursor: pointer;
+  
+}
+
+.feed-list {
+  list-style-type: none;
+  height: 100%;
+  padding: 10px;
+}
+
+@media(max-width: 800px) {
+  .questionBox {
+    margin: 0;
+    margin-top: 5px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    width: 10%;
+  }
+  .feed-list .container li:last-of-type {
+    border-bottom: none;
+  }
+
+  #searchBar {
+    margin-left: 0;
+  }
+}
+
+a {
+  font-weight: bold;
+  color: #0070d1;
+}
+
+.seeFull {
+  display: inline-block;
+  float:right;
+  margin-top: -30px;
+  margin-right: 10px;
+}
+
+.voteButton {
+  outline: none !important; 
+  text-align: center !important;
+
+  display: block;
+  border: none;
+  padding: none;
+  margin-top: -8px;
+  padding-left: 10px;
+}
+
+#middleText {
+  text-align: center;
+}
+
+.footer {
+  padding: 10px;
+  padding: 30px;
+  position: relative;
+  bottom: 0;
+}
+
+.links {
+  font-weight: bold;
+  color: #0070d1;
+  text-decoration: none;
+  -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+}
+.links:hover {
+  text-decoration: underline;
+}
