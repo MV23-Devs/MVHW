@@ -47,53 +47,53 @@ export default class Feed extends Component {
 
   renderQuestions() {
     // console.log(this.props.filteredQuestions)
-    // return (
-    //   <ul className="feed-list">
-    //     <Container>
-    //       {
-    //         this.props.filteredQuestions.map(
-    //           (item, i) => {
-    //             let currentDate = this.state.d.getTime();
-    //             if ((item.getTime() - currentDate) <= (2.592 * Math.pow(10, 9))) {
-    //               return (
-    //                 <li key={i} style={this.props.theme === 1 ? dark : light} className="questionBox">
-    //                   <Row>
-    //                     <Col xs="1">
-    //                       <button style={this.props.theme === 1 ? dark : light} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-    //                       <h5 id="middleText">{this.props.filteredQuestions[i].getUpvotes()} </h5>
-    //                       <button style={this.props.theme === 1 ? dark : light} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
-    //                     </Col>
-    //                     <Col xs="11">
-    //                       <div style={this.props.theme === 1 ? dark : light} onClick={
-    //                         this.callBoth.bind(this, item)
+    return (
+      <ul className="feed-list">
+        <Container>
+          {
+            this.props.filteredQuestions.map(
+              (item, i) => {
+                let currentDate = this.state.d.getTime();
+                if ((item.getTime() - currentDate) <= (2.592 * Math.pow(10, 9))) {
+                  return (
+                    <li key={i} style={this.props.theme === 1 ? dark : light} className="questionBox">
+                      <Row>
+                        <Col xs="1">
+                          <button style={this.props.theme === 1 ? dark : light} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
+                          <h5 id="middleText">{this.props.filteredQuestions[i].getUpvotes()} </h5>
+                          <button style={this.props.theme === 1 ? dark : light} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
+                        </Col>
+                        <Col xs="11">
+                          <div style={this.props.theme === 1 ? dark : light} onClick={
+                            this.callBoth.bind(this, item)
 
-    //                       }>
-    //                         <h5>User: {item.getUser()}</h5>
-    //                         <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
-    //                         <h4>Question: {item.getText()}</h4>
-    //                         {this.renderAnswer(item)}
-    //                       </div>
-    //                       <hr style={this.props.theme === 1 ? dark.line : light.line} />
-    //                       <p className="links" onClick={
+                          }>
+                            <h5>User: {item.getUser()}</h5>
+                            <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
+                            <h4>Question: {item.getText()}</h4>
+                            {this.renderAnswer(item)}
+                          </div>
+                          <hr style={this.props.theme === 1 ? dark.line : light.line} />
+                          <p className="links" onClick={
 
-    //                         this.openReply.bind(this, item)
+                            this.openReply.bind(this, item)
 
-    //                       }>reply</p>
-    //                       {this.renderReply(item)}
-    //                     </Col>
-    //                   </Row>
-    //                 </li>
-    //               )
-    //             }
-    //             else {
-    //               return null;
-    //             }
-    //           }
-    //         )
-    //       }
-    //     </Container>
-    //   </ul>
-    // )
+                          }>reply</p>
+                          {this.renderReply(item)}
+                        </Col>
+                      </Row>
+                    </li>
+                  )
+                }
+                else {
+                  return null;
+                }
+              }
+            )
+          }
+        </Container>
+      </ul>
+    )
   }
 
 

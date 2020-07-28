@@ -11,6 +11,9 @@ import firebase from './firebase.js';
 const db = firebase.firestore();
 
 
+console.log('%cMVHW', 'color: black; background-color: #f6c733; padding: 5px 10px; font-size: 50px;');
+
+
 // dark theme
 const theme1 = {
   header: {
@@ -97,17 +100,16 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    db.collection("questions")
-      .get()
-      .then(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
-        this.setState({ questions: data });
-        this.setState({ filteredQuestions: data });
-      });
-
 
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+
+    db.collection("questions")
+    .get()
+    .then(querySnapshot => {
+      const data = querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
+      console.log(data);
+    });
   }
 
   componentWillUnmount() {
