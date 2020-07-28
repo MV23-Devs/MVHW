@@ -33,7 +33,6 @@ const theme1 = {
   }
 };
 
-
 // light theme
 const theme2 = {
   header: {
@@ -65,8 +64,8 @@ export default class App extends Component {
       // questions: [
       //   new Question('test', "test", 0, 0)
       // ],
-      questions: null,
-      filteredQuestions: null,
+      questions: [],
+      filteredQuestions: [],
       currentQuestion: [],
       theme: 1,
       styles: { ...theme2, ...theme1 },
@@ -78,31 +77,35 @@ export default class App extends Component {
       seeingFull: false,
     };
 
-    var feed = [];
-    var ffeed = [];
+    // this.feed = [];
+    // this.ffeed = [];
 
-    db.collection("questions").get()
-      .then(function (querySnapshot) {
-        querySnapshot.forEach(function (doc) {
-          let raw = doc.data();
-          let q = new Question(raw.title, raw.author, raw.timestamp, doc.id);
-          feed.push(q);
-          ffeed.push(q);
-        });
-      })
-      .catch(function (error) {
-        console.log("Error getting database data: ", error);
-      });
+    // db.collection("questions").get().then((querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       let raw = doc.data();
+    //       let q = new Question(raw.title, raw.author, raw.timestamp, doc.id);
+    //       this.feed.push(q);
+    //       this.ffeed.push(q);
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error getting database data: ", error);
+    //   });
 
-      console.log(feed);
-
-      this.state.questions = feed;
-      this.state.filteredQuestions = ffeed;
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   componentDidMount() {
+    db.collection("questions")
+      .get()
+      .then(querySnapshot => {
+        const data = querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
+        this.setState({ questions: data });
+        this.setState({ filteredQuestions: data });
+      });
+
+
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
   }
