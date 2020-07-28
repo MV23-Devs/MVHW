@@ -7,6 +7,10 @@ import { Button, Form, FormGroup, Label, Input, FormText, Badge } from 'reactstr
 
 import firebase from './firebase.js';
 
+
+const db = firebase.firestore();
+
+
 // dark theme
 const theme1 = {
   header: {
@@ -23,6 +27,9 @@ const theme1 = {
   },
   line: {
     backgroundColor: '#fff',
+  },
+  link: {
+    color: '#fff',
   }
 };
 
@@ -43,6 +50,9 @@ const theme2 = {
   },
   line: {
     backgroundColor: '#222',
+  },
+  link: {
+    color: '#000',
   }
 };
 
@@ -52,8 +62,11 @@ export default class App extends Component {
 
     this.state = {
       d: new Date(),
-      questions: [],
-      filteredQuestions: [],
+      // questions: [
+      //   new Question('test', "test", 0, 0)
+      // ],
+      questions: null,
+      filteredQuestions: null,
       currentQuestion: [],
       theme: 1,
       styles: { ...theme2, ...theme1 },
@@ -62,8 +75,30 @@ export default class App extends Component {
       errormessage: '',
       text: "",
       tags: [],
-      seeingFull: false
+      seeingFull: false,
     };
+
+    var feed = [];
+    var ffeed = [];
+
+    db.collection("questions").get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          let raw = doc.data();
+          let q = new Question(raw.title, raw.author, raw.timestamp, doc.id);
+          feed.push(q);
+          ffeed.push(q);
+        });
+      })
+      .catch(function (error) {
+        console.log("Error getting database data: ", error);
+      });
+
+      console.log(feed);
+
+      this.state.questions = feed;
+      this.state.filteredQuestions = ffeed;
+
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
@@ -95,7 +130,7 @@ export default class App extends Component {
       this.setState({ errormessage: err });
     } else {
       this.setState({ errormessage: '' });
-      
+
       let date = (new Date()).toString();
       var id = null;
 
@@ -106,13 +141,14 @@ export default class App extends Component {
         downvotes: 0,
         timestamp: date,
       }).then(function (docRef) {
+        firebase.database().ref('audit log').push(date + ": created a new post");
         id = docRef.id;
       });
-      
+
       let q = new Question(val, "You", (new Date()).getTime(), id);
       this.state.questions.push(q);
       this.state.filteredQuestions.push(q);
-      
+
       // Unused Reply Database code
       /* 
 
@@ -177,7 +213,13 @@ export default class App extends Component {
             </div>
 
             <div className="sbox" style={this.state.styles.footer}>
+              <a href="https://github.com/MV23-Devs/MVHW" className={this.state.theme === 1 ? 'link-dark' : 'link-light'}>Github</a>
+              <br />
+              <a href="https://www.instagram.com/mvhs.2023/?hl=en" className={this.state.theme === 1 ? 'link-dark' : 'link-light'}>Instagram</a>
+              <br />
+              <br />
               <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
+              <hr style={this.state.theme === 1 ? theme1.line : theme2.line} />
               <Button theme={this.state.theme} color={this.state.theme === 1 ? 'light' : 'dark'} block onClick={this.changeTheme}>Switch to {this.state.theme === 1 ? 'light' : 'dark'} theme</Button>
             </div>
           </section>

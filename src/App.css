@@ -52,6 +52,24 @@ html,body {
   margin-right: 10%;
 }
 
+.link-dark {
+  color: white;
+  font-size: 15px;
+}
+
+.link-light {
+  color: black;
+  font-size: 15px;
+}
+
+.link-dark:hover {
+  color: white;
+}
+
+.link-light:hover {
+  color: black;
+}
+
 .sbox {
   margin-bottom: 20px;
   padding: 10px;
