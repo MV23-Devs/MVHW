@@ -3,15 +3,13 @@ import './App.css';
 import Feed from "./screens/Feed.jsx";
 import NavBar from './components/NavBar.jsx'
 import Question from './Question';
-import { Button, Form, FormGroup, Label, Input, FormText, Badge } from 'reactstrap';
-
+import { Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner } from 'reactstrap';
 import firebase from './firebase.js';
 
+console.log("_   .-')          (`-.    ('-. .-.  (` .-') /`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),'\n ,--.   ,--.),--(_/   ,.  ,--. ,--.,--./  .--.  \n |   `.'   | \\      /(__/ |  | |  ||      |  |  \n |         |  \\    /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n `--'   `--'      `-'     `--' `--''--'   '--'");
 
 const db = firebase.firestore();
 
-
-// console.log("_   .-')          (`-.    ('-. .-.  (`\ .-') /\`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),\'\n ,--.   ,--.),--(_/   ,.  \,--. ,--.,--./  .--.  \n |   `.'   | \\   \   /(__/ |  | |  ||      |  |  \n |         |  \\   \ /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n \`--'   \`--'      \`-'     \`--' \`--''--'   '--'");
 
 
 // dark theme
@@ -75,7 +73,13 @@ export default class App extends Component {
       text: "",
       tags: [],
       seeingFull: false,
+      loading_data: true,
     };
+
+
+    this.user = {
+      name: 'you',
+    }
 
     // this.feed = [];
     // this.ffeed = [];
@@ -104,11 +108,12 @@ export default class App extends Component {
     db.collection("questions")
       .get()
       .then(querySnapshot => {
-        return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
+        return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id, doc.data().upvotes));
       }).then((data) => {
         this.setState({
           questions: data,
           filteredQuestions: data,
+          loading_data: false,
         })
       });
 
@@ -143,7 +148,7 @@ export default class App extends Component {
 
       firebase.firestore().collection('questions').add({
         title: this.state.text,
-        author: 'devs',
+        author: this.user.name,
         upvotes: 0,
         downvotes: 0,
         timestamp: date,
@@ -152,7 +157,7 @@ export default class App extends Component {
         id = docRef.id;
       });
 
-      let q = new Question(val, "You", (new Date()).getTime(), id);
+      let q = new Question(val, this.user.name, (new Date()).getTime(), id);
       this.state.questions.push(q);
 
       // Unused Reply Database code
@@ -179,9 +184,15 @@ export default class App extends Component {
   }
 
   render() {
+    let feed = <Feed theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
+    if (this.state.loading_data) {
+      feed = (
+        <Spinner className="loader" style={{ width: '3rem', height: '3rem' }} color="warning" />
+      );
+    }
     return (
       <React.Fragment>
-        <div style={{ height: this.state.height, backgroundColor: this.state.styles.body.backgroundColor }}>
+        <div className="main" style={{ backgroundColor: this.state.styles.body.backgroundColor }}>
           <div id="titleArea" style={this.state.styles.header}>
             <h1 id="title">MVHW</h1>
             <NavBar
@@ -193,9 +204,6 @@ export default class App extends Component {
           </div>
 
           <section className="sidePanel">
-
-
-
             <div className="sbox" style={this.state.styles.footer}>
               <p>Create a Post:</p>
               <hr style={this.state.theme === 1 ? theme1.line : theme2.line} />
@@ -231,14 +239,13 @@ export default class App extends Component {
           </section>
 
           <div id="field">
-            <Feed theme={this.state.theme} filteredQuestions={this.state.filteredQuestions} />
+            {feed}
           </div>
 
 
-          {/* <footer className="footer" style={this.state.styles.footer} >
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium impedit, minus autem sint exercitationem voluptatum facere aut quisquam ipsum reprehenderit. Dolore corrupti provident cum mollitia fuga necessitatibus excepturi non impedit.</p>
-
-          </footer> */}
+          <footer className="footer" style={this.state.styles.footer} >
+            <p className="footertext">Wow! you reached the end</p>
+          </footer>
         </div>
 
       </React.Fragment>

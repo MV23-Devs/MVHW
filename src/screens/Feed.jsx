@@ -27,7 +27,8 @@ export default class Feed extends Component {
   state = {
     update: 0,
     d: new Date(),
-    focus: 0
+    focus: 0,
+    notification: '',
   }
 
   componentDidUpdate() {
@@ -36,11 +37,29 @@ export default class Feed extends Component {
   render() {
     return (
       <React.Fragment>
+        <div className={this.state.notification !== '' ? "notification open" : "notification"}><p>{this.state.notification}</p></div>
         <ul className="feed-list">
           <Container>
             {
               this.props.filteredQuestions.map(
                 (item, i) => {
+                  let user = <h5>User: {item.getUser()}</h5>;
+                  if (item.getUser() === "devs") {
+                    user = <h6>User: <Badge color="secondary">devs</Badge></h6>;
+                  } else if (item.getUser() === "you") {
+                    user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                  }
+
+                  let deletedata = null;
+                  if (this.props.user.name === item.getUser()) {
+                    deletedata = (
+                      <span>
+                        <span> | </span>
+                        <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                      </span>
+                    );
+                  }
+
                   return (
                     <li key={i} style={this.props.theme === 1 ? dark : light} className="questionBox">
                       <Row>
@@ -54,7 +73,7 @@ export default class Feed extends Component {
                             this.callBoth.bind(this, item)
 
                           }>
-                            <h5>User: {item.getUser()}</h5>
+                            {user}
                             <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
                             <h4>Question: {item.getText()}</h4>
                             {this.renderAnswer(item)}
@@ -65,9 +84,7 @@ export default class Feed extends Component {
                             this.openReply.bind(this, item)
 
                           }>reply</span>
-                          <span> | </span>
-                          <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
-
+                          {deletedata}
                           {this.renderReply(item)}
                         </Col>
                       </Row>
@@ -78,7 +95,7 @@ export default class Feed extends Component {
             }
           </Container>
         </ul>
-      </React.Fragment>
+      </React.Fragment >
     )
   }
 
@@ -93,10 +110,12 @@ export default class Feed extends Component {
   }
 
   deleteQ = (item) => {
-    db.collection("questions").doc(item.getId()).delete().then(function () {
+    db.collection("questions").doc(item.getId()).delete().then(() => {
       console.log("Document successfully deleted!");
+      this.setState({ notification: 'successfully deleted post. Reload page to view changes and dismiss this notification' });
     }).catch(function (error) {
       console.error("Error removing document: ", error);
+      this.setState({ notification: 'failed to deleted post. Try again in few seconds' });
     });
   }
 

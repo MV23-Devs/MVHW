@@ -1,10 +1,6 @@
 html,body {
-  height:100%;
+  height:100vh;
   outline: none;
-}
-
-.main {
-  height: 100%;
 }
 
 #fullQuestion {
@@ -18,6 +14,10 @@ html,body {
   background: #f6c733;
   padding: 0px 10px;
   margin-bottom: none !important;
+}
+
+.footertext {
+  margin: 0;
 }
 
 #searchBar {
@@ -50,6 +50,23 @@ html,body {
   text-align: left;
   width: 20%;
   margin-right: 10%;
+}
+
+.notification {
+  display: none;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.notification p {
+  margin: 0;
+}
+
+.open {
+  display: block;
 }
 
 .link-dark {
@@ -176,8 +193,8 @@ a {
 }
 
 .footer {
-  padding: 10px;
   padding: 30px;
+  width: 100%;
   position: relative;
   bottom: 0;
 }
@@ -192,4 +209,11 @@ a {
 }
 .links:hover {
   text-decoration: underline;
+}
+
+.loader {
+  margin-left: 30%;
+  margin-top: 250px;
+  margin-bottom: 250px;
+  text-align: center;
 }
