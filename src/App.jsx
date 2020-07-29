@@ -11,7 +11,7 @@ import firebase from './firebase.js';
 const db = firebase.firestore();
 
 
-console.log("_   .-')          (`-.    ('-. .-.  (`\ .-') /\`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),\'\n ,--.   ,--.),--(_/   ,.  \,--. ,--.,--./  .--.  \n |   `.'   | \\   \   /(__/ |  | |  ||      |  |  \n |         |  \\   \ /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n \`--'   \`--'      \`-'     \`--' \`--''--'   '--'");
+// console.log("_   .-')          (`-.    ('-. .-.  (`\ .-') /\`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),\'\n ,--.   ,--.),--(_/   ,.  \,--. ,--.,--./  .--.  \n |   `.'   | \\   \   /(__/ |  | |  ||      |  |  \n |         |  \\   \ /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n \`--'   \`--'      \`-'     \`--' \`--''--'   '--'");
 
 
 // dark theme
@@ -64,9 +64,6 @@ export default class App extends Component {
 
     this.state = {
       d: new Date(),
-      // questions: [
-      //   new Question('test', "test", 0, 0)
-      // ],
       questions: [],
       filteredQuestions: [],
       currentQuestion: [],
@@ -105,12 +102,16 @@ export default class App extends Component {
     window.addEventListener('resize', this.updateWindowDimensions);
 
     db.collection("questions")
-    .get()
-    .then(querySnapshot => {
-      return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
-    }).then((data) => {
-      console.log(data);
-    });
+      .get()
+      .then(querySnapshot => {
+        return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
+      }).then((data) => {
+        this.setState({
+          questions: data,
+          filteredQuestions: data,
+        })
+      });
+
   }
 
   componentWillUnmount() {
@@ -153,7 +154,6 @@ export default class App extends Component {
 
       let q = new Question(val, "You", (new Date()).getTime(), id);
       this.state.questions.push(q);
-      this.state.filteredQuestions.push(q);
 
       // Unused Reply Database code
       /* 

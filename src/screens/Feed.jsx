@@ -30,42 +30,17 @@ export default class Feed extends Component {
     focus: 0
   }
 
+  componentDidUpdate() {
+  }
+
   render() {
     return (
       <React.Fragment>
-        {this.renderQuestions()}
-      </React.Fragment>
-    )
-  }
-
-  upvote(i) {
-    this.props.filteredQuestions[i].upvote();
-    this.setState({ update: 0 })
-  }
-
-  downvote(i) {
-    this.props.filteredQuestions[i].downvote();
-    this.setState({ update: 0 })
-  }
-
-  deleteQ = (item) => {
-    console.log(item)
-    db.collection("questions").doc("DC").delete().then(function () {
-      console.log("Document successfully deleted!");
-    }).catch(function (error) {
-      console.error("Error removing document: ", error);
-    });
-  }
-
-  renderQuestions() {
-    return (
-      <ul className="feed-list">
-        <Container>
-          {
-            this.props.filteredQuestions.map(
-              (item, i) => {
-                let currentDate = this.state.d.getTime();
-                if ((item.getTime() - currentDate) <= (2.592 * Math.pow(10, 9))) {
+        <ul className="feed-list">
+          <Container>
+            {
+              this.props.filteredQuestions.map(
+                (item, i) => {
                   return (
                     <li key={i} style={this.props.theme === 1 ? dark : light} className="questionBox">
                       <Row>
@@ -86,9 +61,9 @@ export default class Feed extends Component {
                           </div>
                           <hr style={this.props.theme === 1 ? dark.line : light.line} />
                           <span className="links" onClick={
-                            
+
                             this.openReply.bind(this, item)
-                            
+
                           }>reply</span>
                           <span> | </span>
                           <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
@@ -97,17 +72,32 @@ export default class Feed extends Component {
                         </Col>
                       </Row>
                     </li>
-                  )
+                  );
                 }
-                else {
-                  return null;
-                }
-              }
-            )
-          }
-        </Container>
-      </ul>
+              )
+            }
+          </Container>
+        </ul>
+      </React.Fragment>
     )
+  }
+
+  upvote(i) {
+    this.props.filteredQuestions[i].upvote();
+    this.setState({ update: 0 })
+  }
+
+  downvote(i) {
+    this.props.filteredQuestions[i].downvote();
+    this.setState({ update: 0 })
+  }
+
+  deleteQ = (item) => {
+    db.collection("questions").doc(item.getId()).delete().then(function () {
+      console.log("Document successfully deleted!");
+    }).catch(function (error) {
+      console.error("Error removing document: ", error);
+    });
   }
 
 

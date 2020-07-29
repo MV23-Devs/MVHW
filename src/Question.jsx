@@ -15,7 +15,6 @@ export default class Question {
     }
 
     getId() {
-
         return this.id
     }
 
