@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge } from 'reactstrap';
+import firebase from '../firebase.js';
+
+const db = firebase.firestore();
 
 const dark = {
   backgroundColor: '#222',
@@ -24,7 +27,7 @@ export default class Feed extends Component {
   state = {
     update: 0,
     d: new Date(),
-    focus:0
+    focus: 0
   }
 
   render() {
@@ -45,8 +48,16 @@ export default class Feed extends Component {
     this.setState({ update: 0 })
   }
 
+  deleteQ = (item) => {
+    console.log(item)
+    db.collection("questions").doc("DC").delete().then(function () {
+      console.log("Document successfully deleted!");
+    }).catch(function (error) {
+      console.error("Error removing document: ", error);
+    });
+  }
+
   renderQuestions() {
-    // console.log(this.props.filteredQuestions)
     return (
       <ul className="feed-list">
         <Container>
@@ -74,11 +85,14 @@ export default class Feed extends Component {
                             {this.renderAnswer(item)}
                           </div>
                           <hr style={this.props.theme === 1 ? dark.line : light.line} />
-                          <p className="links" onClick={
-
+                          <span className="links" onClick={
+                            
                             this.openReply.bind(this, item)
+                            
+                          }>reply</span>
+                          <span> | </span>
+                          <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
 
-                          }>reply</p>
                           {this.renderReply(item)}
                         </Col>
                       </Row>
@@ -98,11 +112,11 @@ export default class Feed extends Component {
 
 
   changeFocus(elem) {
-    this.setState({focus: elem});
-    
+    this.setState({ focus: elem });
+
   }
   getFocus(elem) {
-    return this.state.focus;  
+    return this.state.focus;
   }
 
 

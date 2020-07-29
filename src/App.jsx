@@ -11,7 +11,7 @@ import firebase from './firebase.js';
 const db = firebase.firestore();
 
 
-console.log('%cMVHW', 'color: black; background-color: #f6c733; padding: 5px 10px; font-size: 50px;');
+console.log("_   .-')          (`-.    ('-. .-.  (`\ .-') /\`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),\'\n ,--.   ,--.),--(_/   ,.  \,--. ,--.,--./  .--.  \n |   `.'   | \\   \   /(__/ |  | |  ||      |  |  \n |         |  \\   \ /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n \`--'   \`--'      \`-'     \`--' \`--''--'   '--'");
 
 
 // dark theme
@@ -107,7 +107,8 @@ export default class App extends Component {
     db.collection("questions")
     .get()
     .then(querySnapshot => {
-      const data = querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
+      return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id));
+    }).then((data) => {
       console.log(data);
     });
   }
