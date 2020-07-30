@@ -50,8 +50,30 @@ export default class Feed extends Component {
                     user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                   }
 
-                  let tag = <Badge color="secondary">{item.getTags()}</Badge>;
-                  if(item.getTags() === "None") {
+                  let color = '';
+                  switch (item.getTags()) {
+                    case 'Math':
+                      color = 'info';
+                      break;
+                    case 'Science':
+                      color = 'warning';
+                      break;
+                    case 'English':
+                      color = 'danger';
+                      break;
+                    case 'History':
+                      color = 'success';
+                      break;
+                    case 'Computer Science':
+                      color = 'primary';
+                      break;
+
+                    default:
+                      color = 'secondary';
+                      break;
+                  }
+                  let tag = <Badge color={color}>{item.getTags()}</Badge>;
+                  if (item.getTags() === "None") {
                     tag = null;
                   }
 
@@ -80,7 +102,7 @@ export default class Feed extends Component {
                           }>
                             {user}
                             <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
-                        <h4>Question: {item.getText()}  {tag}</h4>
+                            <h4>Question: {item.getText()}  {tag}</h4>
                             {this.renderAnswer(item)}
                           </div>
                           <hr style={this.props.theme === 1 ? dark.line : light.line} />
