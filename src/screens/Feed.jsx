@@ -50,6 +50,11 @@ export default class Feed extends Component {
                     user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                   }
 
+                  let tag = <Badge color="secondary">{item.getTags()}</Badge>;
+                  if(item.getTags() === "None") {
+                    tag = null;
+                  }
+
                   let deletedata = null;
                   if (this.props.user.name === item.getUser()) {
                     deletedata = (
@@ -75,7 +80,7 @@ export default class Feed extends Component {
                           }>
                             {user}
                             <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
-                            <h4>Question: {item.getText()}</h4>
+                        <h4>Question: {item.getText()}  {tag}</h4>
                             {this.renderAnswer(item)}
                           </div>
                           <hr style={this.props.theme === 1 ? dark.line : light.line} />

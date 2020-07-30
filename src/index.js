@@ -5,6 +5,8 @@ import './index.css';
 import App from './App.jsx';
 import * as serviceWorker from './serviceWorker';
 
+console.log("_   .-')          (`-.    ('-. .-.  (` .-') /`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),'\n ,--.   ,--.),--(_/   ,.  ,--. ,--.,--./  .--.  \n |   `.'   | \\      /(__/ |  | |  ||      |  |  \n |         |  \\    /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n `--'   `--'      `-'     `--' `--''--'   '--'");
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
