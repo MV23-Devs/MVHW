@@ -8,8 +8,6 @@ import firebase from './firebase.js';
 
 const db = firebase.firestore();
 
-
-
 // dark theme
 const theme1 = {
   header: {
@@ -156,8 +154,8 @@ export default class App extends Component {
         id = docRef.id;
       });
 
-      let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
-      this.state.questions.push(q);
+      let q = new Question(val, this.user.name, (new Date()).getTime(), id);
+      this.state.filteredQuestions.push(q);
 
       // Unused Reply Database code
       /* 
