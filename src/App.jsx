@@ -154,13 +154,8 @@ export default class App extends Component {
         id = docRef.id;
       });
 
-<<<<<<< HEAD
       let q = new Question(val, this.user.name, (new Date()).getTime(), id);
       this.state.filteredQuestions.push(q);
-=======
-      let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
-      this.state.questions.push(q);
->>>>>>> 43257fe6e2a5bfa81ddfad77a0cfbd81dd135457
 
       // Unused Reply Database code
       /* 
