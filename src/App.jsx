@@ -137,9 +137,12 @@ export default class App extends Component {
         firebase.database().ref('audit log').push(date + ": created a new post");
         id = docRef.id;
       });
-
+      let pushArray = [...this.state.filteredQuestions]
       let q = new Question(val, this.user.name, (new Date()).getTime(), id);
-      this.state.filteredQuestions.push(q);
+      pushArray.push(q)
+      this.setState({
+        filteredQuestions: pushArray
+      })
 
       // Unused Reply Database code
       /* 
