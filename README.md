@@ -1,6 +1,8 @@
 # MVHW
 - - -
+This project utilizes firebase firestore to store server-side data to the cloud. The front end is developed in react.js.
 
+- - -
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
