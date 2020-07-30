@@ -126,23 +126,25 @@ export default class App extends Component {
       let date = (new Date()).toString();
       var id = null;
 
-      firebase.firestore().collection('questions').add({
-        title: val,
-        author: this.user.name,
-        upvotes: 0,
-        downvotes: 0,
-        timestamp: date,
-        tags: t,
-      }).then(function (docRef) {
-        firebase.database().ref('audit log').push(date + ": created a new post");
-        id = docRef.id;
-      });
-      let pushArray = [...this.state.filteredQuestions]
-      let q = new Question(val, this.user.name, (new Date()).getTime(), id);
-      pushArray.push(q)
-      this.setState({
-        filteredQuestions: pushArray
-      })
+      firebase.firestore()
+        .collection('questions')
+        .add({
+          title: val,
+          author: this.user.name,
+          upvotes: 0,
+          downvotes: 0,
+          timestamp: date,
+          tags: t,
+        }).then((docRef) => {
+          firebase.database().ref('audit log').push(date + ": created a new post");
+          id = docRef.id;
+        });
+        let pushArray = [...this.state.filteredQuestions]
+        let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
+        pushArray.push(q)
+        this.setState({
+          filteredQuestions: pushArray
+        })
 
       // Unused Reply Database code
       /* 
