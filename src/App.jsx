@@ -13,7 +13,6 @@ const theme1 = {
   header: {
     backgroundColor: '#222',
     color: '#fff',
-    borderBottomColor: '#ccc',
   },
   body: {
     backgroundColor: '#333',
@@ -35,7 +34,6 @@ const theme2 = {
   header: {
     backgroundColor: '#fff',
     color: '#000',
-    borderBottomColor: '#333',
   },
   body: {
     backgroundColor: '#ccc',
@@ -68,6 +66,7 @@ export default class App extends Component {
       errormessage: '',
       seeingFull: false,
       loading_data: true,
+      loaded: 0,
       update: 0,
     };
 
@@ -75,21 +74,6 @@ export default class App extends Component {
     this.user = {
       name: 'you',
     }
-
-    // this.feed = [];
-    // this.ffeed = [];
-
-    // db.collection("questions").get().then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       let raw = doc.data();
-    //       let q = new Question(raw.title, raw.author, raw.timestamp, doc.id);
-    //       this.feed.push(q);
-    //       this.ffeed.push(q);
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error getting database data: ", error);
-    //   });
 
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -183,9 +167,8 @@ export default class App extends Component {
   render() {
     let feed = <Feed theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
     if (this.state.loading_data) {
-      feed = (
-        <Spinner className="loader" style={{ width: '3rem', height: '3rem' }} color="warning" />
-      );
+      feed = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
+
     }
     return (
       <React.Fragment>
@@ -242,7 +225,7 @@ export default class App extends Component {
 
 
           <footer className="footer" style={this.state.styles.footer} >
-            <p className="footertext">Wow! you reached the end</p>
+            <p className="footertext">hola</p>
           </footer>
         </div>
 

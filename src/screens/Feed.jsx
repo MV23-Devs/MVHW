@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, Alert } from 'reactstrap';
 import firebase from '../firebase.js';
 
 const db = firebase.firestore();
@@ -37,7 +37,9 @@ export default class Feed extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className={this.state.notification !== '' ? "notification open" : "notification"}><p>{this.state.notification}</p></div>
+        <div className="alertcenter">
+          <Alert className={this.state.notification !== '' ? "alert open" : "alert closed"} fade={false}>{this.state.notification}</Alert>
+        </div>
         <ul className="feed-list">
           <Container>
             {
@@ -45,7 +47,7 @@ export default class Feed extends Component {
                 (item, i) => {
                   let user = <h5>User: {item.getUser()}</h5>;
                   if (item.getUser() === "devs") {
-                    user = <h6>User: <Badge color="secondary">devs</Badge></h6>;
+                    user = <h6>User: <Badge color="dark">devs</Badge></h6>;
                   } else if (item.getUser() === "you") {
                     user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                   }

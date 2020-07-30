@@ -36,7 +36,6 @@ html,body {
   padding: 20px;
   margin: none;
   width: 100%;
-  border-bottom: 1px solid #ccc;
 }
 
 .sidePanel {
@@ -52,13 +51,18 @@ html,body {
   margin-right: 10%;
 }
 
-.notification {
+.alertcenter {
+  width: 50%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 100;
+}
+
+.closed {
   display: none;
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-  padding: 20px;
-  font-size: 20px;
 }
 
 .notification p {
@@ -92,8 +96,6 @@ html,body {
   padding: 10px;
   border-radius: 5px;
   background-color: #222;
-  border: white;
-  border: 1px solid;
 }
 
 .copyright {
@@ -111,8 +113,6 @@ button {
   padding-bottom: 2px;
   display: block;
   padding: 10px;
-  border: solid;
-  border-width: 1px;
   border-radius: 5px;
   width: 70%;
 }
@@ -212,8 +212,6 @@ a {
 }
 
 .loader {
+  margin: 25%;
   margin-left: 30%;
-  margin-top: 250px;
-  margin-bottom: 250px;
-  text-align: center;
 }
