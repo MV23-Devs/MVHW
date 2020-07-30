@@ -1,7 +1,7 @@
 import Answer from './Answer.jsx'
 
 export default class Question {
-    constructor(questionText, user, time, id, upvotes=0){
+    constructor(questionText, user, time, id, upvotes=0, tags=null){
         this.questionText = questionText
         this.isReplying = false;
         this.isReplyingInner = false;
@@ -9,7 +9,7 @@ export default class Question {
         this.id = id
         this.upvotes = upvotes;
         this.answers = [new Answer("no answers to this question yet", "bot"), new Answer("test test", "yeet")]
-        //this.tags = tags
+        this.tags = tags;
         this.isClicked = false;
         this.time = time
     }

@@ -6,8 +6,6 @@ import Question from './Question';
 import { Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner } from 'reactstrap';
 import firebase from './firebase.js';
 
-console.log("_   .-')          (`-.    ('-. .-.  (` .-') /`\n( '.( OO )_      _(OO  )_ ( OO )  /   `.( OO ),'\n ,--.   ,--.),--(_/   ,.  ,--. ,--.,--./  .--.  \n |   `.'   | \\      /(__/ |  | |  ||      |  |  \n |         |  \\    /   /  |   .|  ||  |   |  |, \n |  |'.'|  |   \\   '   /, |       ||  |.'.|  |_)\n |  |   |  |    \\     /__)|  .-.  ||         |  \n |  |   |  |     \\   /    |  | |  ||   ,'.   |  \n `--'   `--'      `-'     `--' `--''--'   '--'");
-
 const db = firebase.firestore();
 
 // dark theme
@@ -68,10 +66,9 @@ export default class App extends Component {
       width: 0,
       height: 0,
       errormessage: '',
-      text: "",
-      tags: [],
       seeingFull: false,
       loading_data: true,
+      update: 0,
     };
 
 
@@ -106,7 +103,7 @@ export default class App extends Component {
     db.collection("questions")
       .get()
       .then(querySnapshot => {
-        return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id, doc.data().upvotes));
+        return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
       }).then((data) => {
         this.setState({
           questions: data,
@@ -134,7 +131,8 @@ export default class App extends Component {
 
   submitHandler = (event) => {
     event.preventDefault();
-    let val = this.state.text;
+    let val = event.target["text"].value;
+    let t = event.target["select"].value;
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
@@ -145,18 +143,24 @@ export default class App extends Component {
       var id = null;
 
       firebase.firestore().collection('questions').add({
-        title: this.state.text,
+        title: val,
         author: this.user.name,
         upvotes: 0,
         downvotes: 0,
         timestamp: date,
+        tags: t,
       }).then(function (docRef) {
         firebase.database().ref('audit log').push(date + ": created a new post");
         id = docRef.id;
       });
 
+<<<<<<< HEAD
       let q = new Question(val, this.user.name, (new Date()).getTime(), id);
       this.state.filteredQuestions.push(q);
+=======
+      let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
+      this.state.questions.push(q);
+>>>>>>> 43257fe6e2a5bfa81ddfad77a0cfbd81dd135457
 
       // Unused Reply Database code
       /* 
@@ -171,7 +175,7 @@ export default class App extends Component {
 
       */
 
-      this.setState({ text: '' });
+      this.setState({ update: 0 });
       event.target["text"].value = "";
     }
   }
@@ -213,6 +217,7 @@ export default class App extends Component {
                   <br />
                   <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
                   <Input type="select" name="select" id="tags">
+                    <option>None</option>
                     <option>Math</option>
                     <option>Science</option>
                     <option>English</option>
