@@ -151,8 +151,8 @@ export default class App extends Component {
       loading_data: true,
       loaded: 0,
       update: 0,
-      tempUpvotes: 0,
     };
+
 
     this.user = {
       name: 'you',
@@ -251,50 +251,6 @@ export default class App extends Component {
     let val = event.target.value;
     this.setState({ text: val });
   }
-
-  upvote = (id) => {
-    let db = firebase.firestore()
-    db
-      .collection('questions')
-      .doc(id).get().then((doc) => {
-        //console.log(doc.data())
-        //console.log(doc.data().upvotes)
-        this.setState({tempUpvotes: doc.data().upvotes})
-      })
-    db
-      .collection('questions')
-      .doc(id).update({
-        upvotes: this.state.tempUpvotes + 1
-      })
-      //console.log(this.state.tempUpvotes + 1)
-    return this.state.tempUpvotes + 1
-  }
-  downvote = (id) => {
-    let db = firebase.firestore()
-    db
-      .collection('questions')
-      .doc(id).get().then((doc) => {
-        //console.log(doc.data())
-        //console.log(doc.data().upvotes)
-        this.setState({tempUpvotes: doc.data().upvotes})
-      })
-    db
-      .collection('questions')
-      .doc(id).update({
-        upvotes: this.state.tempUpvotes - 1
-      })
-      //console.log("next" + this.state.tempUpvotes)
-    return this.state.tempUpvotes - 1
-  }
-
-  setQuestionUpvotes(){
-    for(let i = 0; i < this.state.filteredQuestions.length; i++){
-      firebase.firestore()
-        .collection('questions').doc(this.state.filteredQuestions[i].getId()).get().then((doc) => {
-          this.state.filteredQuestions[i].setUpvotes(doc.data().upvotes)
-        })
-    }
-  }  
 
   render() {
     let feed = <Feed theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;

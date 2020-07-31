@@ -155,8 +155,6 @@ export default class Feed extends Component {
       upvotes: up + 1,
     })
     this.setState({ update: 0 })
-    this.props.filteredQuestions[i].setUpvotes(this.props.upvote(this.props.filteredQuestions[i].getId()))
-    console.log(this.props.filteredQuestions[i].getUpvotes())
   }
 
   downvote(i) {
@@ -166,7 +164,6 @@ export default class Feed extends Component {
       upvotes: up - 1,
     })
     this.setState({ update: 0 })
-    this.props.filteredQuestions[i].setUpvotes(this.props.downvote(this.props.filteredQuestions[i].getId()))
   }
 
   deleteQ = (item) => {
