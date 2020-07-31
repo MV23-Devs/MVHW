@@ -86,8 +86,6 @@ export default class Feed extends Component {
                     upvotes = (item.getUpvotes() / 1000).toFixed(1) + "k";
                   }
 
-                  test
-
                   let deletedata = null;
                   if (this.props.user.name === item.getUser()) {
                     deletedata = (
