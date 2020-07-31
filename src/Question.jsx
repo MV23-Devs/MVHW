@@ -32,6 +32,9 @@ export default class Question {
     getUpvotes(){
         return this.upvotes
     }
+    setUpvotes(uv){
+        this.upvotes = uv
+    }
     getText(){
         return this.questionText
     }

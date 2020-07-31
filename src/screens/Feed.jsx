@@ -129,13 +129,16 @@ export default class Feed extends Component {
   }
 
   upvote(i) {
-    this.props.filteredQuestions[i].upvote();
+    //this.props.filteredQuestions[i].upvote();
     this.setState({ update: 0 })
+    this.props.filteredQuestions[i].setUpvotes(this.props.upvote(this.props.filteredQuestions[i].getId()))
+    console.log(this.props.filteredQuestions[i].getUpvotes())
   }
 
   downvote(i) {
-    this.props.filteredQuestions[i].downvote();
+    //this.props.filteredQuestions[i].downvote();
     this.setState({ update: 0 })
+    this.props.filteredQuestions[i].setUpvotes(this.props.downvote(this.props.filteredQuestions[i].getId()))
   }
 
   deleteQ = (item) => {

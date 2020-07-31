@@ -204,8 +204,8 @@ a {
   color: #0070d1;
   text-decoration: none;
   -moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
 .links:hover {
   text-decoration: underline;
