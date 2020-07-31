@@ -79,6 +79,13 @@ export default class Feed extends Component {
                     tag = null;
                   }
 
+                  let upvotes = item.getUpvotes() + "";
+
+                  let num = item.getUpvotes();
+                  if (item.getUpvotes() >= 1000) {
+                    upvotes = (item.getUpvotes() / 1000).toFixed(1) + "k";
+                  }
+
                   let deletedata = null;
                   if (this.props.user.name === item.getUser()) {
                     deletedata = (
@@ -94,7 +101,7 @@ export default class Feed extends Component {
                       <Row>
                         <Col xs="1">
                           <button style={this.props.theme === 1 ? dark : light} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-                          <h5 id="middleText">{this.props.filteredQuestions[i].getUpvotes()} </h5>
+                          <h5 id="middleText">{upvotes} </h5>
                           <button style={this.props.theme === 1 ? dark : light} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
                         </Col>
                         <Col xs="11">
@@ -132,7 +139,7 @@ export default class Feed extends Component {
     let up = this.props.filteredQuestions[i].getUpvotes();
     this.props.filteredQuestions[i].upvote();
     db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-      upvotes: up+1,
+      upvotes: up + 1,
     })
     this.setState({ update: 0 })
   }
@@ -141,7 +148,7 @@ export default class Feed extends Component {
     let up = this.props.filteredQuestions[i].getUpvotes();
     this.props.filteredQuestions[i].downvote();
     db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-      upvotes: up-1,
+      upvotes: up - 1,
     })
     this.setState({ update: 0 })
   }

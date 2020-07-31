@@ -53,7 +53,7 @@ html,body {
 
 .alertcenter {
   width: 50%;
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   margin-left: auto;
