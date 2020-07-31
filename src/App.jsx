@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import Feed from "./screens/Feed.jsx";
+import FullThread from "./screens/fullThread.jsx";
+
 import NavBar from './components/NavBar.jsx'
 import Question from './Question';
 import { Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner } from 'reactstrap';
@@ -171,8 +173,15 @@ export default class App extends Component {
 
   render() {
     let feed = <Feed theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
+
     if (this.state.loading_data) {
       feed = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
+
+    }
+
+    let solo = <FullThread theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
+    if (this.state.loading_data) {
+      solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
 
     }
     return (
@@ -225,6 +234,7 @@ export default class App extends Component {
           </section>
 
           <div id="field">
+            
             {feed}
           </div>
 
