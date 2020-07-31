@@ -129,12 +129,20 @@ export default class Feed extends Component {
   }
 
   upvote(i) {
+    let up = this.props.filteredQuestions[i].getUpvotes();
     this.props.filteredQuestions[i].upvote();
+    db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+      upvotes: up+1,
+    })
     this.setState({ update: 0 })
   }
 
   downvote(i) {
+    let up = this.props.filteredQuestions[i].getUpvotes();
     this.props.filteredQuestions[i].downvote();
+    db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+      upvotes: up-1,
+    })
     this.setState({ update: 0 })
   }
 
