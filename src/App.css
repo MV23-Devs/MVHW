@@ -145,6 +145,10 @@ button {
   
 }
 
+.aboutname {
+  font-size: 1em;
+}
+
 .feed-list {
   list-style-type: none;
   height: 100%;
@@ -159,14 +163,28 @@ button {
     border: none;
     border-bottom: 1px solid #ccc;
     outline: none;
-    width: 10%;
+    width: 100%;
   }
+
   .feed-list .container li:last-of-type {
     border-bottom: none;
   }
 
+  .sidePanel {
+    display: none;
+  }
+
   #searchBar {
     margin-left: 0;
+  }
+
+  .cardcontainer {
+    flex-direction: column;
+  }
+
+  .container .card {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
 
@@ -218,4 +236,9 @@ a {
 .loader {
   margin: 25%;
   margin-left: 30%;
+}
+
+.cardcontainer {
+  display: flex;
+  flex-direction: row;
 }

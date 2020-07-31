@@ -1,12 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './App.css';
 import Feed from "./screens/Feed.jsx";
 import FullThread from "./screens/fullThread.jsx";
 
 import NavBar from './components/NavBar.jsx'
 import Question from './Question';
-import { Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner } from 'reactstrap';
+import {
+  Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+} from 'reactstrap';
 import firebase from './firebase.js';
+
+import jacob from "./img/jacob.jpg";
+import saarang from "./img/saarang.jpg";
+import jason from "./img/jason.jpg";
+import atli_sucks from "./img/atli-sucks.jpg";
 
 const db = firebase.firestore();
 
@@ -51,6 +58,80 @@ const theme2 = {
     color: '#000',
   }
 };
+
+const SocialDropdown = (props) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggle = () => setDropdownOpen(prevState => !prevState);
+
+  return (
+    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+      <DropdownToggle color="dark" caret>
+        Social
+        </DropdownToggle>
+      <DropdownMenu>
+        <DropdownItem><a href={props.github}>Github</a></DropdownItem>
+        <DropdownItem><a href={props.instagram}>Instagram</a></DropdownItem>
+        <DropdownItem><a href={props.gmail}>Mail</a></DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
+}
+
+const AboutModal = (props) => {
+  const {
+    className,
+    theme
+  } = props;
+
+  const [modal, setModal] = useState(false);
+
+  const toggle = () => setModal(!modal);
+
+  return (
+    <div>
+      <Button color={theme === 1 ? 'light' : 'dark'} block onClick={toggle}>Who?</Button>
+      <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
+        <ModalHeader toggle={toggle}>Us</ModalHeader>
+        <ModalBody>
+          <div className="cardcontainer">
+            <Card className="card">
+              <CardImg top width="100%" src={jason} alt="Jason Zhang" />
+              <CardBody>
+                <h3 class="aboutname">Jason Zhang</h3>
+                <SocialDropdown github="https://github.com/minisounds" instagram="https://www.instagram.com/jason.zhang848/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jzscuba@gmail.com"></SocialDropdown>
+              </CardBody>
+            </Card>
+            <Card className="card">
+              <CardImg top width="100%" src={jacob} alt="Jacob Ismael" />
+              <CardBody>
+              <h3 class="aboutname">Jacob Ismael</h3>
+                <SocialDropdown github="https://github.com/jacobismael" instagram="https://www.instagram.com/jacobismael16/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jacob.ismael@gmail.com"></SocialDropdown>
+              </CardBody>
+            </Card>
+            <Card className="card">
+              <CardImg top width="100%" src={saarang} alt="Saarang Bondalapati" />
+              <CardBody>
+                <h3 class="aboutname">Saarang Bondalapati</h3>
+                <SocialDropdown github="https://github.com/saarangbond" instagram="https://www.instagram.com/saarang.bond.05/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=saarang.bondalapati@gmail.com"></SocialDropdown>
+              </CardBody>
+            </Card>
+            <Card className="card">
+              <CardImg top width="100%" src={atli_sucks} alt="Atli Arnarsson" />
+              <CardBody>
+              <h3 class="aboutname">Atli Arnarsson</h3>
+                <SocialDropdown github="https://github.com/atli-a" instagram="https://www.instagram.com/atli_i_guess/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
+              </CardBody>
+            </Card>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>Close</Button>
+        </ModalFooter>
+      </Modal>
+    </div>
+  );
+}
 
 export default class App extends Component {
   constructor(props) {
@@ -141,12 +222,12 @@ export default class App extends Component {
           firebase.database().ref('audit log').push(date + ": created a new post");
           id = docRef.id;
         });
-        let pushArray = [...this.state.filteredQuestions]
-        let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
-        pushArray.push(q)
-        this.setState({
-          filteredQuestions: pushArray
-        })
+      let pushArray = [...this.state.filteredQuestions]
+      let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
+      pushArray.push(q)
+      this.setState({
+        filteredQuestions: pushArray
+      })
 
       // Unused Reply Database code
       /* 
@@ -228,6 +309,8 @@ export default class App extends Component {
               <br />
               <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
               <hr style={this.state.theme === 1 ? theme1.line : theme2.line} />
+              <AboutModal theme={this.state.theme}></AboutModal>
+              <br />
               <Button theme={this.state.theme} color={this.state.theme === 1 ? 'light' : 'dark'} block onClick={this.changeTheme}>Switch to {this.state.theme === 1 ? 'light' : 'dark'} theme</Button>
             </div>
           </section>
