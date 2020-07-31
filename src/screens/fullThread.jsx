@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, Alert, UncontrolledPopover, PopoverBody } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, Alert } from 'reactstrap';
 import firebase from '../firebase.js';
 
 const db = firebase.firestore();
@@ -21,20 +21,6 @@ const light = {
     backgroundColor: '#222',
   }
 };
-
-const Votes = (props) => {
-  let id = "vote-num-" + props.listvalue;
-  return (
-    <div>
-      <h5 id={id} className="upvotes-num">{props.num}</h5>
-      <UncontrolledPopover trigger="legacy" placement="bottom" target={id}>
-        <PopoverBody>
-          {props.actualNumber}
-        </PopoverBody>
-      </UncontrolledPopover>
-    </div>
-  );
-}
 
 export default class Feed extends Component {
 
@@ -93,12 +79,6 @@ export default class Feed extends Component {
                     tag = null;
                   }
 
-                  let upvotes = item.getUpvotes() + "";
-
-                  if (item.getUpvotes() >= 1000) {
-                    upvotes = (item.getUpvotes() / 1000).toFixed(1) + "k";
-                  }
-
                   let deletedata = null;
                   if (this.props.user.name === item.getUser()) {
                     deletedata = (
@@ -114,7 +94,7 @@ export default class Feed extends Component {
                       <Row>
                         <Col xs="1">
                           <button style={this.props.theme === 1 ? dark : light} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-                          <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                          <h5 id="middleText">{this.props.filteredQuestions[i].getUpvotes()} </h5>
                           <button style={this.props.theme === 1 ? dark : light} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
                         </Col>
                         <Col xs="11">
@@ -123,7 +103,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
-                            <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
+                            <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >Back to Home</Button>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {this.renderAnswer(item)}
                           </div>
@@ -149,24 +129,13 @@ export default class Feed extends Component {
   }
 
   upvote(i) {
-    let up = this.props.filteredQuestions[i].getUpvotes();
     this.props.filteredQuestions[i].upvote();
-    db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-      upvotes: up + 1,
-    })
     this.setState({ update: 0 })
-    this.props.filteredQuestions[i].setUpvotes(this.props.upvote(this.props.filteredQuestions[i].getId()))
-    console.log(this.props.filteredQuestions[i].getUpvotes())
   }
 
   downvote(i) {
-    let up = this.props.filteredQuestions[i].getUpvotes();
     this.props.filteredQuestions[i].downvote();
-    db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-      upvotes: up - 1,
-    })
     this.setState({ update: 0 })
-    this.props.filteredQuestions[i].setUpvotes(this.props.downvote(this.props.filteredQuestions[i].getId()))
   }
 
   deleteQ = (item) => {
