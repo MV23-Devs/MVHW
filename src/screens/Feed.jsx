@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, Alert } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, Alert, UncontrolledPopover, PopoverBody } from 'reactstrap';
 import firebase from '../firebase.js';
 
 const db = firebase.firestore();
@@ -21,6 +21,20 @@ const light = {
     backgroundColor: '#222',
   }
 };
+
+const Votes = (props) => {
+  let id = "vote-num-" + props.listvalue;
+  return (
+    <div>
+      <h5 id={id} className="upvotes-num">{props.num}</h5>
+      <UncontrolledPopover trigger="legacy" placement="bottom" target={id}>
+        <PopoverBody>
+          {props.actualNumber}
+        </PopoverBody>
+      </UncontrolledPopover>
+    </div>
+  );
+}
 
 export default class Feed extends Component {
 
@@ -81,7 +95,6 @@ export default class Feed extends Component {
 
                   let upvotes = item.getUpvotes() + "";
 
-                  let num = item.getUpvotes();
                   if (item.getUpvotes() >= 1000) {
                     upvotes = (item.getUpvotes() / 1000).toFixed(1) + "k";
                   }
@@ -101,7 +114,7 @@ export default class Feed extends Component {
                       <Row>
                         <Col xs="1">
                           <button style={this.props.theme === 1 ? dark : light} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-                          <h5 id="middleText">{upvotes} </h5>
+                          <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
                           <button style={this.props.theme === 1 ? dark : light} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
                         </Col>
                         <Col xs="11">

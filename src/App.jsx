@@ -182,7 +182,6 @@ export default class App extends Component {
     let solo = <FullThread theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
     if (this.state.loading_data) {
       solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
-
     }
     return (
       <React.Fragment>
@@ -234,7 +233,6 @@ export default class App extends Component {
           </section>
 
           <div id="field">
-            
             {feed}
           </div>
 
