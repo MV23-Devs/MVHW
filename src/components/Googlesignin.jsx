@@ -2,14 +2,6 @@ import React, {Component} from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
  
-// Configure Firebase.
-const config = {
-  apiKey: 'AIzaSyAeue-AsYu76MMQlTOM-KlbYBlusW9c1FMAIzaSyAVodeF3jAnoTmE9CYAF1cHcaZ1GxM-G44',
-  authDomain: 'http://localhost:3000/',
-  // ...
-};
-firebase.initializeApp(config);
- 
 // Configure FirebaseUI.
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
