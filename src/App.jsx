@@ -2,7 +2,7 @@ import React, { Component, useState } from 'react';
 import './App.css';
 import Feed from "./screens/Feed.jsx";
 import FullThread from "./screens/fullThread.jsx";
-
+import Googlesignin from './components/NavBar.jsx';
 import NavBar from './components/NavBar.jsx'
 import Question from './Question';
 import {
@@ -274,7 +274,7 @@ export default class App extends Component {
               updateFilter={this.updateFilter}
             />
 
-            <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logIn">Sign In</Button>
+            <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logIn"><Googlesignin></Googlesignin></Button>
           </div>
 
           <section className="sidePanel">
