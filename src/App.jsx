@@ -151,6 +151,7 @@ export default class App extends Component {
       loading_data: true,
       loaded: 0,
       update: 0,
+      authUser: null,
     };
 
 
@@ -163,6 +164,15 @@ export default class App extends Component {
   }
 
   componentDidMount() {
+    
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({authUser: user})
+      } else {
+        this.setState({authUser: null})
+      }
+      console.log('jacob is a bully', this.state.authUser, 'jacob is a bully');
+    });
 
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
@@ -180,7 +190,7 @@ export default class App extends Component {
       });
 
   }
-
+  
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
   }
@@ -204,7 +214,10 @@ export default class App extends Component {
       var token = result.credential.accessToken;
       // The signed-in user info.
       var user = result.user;
+      console.log(user);
       // ...
+      this.setState({update: 0});
+      console.log(firebase.auth().currentUser === null);
     }).catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -215,7 +228,13 @@ export default class App extends Component {
       var credential = error.credential;
       // ...
     });
-    
+  }
+  signoutwithGoogle() {
+    firebase.auth().signOut().then(function() {
+      this.setState({update: 0});
+    }).catch(function(error) {
+      // An error happened.
+    });
   }
   submitHandler = (event) => {
     event.preventDefault();
@@ -294,8 +313,12 @@ export default class App extends Component {
               questions={this.state.questions}
               updateFilter={this.updateFilter}
             />
-
-            <Button color={this.state.theme === 1 ? 'light' : 'dark' } id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+            {
+              this.state.authUser !== null ? 
+              <Button color={this.state.theme === 1 ? 'light' : 'dark' } id="logOut" onClick={this.signoutwithGoogle}>Sign out</Button>
+              :
+              <Button color={this.state.theme === 1 ? 'light' : 'dark' } id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+          }
           </div>
 
           <section className="sidePanel">
