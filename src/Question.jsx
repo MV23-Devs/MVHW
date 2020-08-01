@@ -8,7 +8,7 @@ export default class Question {
         this.user = user
         this.id = id
         this.upvotes = upvotes;
-        this.answers = [new Answer("no answers to this question yet", "bot"), new Answer("test test", "yeet")]
+        this.answers = [new Answer("no answers to this question yet", "bot", null)]
         this.tags = tags;
         this.isClicked = false;
         this.time = time
@@ -34,6 +34,9 @@ export default class Question {
     }
     getText(){
         return this.questionText
+    }
+    getUsername() {
+        return this.user.displayName;
     }
     getUser(){
         return this.user

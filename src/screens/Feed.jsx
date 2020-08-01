@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, Alert, UncontrolledPopover, PopoverBody } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
 import firebase from '../firebase.js';
 
 const db = firebase.firestore();
@@ -52,17 +52,17 @@ export default class Feed extends Component {
     return (
       <React.Fragment>
         <div className="alertcenter">
-          <Alert className={this.state.notification !== '' ? "alert open" : "alert closed"} fade={false}>{this.state.notification}</Alert>
+          <div className={this.state.notification !== '' ? "alert open" : "alert closed"}>{this.state.notification}</div>
         </div>
         <ul className="feed-list">
           <Container>
             {
               this.props.filteredQuestions.map(
                 (item, i) => {
-                  let user = <h5>User: {item.getUser()}</h5>;
-                  if (item.getUser() === "devs") {
+                  let user = <h5>User: {item.getUsername()}</h5>;
+                  if (item.getUsername() === "devs") {
                     user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                  } else if (item.getUser() === "you") {
+                  } else if (item.getUsername() === this.props.user.name) {
                     user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                   }
 
@@ -96,11 +96,11 @@ export default class Feed extends Component {
                   let upvotes = item.getUpvotes() + "";
 
                   if (item.getUpvotes() >= 1000) {
-                    upvotes = (item.getUpvotes() / 1000).toFixed(1) + "k";
+                    upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
                   }
 
                   let deletedata = null;
-                  if (this.props.user.name === item.getUser()) {
+                  if (this.props.user.name === item.getUsername()) {
                     deletedata = (
                       <span>
                         <span> | </span>
@@ -149,21 +149,37 @@ export default class Feed extends Component {
   }
 
   upvote(i) {
-    let up = this.props.filteredQuestions[i].getUpvotes();
-    this.props.filteredQuestions[i].upvote();
-    db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-      upvotes: up + 1,
-    })
-    this.setState({ update: 0 })
+    if (this.props.user.auth !== null) {
+      let up = this.props.filteredQuestions[i].getUpvotes();
+      this.props.filteredQuestions[i].upvote();
+      db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+        upvotes: up + 1,
+      })
+      this.setState({ update: 0 })
+    } else {
+      var provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase.auth().signInWithPopup(provider).catch((error) => {
+        console.error('Error Code ' + error.code + ': ' + error.message)
+      });
+    }
   }
 
   downvote(i) {
-    let up = this.props.filteredQuestions[i].getUpvotes();
-    this.props.filteredQuestions[i].downvote();
-    db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-      upvotes: up - 1,
-    })
-    this.setState({ update: 0 })
+    if (this.props.user.auth !== null) {
+      let up = this.props.filteredQuestions[i].getUpvotes();
+      this.props.filteredQuestions[i].downvote();
+      db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+        upvotes: up - 1,
+      })
+      this.setState({ update: 0 })
+    } else {
+      var provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase.auth().signInWithPopup(provider).catch((error) => {
+        console.error('Error Code ' + error.code + ': ' + error.message)
+      });
+    }
   }
 
   deleteQ = (item) => {
@@ -221,12 +237,13 @@ export default class Feed extends Component {
   callBoth(item1) {
     item1.click();
     console.log(item1.getClicked())
+    console.log(item1.getUser());
     //this.renderAnswer(item1);
     this.setState({ update: 0 })
   }
 
   renderAnswer(item1) {
-    let user = <h6>User: {item1.getFirstAnswer().getUser()}</h6>;
+    let user = <h6>User: {item1.getFirstAnswer().getUsername()}</h6>;
     let respondable = (
       <Form onSubmit={this.submitHandler}>
         <FormGroup>
@@ -237,7 +254,7 @@ export default class Feed extends Component {
         <Button color={this.props.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
       </Form>
     );
-    if (item1.getFirstAnswer().getUser() === "bot") {
+    if (item1.getFirstAnswer().getUsername() === "bot") {
       user = <h6>User: <Badge color="secondary">bot</Badge></h6>;
       respondable = null;
     }

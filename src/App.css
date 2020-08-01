@@ -61,6 +61,13 @@ html,body {
   z-index: 100;
 }
 
+.alert {
+  border: 1px solid #f6c733;
+  border-radius: 5px;
+  color: #000;
+  background-color: #f6c733;
+}
+
 .closed {
   display: none;
 }

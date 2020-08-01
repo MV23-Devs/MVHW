@@ -1,6 +1,7 @@
 export default class Answer {
-    constructor(answerText, user){
+    constructor(answerText, username, user){
         this.answerText = answerText
+        this.username = username;
         this.user = user
         this.upvotes = 0
     }
@@ -15,6 +16,9 @@ export default class Answer {
     }
     getText(){
         return this.answerText
+    }
+    getUsername() {
+        return this.username;
     }
     getUser(){
         return this.user

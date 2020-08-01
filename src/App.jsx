@@ -1,8 +1,7 @@
 import React, { Component, useState } from 'react';
 import './App.css';
 import Feed from "./screens/Feed.jsx";
-import FullThread from "./screens/fullThread.jsx";
-import Googlesignin from './components/NavBar.jsx';
+// import FullThread from "./screens/fullThread.jsx";
 import NavBar from './components/NavBar.jsx'
 import Question from './Question';
 import {
@@ -78,6 +77,7 @@ const SocialDropdown = (props) => {
   );
 }
 
+
 const AboutModal = (props) => {
   const {
     className,
@@ -105,7 +105,7 @@ const AboutModal = (props) => {
             <Card className="card">
               <CardImg top width="100%" src={jacob} alt="Jacob Ismael" />
               <CardBody>
-              <h3 class="aboutname">Jacob Ismael</h3>
+                <h3 class="aboutname">Jacob Ismael</h3>
                 <SocialDropdown github="https://github.com/jacobismael" instagram="https://www.instagram.com/jacobismael16/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jacob.ismael@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
@@ -119,7 +119,7 @@ const AboutModal = (props) => {
             <Card className="card">
               <CardImg top width="100%" src={atli_sucks} alt="Atli Arnarsson" />
               <CardBody>
-              <h3 class="aboutname">Atli Arnarsson</h3>
+                <h3 class="aboutname">Atli Arnarsson</h3>
                 <SocialDropdown github="https://github.com/atli-a" instagram="https://www.instagram.com/atli_i_guess/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
@@ -151,27 +151,24 @@ export default class App extends Component {
       loading_data: true,
       loaded: 0,
       update: 0,
-      authUser: null,
+      user: {
+        auth: null,
+        name: 'Anonymous',
+      }
     };
-
-
-    this.user = {
-      name: 'you',
-    }
 
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   componentDidMount() {
-    
+
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({authUser: user})
+        this.setState({ user: { auth: user, name: user.displayName }})
       } else {
-        this.setState({authUser: null})
+        this.setState({  user: { auth: user, name: 'Anonymous' } })
       }
-      console.log('jacob is a bully', this.state.authUser, 'jacob is a bully');
     });
 
     this.updateWindowDimensions();
@@ -180,7 +177,7 @@ export default class App extends Component {
     db.collection("questions")
       .get()
       .then(querySnapshot => {
-        return querySnapshot.docs.map(doc => new Question(doc.data().title, doc.data().author, doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
+        return querySnapshot.docs.map(doc => new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
       }).then((data) => {
         this.setState({
           questions: data,
@@ -190,7 +187,7 @@ export default class App extends Component {
       });
 
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
   }
@@ -209,30 +206,14 @@ export default class App extends Component {
   signinwithGoogle() {
     var provider = new firebase.auth.GoogleAuthProvider();
 
-    firebase.auth().signInWithPopup(provider).then(function(result) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      console.log(user);
-      // ...
-      this.setState({update: 0});
-      console.log(firebase.auth().currentUser === null);
-    }).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
+    firebase.auth().signInWithPopup(provider).catch((error) => {
+      console.error('Error Code ' + error.code + ': ' + error.message)
     });
   }
   signoutwithGoogle() {
-    firebase.auth().signOut().then(function() {
-      this.setState({update: 0});
-    }).catch(function(error) {
+    firebase.auth().signOut().then(() => {
+      this.setState({ update: 0 });
+    }).catch((error) => {
       // An error happened.
     });
   }
@@ -242,6 +223,9 @@ export default class App extends Component {
     let t = event.target["select"].value;
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
+      this.setState({ errormessage: err });
+    } else if(this.state.user.auth === null) {
+      let err = <FormText color="danger">You have to sign in to post something</FormText>;
       this.setState({ errormessage: err });
     } else {
       this.setState({ errormessage: '' });
@@ -253,7 +237,8 @@ export default class App extends Component {
         .collection('questions')
         .add({
           title: val,
-          author: this.user.name,
+          username: this.state.user.name,
+          auth: JSON.stringify(this.state.user.auth),
           upvotes: 0,
           downvotes: 0,
           timestamp: date,
@@ -263,7 +248,7 @@ export default class App extends Component {
           id = docRef.id;
         });
       let pushArray = [...this.state.filteredQuestions]
-      let q = new Question(val, this.user.name, (new Date()).getTime(), id, 0, t);
+      let q = new Question(val, this.state.user.auth, (new Date()).getTime(), id, 0, t);
       pushArray.push(q)
       this.setState({
         filteredQuestions: pushArray
@@ -293,16 +278,16 @@ export default class App extends Component {
   }
 
   render() {
-    let feed = <Feed theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
+    let feed = <Feed theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
 
     if (this.state.loading_data) {
       feed = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
 
     }
 
-    let solo = <FullThread theme={this.state.theme} user={this.user} filteredQuestions={this.state.filteredQuestions} />;
+    // let solo = <FullThread theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
     if (this.state.loading_data) {
-      solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
+      // solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
     }
     return (
       <React.Fragment>
@@ -314,11 +299,11 @@ export default class App extends Component {
               updateFilter={this.updateFilter}
             />
             {
-              this.state.authUser !== null ? 
-              <Button color={this.state.theme === 1 ? 'light' : 'dark' } id="logOut" onClick={this.signoutwithGoogle}>Sign out</Button>
-              :
-              <Button color={this.state.theme === 1 ? 'light' : 'dark' } id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
-          }
+              this.state.user.auth !== null ?
+                <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logOut" onClick={this.signoutwithGoogle}>{this.state.user.auth.displayName}</Button>
+                :
+                <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+            }
           </div>
 
           <section className="sidePanel">
