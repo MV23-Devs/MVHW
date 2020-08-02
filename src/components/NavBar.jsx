@@ -1,30 +1,36 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
-export default class NavBar extends Component{
+export default class NavBar extends Component {
 
-    state = {
-        filteredQuestions: []
+    constructor(props) {
+        super(props);
+        this.state = {
+            listqs: []
+        }
     }
 
-    updateFilter = (filteredQuestions) => {
-        this.props.updateFilter(filteredQuestions)
+    updateFilter = () => {
+        console.log(this.state.listqs)
+        this.props.updateFilter(this.state.listqs)
     }
 
     handleSearch = (e) => {
-        console.log(this.props)
         let value = e.target.value
-        if(value === ""){
-            this.setState({filteredQuestions: this.props.questions})
-        }else{
-            this.setState({filteredQuestions: this.props.questions.filter(item => item.getText().toLowerCase().includes(value.toLowerCase()))})
+        if (value === "") {
+            let arr = this.props.questions;
+            this.setState({ listqs: arr });
+            console.log(arr, this.state.listqs)
+        } else {
+            this.setState({ listqs: [] })
+            this.setState({ listqs: this.props.questions.filter(item => item.getText().toLowerCase().includes(value.toLowerCase())) })
         }
-        this.updateFilter(this.state.filteredQuestions)
+        this.updateFilter();
     }
 
-    render(){
+    render() {
         return (
             <React.Fragment>
-                <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch}/>
+                
             </React.Fragment>
         )
     }

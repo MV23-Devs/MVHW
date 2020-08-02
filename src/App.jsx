@@ -2,7 +2,6 @@ import React, { Component, useState } from 'react';
 import './App.css';
 import Feed from "./screens/Feed.jsx";
 // import FullThread from "./screens/fullThread.jsx";
-import NavBar from './components/NavBar.jsx'
 import Question from './Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
@@ -277,6 +276,15 @@ export default class App extends Component {
     this.setState({ text: val });
   }
 
+  handleSearch = (e) => {
+    let value = e.target.value
+    if (value === "") {
+        this.setState({filteredQuestions: this.state.questions})
+    } else {
+        this.setState({ filteredQuestions: this.state.questions.filter(item => item.getText().toLowerCase().includes(value.toLowerCase())) })
+    }
+}
+
   render() {
     let feed = <Feed theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
 
@@ -294,10 +302,7 @@ export default class App extends Component {
         <div className="main" style={{ backgroundColor: this.state.styles.body.backgroundColor }}>
           <div id="titleArea" style={this.state.styles.header}>
             <h1 id="title">MVHW</h1>
-            <NavBar
-              questions={this.state.questions}
-              updateFilter={this.updateFilter}
-            />
+            <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
             {
               this.state.user.auth !== null ?
                 <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logOut" onClick={this.signoutwithGoogle}>{this.state.user.auth.displayName}</Button>
@@ -363,6 +368,7 @@ export default class App extends Component {
   }
 
   updateFilter = (filteredQuestions) => {
+    console.log(filteredQuestions);
     this.setState(
       { filteredQuestions }
     )
