@@ -216,7 +216,7 @@ export default class Feed extends Component {
     if (item1.getReplying() === true) {
       return (
         <React.Fragment>
-          <Form onSubmit={this.submitHandler}>
+          <Form onSubmit={(e) => { this.submitHandler(e, item1)}}>
             <FormGroup>
               <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
               {this.state.errormessage}
@@ -256,36 +256,37 @@ export default class Feed extends Component {
     //this.renderAnswer(item1);
     this.setState({ update: 0 })
   }
-  submitHandler = (event) => {
+  submitHandler = (event, item) => {
     event.preventDefault();
-    // let val = event.target["text"].value;
-    // let t = event.target["select"].value;
-    // if (val === "") {
-    //   let err = <FormText color="danger">You cannot post nothing!</FormText>;
-    //   this.setState({ errormessage: err });
-    // } else if(this.state.user.auth === null) {
-    //   let err = <FormText color="danger">You have to sign in to post something</FormText>;
-    //   this.setState({ errormessage: err });
-    // } else {
-    //   this.setState({ errormessage: '' });
+    console.log(event.target)
+    let val = event.target["text"].value;
+    if (val === "") {
+      let err = <FormText color="danger">You cannot post nothing!</FormText>;
+      this.setState({ errormessage: err });
+    } else if(this.props.user.auth === null) {
+      let err = <FormText color="danger">You have to sign in to post something</FormText>;
+      this.setState({ errormessage: err });
+    } else {
+      this.setState({ errormessage: '' });
 
      
-      // Unused Reply Database code
-      /* 
-
-      firebase.firestore().collection('questions').doc(q.getText()).collection('replies').add({
-          title: this.state.text,
-          author: 'devs',
+      // used Reply Database code
+      
+      if (this.props.user.auth !== null) {
+      firebase.firestore().collection('questions').doc(item.getId()).collection('replies').add({
+          title: event.target["text"].value,
+          author: JSON.stringify(this.props.user.auth),
           upvotes: 0,
           downvotes: 0,
-          timestamp: q.getTime(),
+          timestamp: item.getTime(),
         });
+      }
 
-      */
-
-      this.setState({ update: 0 });
+      //console.log(event.target["text"].value);
+      
+      // this.setState({ update: 0 });
       event.target["text"].value = "";
-  //  }
+    }
   }
 
   renderAnswer(item1) {
