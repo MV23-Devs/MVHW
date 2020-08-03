@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Label, FormText, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
 import firebase from '../firebase.js';
 
 const db = firebase.firestore();
@@ -217,8 +217,15 @@ export default class Feed extends Component {
     if (item1.getReplying() === true) {
       return (
         <React.Fragment>
-          <textarea name="Anything" id="replyBox" cols="30" rows="10" placeholder="type to reply"></textarea>
+          <Form onSubmit={this.submitHandler}>
+            <FormGroup>
+              <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
+              {this.state.errormessage}
+            </FormGroup>
+            <Button color={this.state.theme === 1 ? 'light' : 'dark'} block>Post Reply</Button>
+          </Form>
         </React.Fragment>
+
       )
     }
   }
@@ -227,7 +234,16 @@ export default class Feed extends Component {
     if (item1.getReplyingInner() === true) {
       return (
         <React.Fragment>
-          <textarea name="Anything" id="replyBox" cols="30" rows="10" placeholder="type to reply"></textarea>
+          <Form onSubmit={this.submitHandler}>
+            <FormGroup>
+              <Label for="text">Text:</Label>
+              <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
+              {this.state.errormessage}
+              <br />
+              <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
+            </FormGroup>
+            <Button color={this.state.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
+          </Form>
         </React.Fragment>
       )
     }
@@ -240,6 +256,37 @@ export default class Feed extends Component {
     console.log(item1.getUser());
     //this.renderAnswer(item1);
     this.setState({ update: 0 })
+  }
+  submitHandler = (event) => {
+    event.preventDefault();
+    // let val = event.target["text"].value;
+    // let t = event.target["select"].value;
+    // if (val === "") {
+    //   let err = <FormText color="danger">You cannot post nothing!</FormText>;
+    //   this.setState({ errormessage: err });
+    // } else if(this.state.user.auth === null) {
+    //   let err = <FormText color="danger">You have to sign in to post something</FormText>;
+    //   this.setState({ errormessage: err });
+    // } else {
+    //   this.setState({ errormessage: '' });
+
+     
+      // Unused Reply Database code
+      /* 
+
+      firebase.firestore().collection('questions').doc(q.getText()).collection('replies').add({
+          title: this.state.text,
+          author: 'devs',
+          upvotes: 0,
+          downvotes: 0,
+          timestamp: q.getTime(),
+        });
+
+      */
+
+      this.setState({ update: 0 });
+      event.target["text"].value = "";
+  //  }
   }
 
   renderAnswer(item1) {

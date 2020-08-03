@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import './App.css';
 import Feed from "./screens/Feed.jsx";
-// import FullThread from "./screens/fullThread.jsx";
+import FullThread from "./screens/fullThread.jsx";
 import Question from './Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
@@ -293,9 +293,9 @@ export default class App extends Component {
 
     }
 
-    // let solo = <FullThread theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
+    let solo = <FullThread theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
     if (this.state.loading_data) {
-      // solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
+      solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
     }
     return (
       <React.Fragment>
