@@ -164,27 +164,40 @@ export default class App extends Component {
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ user: { auth: user, name: user.displayName }})
+        this.setState({ user: { auth: user, name: user.displayName } })
       } else {
-        this.setState({  user: { auth: user, name: 'Anonymous' } })
+        this.setState({ user: { auth: user, name: 'Anonymous' } })
       }
     });
 
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
 
-    db.collection("questions")
-      .get()
-      .then(querySnapshot => {
-        return querySnapshot.docs.map(doc => new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
-      }).then((data) => {
-        this.setState({
-          questions: data,
-          filteredQuestions: data,
-          loading_data: false,
-        })
-      });
+    // db.collection("questions")
+    //   .get()
+    //   .then(querySnapshot => {
+    //     return querySnapshot.docs.map(doc => new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
+    //   })
+    //   });
 
+    db.collection("questions")
+      .onSnapshot((querySnapshot) => {
+        let docs = this.state.questions;
+        querySnapshot.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            let doc = change.doc;
+            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
+          } else if(change.type === 'removed') {
+            let doc = change.doc;
+            for(var i = 0; i < docs.length; i++) {
+              if(docs[i].getId() === doc.id) {
+                docs.splice(i, 1);
+              }
+            }
+          }
+        })
+        this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
+      })
   }
 
   componentWillUnmount() {
@@ -223,14 +236,13 @@ export default class App extends Component {
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
-    } else if(this.state.user.auth === null) {
+    } else if (this.state.user.auth === null) {
       let err = <FormText color="danger">You have to sign in to post something</FormText>;
       this.setState({ errormessage: err });
     } else {
       this.setState({ errormessage: '' });
 
       let date = (new Date()).toString();
-      var id = null;
 
       firebase.firestore()
         .collection('questions')
@@ -244,18 +256,12 @@ export default class App extends Component {
           tags: t,
         }).then((docRef) => {
           firebase.database().ref('audit log').push(date + ": created a new post");
-          id = docRef.id;
         });
-      let pushArray = [...this.state.filteredQuestions]
-      let q = new Question(val, this.state.user.auth, (new Date()).getTime(), id, 0, t);
-      pushArray.push(q)
-      this.setState({
-        filteredQuestions: pushArray
-      })
+      
 
       // Unused Reply Database code
       /* 
-
+  
       firebase.firestore().collection('questions').doc(q.getText()).collection('replies').add({
           title: this.state.text,
           author: 'devs',
@@ -263,7 +269,7 @@ export default class App extends Component {
           downvotes: 0,
           timestamp: q.getTime(),
         });
-
+  
       */
 
       this.setState({ update: 0 });
@@ -279,11 +285,11 @@ export default class App extends Component {
   handleSearch = (e) => {
     let value = e.target.value
     if (value === "") {
-        this.setState({filteredQuestions: this.state.questions})
+      this.setState({ filteredQuestions: this.state.questions })
     } else {
-        this.setState({ filteredQuestions: this.state.questions.filter(item => item.getText().toLowerCase().includes(value.toLowerCase())) })
+      this.setState({ filteredQuestions: this.state.questions.filter(item => item.getText().toLowerCase().includes(value.toLowerCase())) })
     }
-}
+  }
 
   render() {
     let feed = <Feed theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;

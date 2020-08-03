@@ -51,19 +51,18 @@ export default class Feed extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="alertcenter">
-          <div className={this.state.notification !== '' ? "alert open" : "alert closed"}>{this.state.notification}</div>
-        </div>
         <ul className="feed-list">
           <Container>
             {
               this.props.filteredQuestions.map(
                 (item, i) => {
                   let user = <h5>User: {item.getUsername()}</h5>;
-                  if (item.getUsername() === "devs") {
+                  if (item.getUsername() === 'devs') {
                     user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                  } else if (item.getUsername() === this.props.user.name) {
-                    user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                  } if(this.props.user.auth !== null) {
+                    if (item.getUser().uid === this.props.user.auth.uid) {
+                      user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                    }
                   }
 
                   let color = '';
