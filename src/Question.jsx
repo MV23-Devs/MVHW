@@ -67,6 +67,12 @@ export default class Question {
         return this.time
     }
     getFirstAnswer() {
-        return this.answers[0]
+        if (this.answers.length == 0) {
+            let x = new Answer("no answers to this question yet", "bot", null)
+            return x
+        }
+        else{
+            return 
+        }
     }
 }
