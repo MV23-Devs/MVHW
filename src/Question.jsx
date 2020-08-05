@@ -3,8 +3,9 @@ import firebase from './firebase.js';
 
 
 export default class Question {
-    constructor(questionText, user, time, id, upvotes = 0, tags = null) {
+    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url="") {
         this.questionText = questionText
+        this.img_url = img_url;
         this.isReplying = false;
         this.isReplyingInner = false;
         this.user = user
@@ -30,6 +31,10 @@ export default class Question {
             .get().then((doc) => {
                 console.log(doc.data);
             })
+    }
+
+    getImgUrl(){
+        return this.img_url
     }
 
     getId() {

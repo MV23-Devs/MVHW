@@ -156,8 +156,10 @@ export default class App extends Component {
       user: {
         auth: null,
         name: 'Anonymous',
-      }
-   }
+      },
+      filterBy: "none"
+    };
+
 
     this.fileinputref = React.createRef()
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -188,7 +190,7 @@ export default class App extends Component {
         querySnapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             let doc = change.doc;
-            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
+            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url));
           } else if(change.type === 'removed') {
             let doc = change.doc;
             for(var i = 0; i < docs.length; i++) {
@@ -199,6 +201,9 @@ export default class App extends Component {
           }
         })
         this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
+        if(this.state.filterBy === "popularity"){
+          this.orderByPopularity()
+        }
       })
   }
 
@@ -285,7 +290,6 @@ export default class App extends Component {
         }).then((docRef) => {
           firebase.database().ref('audit log').push(date + ": created a new post");
         });
-      })
 
       // Unused Reply Database code
       /* 
@@ -381,6 +385,7 @@ export default class App extends Component {
               <AboutModal theme={this.state.theme}></AboutModal>
               <br />
               <Button theme={this.state.theme} color={this.state.theme === 1 ? 'light' : 'dark'} block onClick={this.changeTheme}>Switch to {this.state.theme === 1 ? 'light' : 'dark'} theme</Button>
+              <Button theme={this.state.theme} color={this.state.theme === 1 ? 'light' : 'dark'} block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
             </div>
           </section>
 
@@ -396,6 +401,39 @@ export default class App extends Component {
 
       </React.Fragment>
     );
+  }
+
+  filterQuestionsBy = () => {
+    //console.log("filterBy");
+    let temp = ((this.state.filterBy === "popularity") ? "none" : "popularity");
+    //this.setState({filterBy: temp});
+    this.state.filterBy = temp;
+    console.log(this.state.filterBy === "popularity");
+    if(this.state.filterBy === "popularity"){
+      console.log("popular")
+      this.orderByPopularity();
+    }else if(this.state.filterBy === "none"){
+      console.log("none")      
+    }
+    console.log(this.state.filteredQuestions);
+    this.setState({update: 0});
+  }
+
+  orderByPopularity = () => {
+    //console.log("orderBy");
+    //console.log(this.state.filteredQuestions);
+    let tempArray = this.state.filteredQuestions;
+    for(let i = 0; i < tempArray.length; i++){
+      for(let j = 0; j < tempArray.length - i - 1; j++){
+        if(tempArray[j].getUpvotes() < tempArray[j+1].getUpvotes()){
+          let temp1 = tempArray[j];
+          tempArray[j] = tempArray[j+1];
+          tempArray[j+1] = temp1;
+        }
+      }
+    }
+    this.setState({filteredQuestions: tempArray});
+    //console.log(this.state.filteredQuestions);
   }
 
   sortQs() {
