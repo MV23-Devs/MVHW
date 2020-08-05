@@ -33,6 +33,10 @@ export default class Question {
             })
     }
 
+    getImgUrl(){
+        return this.img_url
+    }
+
     getId() {
         return this.id
     }
