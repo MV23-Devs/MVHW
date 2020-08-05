@@ -7,6 +7,7 @@ import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 import firebase from './firebase.js';
+import {storage} from './firebase.js';
 
 import jacob from "./img/jacob.jpg";
 import saarang from "./img/saarang.jpg";
@@ -75,7 +76,6 @@ const SocialDropdown = (props) => {
     </Dropdown>
   );
 }
-
 
 const AboutModal = (props) => {
   const {
@@ -150,16 +150,18 @@ export default class App extends Component {
       loading_data: true,
       loaded: 0,
       update: 0,
+      image: null,
+      url: "",
+      progress: 0,
       user: {
         auth: null,
         name: 'Anonymous',
       }
-    };
+   }
 
-
+    this.fileinputref = React.createRef()
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
-
   componentDidMount() {
 
     firebase.auth().onAuthStateChanged(user => {
@@ -229,6 +231,46 @@ export default class App extends Component {
       // An error happened.
     });
   }
+
+  handleFileInput = e => {
+    if (e.target.files[0]) {
+      const image = e.target.files[0];
+      this.setState(() => ({ image }));
+    }
+  };
+  
+  handleImageUpload = () => {
+    const { image } = this.state;
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        // progress function ...
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        this.setState({ progress });
+      },
+      error => {
+        // Error function ...
+        console.log(error);
+      },
+      () => {
+        // complete function ...
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then(url => {
+            this.fileinputref.current.value=null
+            this.forceUpdate()
+            this.setState({url});
+            console.log(this.fileinputref) 
+          });
+      }
+    );
+  };
+
   submitHandler = (event) => {
     event.preventDefault();
     let val = event.target["text"].value;
@@ -244,10 +286,13 @@ export default class App extends Component {
 
       let date = (new Date()).toString();
 
+      this.handleImageUpload()
+
       firebase.firestore()
         .collection('questions')
         .add({
           title: val,
+          img_url:this.state.url,
           username: this.state.user.name,
           auth: JSON.stringify(this.state.user.auth),
           upvotes: 0,
@@ -337,6 +382,7 @@ export default class App extends Component {
                     <option>Computer Science</option>
                   </Input>
                 </FormGroup>
+                <input type="file" ref={this.fileinputref} onChange={this.handleFileInput} />
                 <Button color={this.state.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
               </Form>
             </div>
