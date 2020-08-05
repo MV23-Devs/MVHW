@@ -11,7 +11,7 @@ import firebase from './firebase.js';
 import jacob from "./img/jacob.jpg";
 import saarang from "./img/saarang.jpg";
 import jason from "./img/jason.jpg";
-import atli_sucks from "./img/atli-sucks.jpg";
+import atli from "./img/atli-sucks.jpg";
 
 const db = firebase.firestore();
 
@@ -116,10 +116,10 @@ const AboutModal = (props) => {
               </CardBody>
             </Card>
             <Card className="card">
-              <CardImg top width="100%" src={atli_sucks} alt="Atli Arnarsson" />
+              <CardImg top width="100%" src={atli} alt="Atli Arnarsson" />
               <CardBody>
                 <h3 class="aboutname">Atli Arnarsson</h3>
-                <SocialDropdown github="https://github.com/atli-a" instagram="https://www.instagram.com/atli_i_guess/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
+                <SocialDropdown github="https://github.com/atli-a" instagram="" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
           </div>

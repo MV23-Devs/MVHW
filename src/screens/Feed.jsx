@@ -290,7 +290,7 @@ export default class Feed extends Component {
   }
 
   renderAnswer(item1) {
-    let user = <h6>User: {item1.getFirstAnswer().getUsername()}</h6>;
+    let user = <h6>User: {item1.getFirstAnswer().getUser()}</h6>;
     let respondable = (
       <Form onSubmit={this.submitHandler}>
         <FormGroup>
@@ -301,7 +301,7 @@ export default class Feed extends Component {
         <Button color={this.props.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
       </Form>
     );
-    if (item1.getFirstAnswer().getUsername() === "bot") {
+    if (item1.getFirstAnswer().getUser() === "bot") {
       user = <h6>User: <Badge color="secondary">bot</Badge></h6>;
       respondable = null;
     }
