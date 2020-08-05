@@ -242,33 +242,12 @@ export default class App extends Component {
   handleImageUpload = () => {
     const { image } = this.state;
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      snapshot => {
-        // progress function ...
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        this.setState({ progress });
-      },
-      error => {
-        // Error function ...
-        console.log(error);
-      },
-      () => {
-        // complete function ...
+    return(
         storage
           .ref("images")
           .child(image.name)
           .getDownloadURL()
-          .then(url => {
-            this.fileinputref.current.value=null
-            this.forceUpdate()
-            this.setState({url});
-            console.log(this.fileinputref) 
-          });
-      }
-    );
+    )
   };
 
   submitHandler = (event) => {
@@ -287,8 +266,12 @@ export default class App extends Component {
       let date = (new Date()).toString();
 
       this.handleImageUpload()
-
-      firebase.firestore()
+      .then(url => {
+        this.fileinputref.current.value=null
+        this.forceUpdate()
+        this.setState({url});
+        console.log(this.fileinputref) 
+        firebase.firestore()
         .collection('questions')
         .add({
           title: val,
@@ -302,7 +285,7 @@ export default class App extends Component {
         }).then((docRef) => {
           firebase.database().ref('audit log').push(date + ": created a new post");
         });
-      
+      })
 
       // Unused Reply Database code
       /* 
