@@ -156,15 +156,10 @@ export default class App extends Component {
       user: {
         auth: null,
         name: 'Anonymous',
-<<<<<<< HEAD
       },
       filterBy: "none"
     };
 
-=======
-      }
-   }
->>>>>>> a936fff196f7f8fbbc4ff8305a75dd2c57fe222f
 
     this.fileinputref = React.createRef()
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
