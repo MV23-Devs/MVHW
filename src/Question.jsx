@@ -23,13 +23,11 @@ export default class Question {
         this.tags = tags;
         this.isClicked = false;
         this.time = time
-        // console.log(firebase.firestore().collection('questions').doc(id).collection('replies').get()
-        // )
         firebase.firestore()
             .collection('questions')
             .doc(id).collection('replies')
             .get().then((doc) => {
-                console.log(doc.data);
+                // console.log(doc.data);
             })
     }
 

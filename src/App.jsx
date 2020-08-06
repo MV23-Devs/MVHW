@@ -7,8 +7,8 @@ import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 import firebase from './firebase.js';
-import {storage} from './firebase.js';
-
+import { storage } from './firebase.js';
+// import { get as _get } from "lodash";
 import jacob from "./img/jacob.jpg";
 import saarang from "./img/saarang.jpg";
 import jason from "./img/jason.jpg";
@@ -37,27 +37,6 @@ const theme1 = {
   }
 };
 
-// light theme
-const theme2 = {
-  header: {
-    backgroundColor: '#fff',
-    color: '#000',
-  },
-  body: {
-    backgroundColor: '#ccc',
-  },
-  footer: {
-    backgroundColor: '#fff',
-    color: '#333'
-  },
-  line: {
-    backgroundColor: '#222',
-  },
-  link: {
-    color: '#000',
-  }
-};
-
 const SocialDropdown = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -65,7 +44,7 @@ const SocialDropdown = (props) => {
 
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-      <DropdownToggle color="dark" caret>
+      <DropdownToggle color="light" caret>
         Social
         </DropdownToggle>
       <DropdownMenu>
@@ -80,7 +59,6 @@ const SocialDropdown = (props) => {
 const AboutModal = (props) => {
   const {
     className,
-    theme
   } = props;
 
   const [modal, setModal] = useState(false);
@@ -89,7 +67,7 @@ const AboutModal = (props) => {
 
   return (
     <div>
-      <Button color={theme === 1 ? 'light' : 'dark'} block onClick={toggle}>Who?</Button>
+      <Button color="light" block onClick={toggle}>Who?</Button>
       <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Us</ModalHeader>
         <ModalBody>
@@ -141,8 +119,6 @@ export default class App extends Component {
       questions: [],
       filteredQuestions: [],
       currentQuestion: [],
-      theme: 1,
-      styles: { ...theme2, ...theme1 },
       width: 0,
       height: 0,
       errormessage: '',
@@ -157,22 +133,25 @@ export default class App extends Component {
         auth: null,
         name: 'Anonymous',
       },
-      filterBy: "none"
+      filterBy: "popularity"
     };
 
 
     this.fileinputref = React.createRef()
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
-  componentDidMount() {
 
+
+  componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ user: { auth: user, name: user.displayName } })
+        console.log(this.state.user.auth)
       } else {
         this.setState({ user: { auth: user, name: 'Anonymous' } })
       }
     });
+
 
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
@@ -191,17 +170,17 @@ export default class App extends Component {
           if (change.type === 'added') {
             let doc = change.doc;
             docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url));
-          } else if(change.type === 'removed') {
+          } else if (change.type === 'removed') {
             let doc = change.doc;
-            for(var i = 0; i < docs.length; i++) {
-              if(docs[i].getId() === doc.id) {
+            for (var i = 0; i < docs.length; i++) {
+              if (docs[i].getId() === doc.id) {
                 docs.splice(i, 1);
               }
             }
           }
         })
         this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
-        if(this.state.filterBy === "popularity"){
+        if (this.state.filterBy === "popularity") {
           this.orderByPopularity()
         }
       })
@@ -215,20 +194,25 @@ export default class App extends Component {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
-  changeTheme = () => {
-    this.setState({
-      theme: this.state.theme === 1 ? 2 : 1,
-      styles: this.state.theme === 1 ? { ...theme2 } : { ...theme1 },
-    });
-  };
-
   signinwithGoogle() {
     var provider = new firebase.auth.GoogleAuthProvider();
 
-    firebase.auth().signInWithPopup(provider).catch((error) => {
+    firebase.auth().signInWithPopup(provider).then((result) => {
+
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+
+      console.log(`the goog token is: ${token}`);
+      console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
+      // return response.json(); // parses JSON response into native JavaScript objects
+
+    }).catch((error) => {
       console.error('Error Code ' + error.code + ': ' + error.message)
     });
   }
+
+
   signoutwithGoogle() {
     firebase.auth().signOut().then(() => {
       this.setState({ update: 0 });
@@ -238,21 +222,29 @@ export default class App extends Component {
   }
 
   handleFileInput = e => {
-    if (e.target.files[0]) {
+    e.preventDefault();
+    if (e.target.files[0] !== null) {
       const image = e.target.files[0];
+      console.log(image);
       this.setState(() => ({ image }));
     }
+    else {
+      this.setState({ image: null })
+    }
   };
-  
+
   handleImageUpload = () => {
-    const { image } = this.state;
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    return(
+    if (this.state.image !== null) {
+      const { image } = this.state;
+      const uploadTask = storage.ref(`images/${image.name}`).put(image);
+      return (
         storage
           .ref("images")
           .child(image.name)
           .getDownloadURL()
-    )
+      )
+    }
+    return null;
   };
 
   submitHandler = (event) => {
@@ -270,39 +262,57 @@ export default class App extends Component {
 
       let date = (new Date()).toString();
 
-      this.handleImageUpload()
-      .then(url => {
-        this.fileinputref.current.value=null
-        this.forceUpdate()
-        this.setState({url});
-        console.log(this.fileinputref) 
+      if (this.handleImageUpload() !== null) {
+        this.handleImageUpload()
+          .then(url => {
+            this.fileinputref.current.value = null
+            this.forceUpdate()
+            this.setState({ url });
+            console.log(this.fileinputref)
+            firebase.firestore()
+              .collection('questions')
+              .add({
+                title: val,
+                img_url: this.state.url,
+                username: this.state.user.name,
+                auth: JSON.stringify(this.state.user.auth),
+                upvotes: 0,
+                downvotes: 0,
+                timestamp: date,
+                tags: t,
+              }).then((docRef) => {
+                firebase.database().ref('audit log').push(date + ": created a new post");
+              });
+          });
+      } else {
         firebase.firestore()
-        .collection('questions')
-        .add({
-          title: val,
-          img_url:this.state.url,
-          username: this.state.user.name,
-          auth: JSON.stringify(this.state.user.auth),
-          upvotes: 0,
-          downvotes: 0,
-          timestamp: date,
-          tags: t,
-        }).then((docRef) => {
-          firebase.database().ref('audit log').push(date + ": created a new post");
-        });
+          .collection('questions')
+          .add({
+            title: val,
+            img_url: this.state.url,
+            username: this.state.user.name,
+            auth: JSON.stringify(this.state.user.auth),
+            upvotes: 0,
+            downvotes: 0,
+            timestamp: date,
+            tags: t,
+          }).then((docRef) => {
+            firebase.database().ref('audit log').push(date + ": created a new post");
+          });
+      }
 
       // Unused Reply Database code
       /* 
-  
-      firebase.firestore().collection('questions').doc(q.getText()).collection('replies').add({
-          title: this.state.text,
-          author: 'devs',
-          upvotes: 0,
-          downvotes: 0,
-          timestamp: q.getTime(),
-        });
-  
-      */
+      
+  firebase.firestore().collection('questions').doc(q.getText()).collection('replies').add({
+      title: this.state.text,
+      author: 'devs',
+      upvotes: 0,
+      downvotes: 0,
+      timestamp: q.getTime(),
+    });
+ 
+  */
 
       this.setState({ update: 0 });
       event.target["text"].value = "";
@@ -324,79 +334,82 @@ export default class App extends Component {
   }
 
   render() {
-    let feed = <Feed theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
+    let feed = <Feed theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
 
     if (this.state.loading_data) {
       feed = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
 
     }
 
-    let solo = <FullThread theme={this.state.theme} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
+    let solo = <FullThread theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
     if (this.state.loading_data) {
       solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
     }
     return (
       <React.Fragment>
-        <div className="main" style={{ backgroundColor: this.state.styles.body.backgroundColor }}>
-          <div id="titleArea" style={this.state.styles.header}>
-            <h1 id="title">MVHW</h1>
-            <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
-            {
-              this.state.user.auth !== null ?
-                <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logOut" onClick={this.signoutwithGoogle}>{this.state.user.auth.displayName}</Button>
-                :
-                <Button color={this.state.theme === 1 ? 'light' : 'dark'} id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
-            }
-          </div>
 
-          <section className="sidePanel">
-            <div className="sbox" style={this.state.styles.footer}>
-              <p>Create a Post:</p>
-              <hr style={this.state.theme === 1 ? theme1.line : theme2.line} />
-              <Form onSubmit={this.submitHandler}>
-                <FormGroup>
-                  <Label for="text">Text:</Label>
-                  <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
-                  {this.state.errormessage}
-                  <br />
-                  <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
-                  <Input type="select" name="select" id="tags">
-                    <option>None</option>
-                    <option>Math</option>
-                    <option>Science</option>
-                    <option>English</option>
-                    <option>History</option>
-                    <option>Computer Science</option>
-                  </Input>
-                </FormGroup>
+        <div className="height"></div>
+
+        <div id="titleArea" style={theme1.header}>
+          <h1 id="title">MVHW</h1>
+          <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
+          {
+            this.state.user.auth !== null ?
+              <img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" onClick={this.signoutwithGoogle} />
+              :
+              <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+          }
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <section className="sidePanel">
+          <div className="sbox">
+            <Button color="light" block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
+          </div>
+          <div className="sbox">
+            <p>Create a Post:</p>
+            <hr style={theme1.line} />
+            <Form onSubmit={this.submitHandler}>
+              <FormGroup>
+                <Label for="text">Text:</Label>
+                <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
+                {this.state.errormessage}
+                <br />
                 <input type="file" ref={this.fileinputref} onChange={this.handleFileInput} />
-                <Button color={this.state.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
-              </Form>
-            </div>
-
-            <div className="sbox" style={this.state.styles.footer}>
-              <a href="https://github.com/MV23-Devs/MVHW" className={this.state.theme === 1 ? 'link-dark' : 'link-light'}>Github</a>
-              <br />
-              <a href="https://www.instagram.com/mvhs.2023/?hl=en" className={this.state.theme === 1 ? 'link-dark' : 'link-light'}>Instagram</a>
-              <br />
-              <br />
-              <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
-              <hr style={this.state.theme === 1 ? theme1.line : theme2.line} />
-              <AboutModal theme={this.state.theme}></AboutModal>
-              <br />
-              <Button theme={this.state.theme} color={this.state.theme === 1 ? 'light' : 'dark'} block onClick={this.changeTheme}>Switch to {this.state.theme === 1 ? 'light' : 'dark'} theme</Button>
-              <Button theme={this.state.theme} color={this.state.theme === 1 ? 'light' : 'dark'} block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
-            </div>
-          </section>
-
-          <div id="field">
-            {feed}
+                <br />
+                <br />
+                <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
+                <Input type="select" name="select" id="tags">
+                  <option>None</option>
+                  <option>Math</option>
+                  <option>Science</option>
+                  <option>English</option>
+                  <option>History</option>
+                  <option>Computer Science</option>
+                </Input>
+              </FormGroup>
+              <Button color="light" block>Submit</Button>
+            </Form>
           </div>
 
+          <div className="sbox" id="last">
+            <a href="https://github.com/MV23-Devs/MVHW" className='link-dark'>Github</a>
+            <br />
+            <a href="https://www.instagram.com/mvhs.2023/?hl=en" className='link-dark'>Instagram</a>
+            <br />
+            <br />
+            <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
+            <AboutModal></AboutModal>
+          </div>
+        </section>
 
-          <footer className="footer" style={this.state.styles.footer} >
-            <p className="footertext">hola</p>
-          </footer>
+
+        <div className="feed">
+          {feed}
         </div>
 
       </React.Fragment>
@@ -409,30 +422,30 @@ export default class App extends Component {
     //this.setState({filterBy: temp});
     this.state.filterBy = temp;
     console.log(this.state.filterBy === "popularity");
-    if(this.state.filterBy === "popularity"){
+    if (this.state.filterBy === "popularity") {
       console.log("popular")
       this.orderByPopularity();
-    }else if(this.state.filterBy === "none"){
-      console.log("none")      
+    } else if (this.state.filterBy === "none") {
+      console.log("none")
     }
     console.log(this.state.filteredQuestions);
-    this.setState({update: 0});
+    this.setState({ update: 0 });
   }
 
   orderByPopularity = () => {
     //console.log("orderBy");
     //console.log(this.state.filteredQuestions);
     let tempArray = this.state.filteredQuestions;
-    for(let i = 0; i < tempArray.length; i++){
-      for(let j = 0; j < tempArray.length - i - 1; j++){
-        if(tempArray[j].getUpvotes() < tempArray[j+1].getUpvotes()){
+    for (let i = 0; i < tempArray.length; i++) {
+      for (let j = 0; j < tempArray.length - i - 1; j++) {
+        if (tempArray[j].getUpvotes() < tempArray[j + 1].getUpvotes()) {
           let temp1 = tempArray[j];
-          tempArray[j] = tempArray[j+1];
-          tempArray[j+1] = temp1;
+          tempArray[j] = tempArray[j + 1];
+          tempArray[j + 1] = temp1;
         }
       }
     }
-    this.setState({filteredQuestions: tempArray});
+    this.setState({ filteredQuestions: tempArray });
     //console.log(this.state.filteredQuestions);
   }
 
@@ -451,7 +464,7 @@ export default class App extends Component {
   //   this.setState({
   //     styles: this.state.theme === 1 ? { ...dark } : { ...light }
   //   });
-  //   console.log(this.state.styles.footer.backgroundColor);
-  //   return this.state.styles.footer.backgroundColor;
+  //   console.log(theme1.footer.backgroundColor);
+  //   return theme1.footer.backgroundColor;
   // }
 }
