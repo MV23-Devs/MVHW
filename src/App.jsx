@@ -146,7 +146,7 @@ export default class App extends Component {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ user: { auth: user, name: user.displayName } })
-        console.log(this.state.user.auth)
+        //console.log(this.state.user.auth)
       } else {
         this.setState({ user: { auth: user, name: 'Anonymous' } })
       }
@@ -203,8 +203,8 @@ export default class App extends Component {
       // The signed-in user info.
       var user = result.user;
 
-      console.log(`the goog token is: ${token}`);
-      console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
+      //console.log(`the goog token is: ${token}`);
+      //console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
       // return response.json(); // parses JSON response into native JavaScript objects
 
     }).catch((error) => {
@@ -225,7 +225,7 @@ export default class App extends Component {
     e.preventDefault();
     if (e.target.files[0] !== null) {
       const image = e.target.files[0];
-      console.log(image);
+      //console.log(image);
       this.setState(() => ({ image }));
     }
     else {
@@ -268,7 +268,7 @@ export default class App extends Component {
             this.fileinputref.current.value = null
             this.forceUpdate()
             this.setState({ url });
-            console.log(this.fileinputref)
+            //console.log(this.fileinputref)
             firebase.firestore()
               .collection('questions')
               .add({
@@ -347,6 +347,7 @@ export default class App extends Component {
     }
     return (
       <React.Fragment>
+        
 
         <div className="height"></div>
 
@@ -421,14 +422,14 @@ export default class App extends Component {
     let temp = ((this.state.filterBy === "popularity") ? "none" : "popularity");
     //this.setState({filterBy: temp});
     this.state.filterBy = temp;
-    console.log(this.state.filterBy === "popularity");
+    //console.log(this.state.filterBy === "popularity");
     if (this.state.filterBy === "popularity") {
-      console.log("popular")
+      //console.log("popular")
       this.orderByPopularity();
     } else if (this.state.filterBy === "none") {
-      console.log("none")
+      //console.log("none")
     }
-    console.log(this.state.filteredQuestions);
+    //console.log(this.state.filteredQuestions);
     this.setState({ update: 0 });
   }
 
@@ -454,7 +455,7 @@ export default class App extends Component {
   }
 
   updateFilter = (filteredQuestions) => {
-    console.log(filteredQuestions);
+    //console.log(filteredQuestions);
     this.setState(
       { filteredQuestions }
     )

@@ -3,7 +3,7 @@ import firebase from './firebase.js';
 
 
 export default class Question {
-    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url="") {
+    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url = "") {
         this.questionText = questionText
         this.img_url = img_url;
         this.isReplying = false;
@@ -12,14 +12,15 @@ export default class Question {
         this.id = id
         this.upvotes = upvotes;
         this.answers = [];
-        this.answersRaw = firebase.firestore().collection('questions').doc(this.id).collection('replies')
-        // for (let i = 0; i < this.answersRaw.length; i++) {
-        //     this.answers.append(
-        //         new Answer(
-        //             this.answersRaw
-        //         )
-        //     )
-        // }
+        this.answersRaw =
+            firebase.firestore()
+                .collection('questions')
+                .doc(id).collection('replies');
+
+
+        //answerText, user, time, id, upvotes=0, tags=null
+
+
         this.tags = tags;
         this.isClicked = false;
         this.time = time
@@ -27,11 +28,52 @@ export default class Question {
             .collection('questions')
             .doc(id).collection('replies')
             .get().then((doc) => {
-                // console.log(doc.data);
+                if (doc.docs[0] !== undefined) {
+                    console.log(doc.docs[0].data())
+                }
             })
+        // firebase.firestore().collection('questions').doc(id).collection('replies').get().then((doc) => {
+        //     console.log(doc.docs[0].data())
+
+        // })
+
+        // for (let i = 0; i < this.answersRaw.length; i++) {
+        //     let a = firebase.firestore()
+        //         .collection('questions')
+        //         .doc(id).collection('replies').get().then((doc) => {
+        //             if (doc.docs[0] !== undefined) {
+        //                 console.log(doc.docs[i].data().title)
+        //             }
+        //         }
+        //         )
+        //     let b = firebase.firestore()
+        //         .collection('questions')
+        //         .doc(id).collection('replies').get().then((doc) => {
+        //             if (doc.docs[0] !== undefined) {
+        //                 console.log(doc.docs[i].data().author)
+        //             }
+        //         }
+        //         )
+        //     let c = firebase.firestore()
+        //         .collection('questions')
+        //         .doc(id).collection('replies').get().then((doc) => {
+        //             if (doc.docs[0] !== undefined) {
+        //                 console.log(doc.docs[i].data().time)
+        //             }
+        //         }
+        //         )
+        //     let d = firebase.firestore()
+        //         .collection('questions')
+        //         .doc(id).collection('replies').get().then((doc) => {
+        //             if (doc.docs[0] !== undefined) {
+        //                 console.log(doc.docs[i].data().upvotes)
+        //             }
+        //         }
+        //         )
+        // }
     }
 
-    getImgUrl(){
+    getImgUrl() {
         return this.img_url
     }
 
