@@ -290,6 +290,7 @@ export default class App extends Component {
         }).then((docRef) => {
           firebase.database().ref('audit log').push(date + ": created a new post");
         });
+      })
 
       // Unused Reply Database code
       /* 

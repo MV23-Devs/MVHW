@@ -124,6 +124,7 @@ export default class Feed extends Component {
                             {user}
                             <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
                             <h4>Question: {item.getText()}  {tag}</h4>
+                            <img src={item.getImgUrl()} width={150}></img>
                             {this.renderAnswer(item)}
                           </div>
                           <hr style={this.props.theme === 1 ? dark.line : light.line} />
