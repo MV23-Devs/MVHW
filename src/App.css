@@ -3,6 +3,10 @@ html,body {
   outline: none;
 }
 
+body {
+  background-color: #333;
+}
+
 #fullQuestion {
   min-height: 100vh;
 }
@@ -18,6 +22,26 @@ html,body {
 
 .footertext {
   margin: 0;
+}
+
+.main {
+  background-color: blue;
+  /* flex: auto; */
+  display: flex;
+}
+
+.feed {
+  padding: 20px;
+  position: absolute;
+  right: 0;
+  width: 75%;
+}
+
+.updown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 #searchBar {
@@ -36,19 +60,18 @@ html,body {
   padding: 20px;
   margin: none;
   width: 100%;
+  z-index: 10000;
+  position: fixed;
 }
 
 .sidePanel {
   display: block;
-  float: right;
-  position: absolute;
-  right: 0;
   color: white;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  background-color: #111;
   text-align: left;
-  width: 20%;
-  margin-right: 10%;
+  width: 25%;
+  height: 100%;
+  position: fixed;
 }
 
 .alertcenter {
@@ -101,8 +124,6 @@ html,body {
 .sbox {
   margin-bottom: 20px;
   padding: 10px;
-  border-radius: 5px;
-  background-color: #222;
 }
 
 .copyright {
@@ -121,7 +142,7 @@ button {
   display: block;
   padding: 10px;
   border-radius: 5px;
-  width: 70%;
+  width: 100%;
 }
 
 .upvotes-num {
@@ -193,6 +214,13 @@ button {
     margin-top: 10px;
     margin-bottom: 10px;
   }
+
+  #logOut {
+    /* margin: 0; */
+    width: 10% !important;
+    float: right;
+    border-radius: 50%;
+  }
 }
 
 a {
@@ -248,4 +276,11 @@ a {
 .cardcontainer {
   display: flex;
   flex-direction: row;
+}
+
+#logOut {
+  /* margin: 0; */
+  width: 3.5%;
+  float: right;
+  border-radius: 50%;
 }

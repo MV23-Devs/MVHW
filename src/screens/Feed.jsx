@@ -14,14 +14,10 @@ const dark = {
   }
 };
 
-const light = {
-  backgroundColor: '#fff',
-  color: '#111',
-  line: {
-    backgroundColor: '#222',
-  }
-};
-
+/**
+ * 
+ * @param {*} props 
+ */
 const Votes = (props) => {
   let id = "vote-num-" + props.listvalue;
   return (
@@ -48,6 +44,9 @@ export default class Feed extends Component {
   componentDidUpdate() {
   }
 
+
+
+
   render() {
     return (
       <React.Fragment>
@@ -59,7 +58,7 @@ export default class Feed extends Component {
                   let user = <h5>User: {item.getUsername()}</h5>;
                   if (item.getUsername() === 'devs') {
                     user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                  } if(this.props.user.auth !== null) {
+                  } if (this.props.user.auth !== null) {
                     if (item.getUser().uid === this.props.user.auth.uid) {
                       user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                     }
@@ -109,25 +108,30 @@ export default class Feed extends Component {
                   }
 
                   return (
-                    <li key={i} style={this.props.theme === 1 ? dark : light} className="questionBox">
+                    <li key={i} style={dark} className="questionBox">
                       <Row>
-                        <Col xs="1">
-                          <button style={this.props.theme === 1 ? dark : light} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
+                        <Col xs="1" className="updown">
+                          <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
                           <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                          <button style={this.props.theme === 1 ? dark : light} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
+                          <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
                         </Col>
                         <Col xs="11">
-                          <div style={this.props.theme === 1 ? dark : light} onClick={
+                          <div style={dark} onClick={
                             this.callBoth.bind(this, item)
 
                           }>
                             {user}
-                            <Button color={this.props.theme === 1 ? 'light' : 'dark'} className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
+                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
                             <h4>Question: {item.getText()}  {tag}</h4>
-                            <img src={item.getImgUrl()} width={150}></img>
+                            {
+                              item.getImgUrl() !== "" ?
+                                <img src={item.getImgUrl()} alt="aa" width="100%" />
+                                :
+                                null
+                            }
                             {this.renderAnswer(item)}
                           </div>
-                          <hr style={this.props.theme === 1 ? dark.line : light.line} />
+                          <hr style={dark.line} />
                           <span className="links" onClick={
 
                             this.openReply.bind(this, item)
@@ -138,6 +142,7 @@ export default class Feed extends Component {
                         </Col>
                       </Row>
                     </li>
+
                   );
                 }
               )
@@ -217,7 +222,7 @@ export default class Feed extends Component {
     if (item1.getReplying() === true) {
       return (
         <React.Fragment>
-          <Form onSubmit={(e) => { this.submitHandler(e, item1)}}>
+          <Form onSubmit={(e) => { this.submitHandler(e, item1) }}>
             <FormGroup>
               <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
               {this.state.errormessage}
@@ -264,17 +269,17 @@ export default class Feed extends Component {
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
-    } else if(this.props.user.auth === null) {
+    } else if (this.props.user.auth === null) {
       let err = <FormText color="danger">You have to sign in to post something</FormText>;
       this.setState({ errormessage: err });
     } else {
       this.setState({ errormessage: '' });
 
-     
+
       // used Reply Database code
-      
+
       if (this.props.user.auth !== null) {
-      firebase.firestore().collection('questions').doc(item.getId()).collection('replies').add({
+        firebase.firestore().collection('questions').doc(item.getId()).collection('replies').add({
           title: event.target["text"].value,
           author: JSON.stringify(this.props.user.auth),
           upvotes: 0,
@@ -284,7 +289,7 @@ export default class Feed extends Component {
       }
 
       //console.log(event.target["text"].value);
-      
+
       // this.setState({ update: 0 });
       event.target["text"].value = "";
     }
@@ -309,7 +314,7 @@ export default class Feed extends Component {
     if (item1.getClicked() === true) {
       return (
         <React.Fragment>
-          <div id="answerBox" style={this.props.theme === 1 ? dark : light}>
+          <div id="answerBox" style={dark}>
             {user}
             <h5>Answer: {item1.getFirstAnswer().getText()}</h5>
             {respondable}
