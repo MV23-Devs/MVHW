@@ -3,7 +3,11 @@ export default class Answer {
         this.answerText = answerText
         //this.username = username;
         this.user = user
-        this.upvotes = 0
+        this.upvotes = upvotes;
+        this.isReplying = false;
+        this.isReplyingInner = false;
+        this.id = id;
+        this.answers = [];
     }
     upvote(){
         this.upvotes+=1
