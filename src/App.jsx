@@ -170,6 +170,11 @@ export default class App extends Component {
           if (change.type === 'added') {
             let doc = change.doc;
             docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url));
+            db.collection("questions").doc(doc.id).collection("replies").get().then(querySnapshot => {
+              querySnapshot.docs.forEach(doc => {
+                // console.log(doc.data());
+              })
+            })
           } else if (change.type === 'removed') {
             let doc = change.doc;
             for (var i = 0; i < docs.length; i++) {

@@ -188,12 +188,28 @@ export default class Feed extends Component {
   }
 
   deleteQ = (item) => {
-    db.collection("questions").doc(item.getId()).delete().then(() => {
-      console.log("Document successfully deleted!");
-      this.setState({ notification: 'successfully deleted post. Reload page to view changes and dismiss this notification' });
-    }).catch(function (error) {
-      console.error("Error removing document: ", error);
-      this.setState({ notification: 'failed to deleted post. Try again in few seconds' });
+
+    let replies = [];
+
+    db.collection("questions").doc(item.getId()).collection("replies").get().then(querySnapshot => {
+      querySnapshot.docs.forEach(doc => {
+        replies.push(doc.id);
+      })
+      return replies;
+    }).then(replies => {
+      replies.forEach(id => {
+        db.collection("questions").doc(item.getId()).collection("replies").doc(id).delete().then(doc => {
+          console.log("Successfully deleted reply with id: ", id);
+        })
+      })
+    }).then(() => {
+      db.collection("questions").doc(item.getId()).delete().then(() => {
+        console.log("Document successfully deleted!");
+        this.setState({ notification: 'successfully deleted post. Reload page to view changes and dismiss this notification' });
+      }).catch(function (error) {
+        console.error("Error removing document: ", error);
+        this.setState({ notification: 'failed to deleted post. Try again in few seconds' });
+      })
     });
   }
 
