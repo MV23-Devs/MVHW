@@ -12,11 +12,61 @@ export default class Question {
         this.id = id
         this.upvotes = upvotes;
         this.answers = [];
-        this.answersRaw =
+
+        this.answersRaw = 0;
+        let len = 100;
+
+        firebase.firestore()
+            .collection('questions')
+            .doc(id).collection('replies')
+            .get().then((doc) => {
+                len = doc.docs.length
+            }
+
+            ).then(() => {
+
+                console.log("len " + len)
+
+            }
+            )
+
+
+        for (let i = 0; i < len; i++) {
+            let aTitle;
             firebase.firestore()
                 .collection('questions')
-                .doc(id).collection('replies');
+                .doc(id).collection('replies')
+                .get().then((doc) => {
+                    if (doc.docs[0] !== undefined) {
+                        console.log(doc.docs[0].data().title)
+                    }
+                })
 
+            let aUser;
+            firebase.firestore()
+                .collection('questions')
+                .doc(id).collection('replies')
+                .get().then((doc) => {
+                    if (doc.docs[0] !== undefined) {
+                        aUser = (doc.docs[0].data().uid)
+                    }
+                })
+
+            let aUp;
+            firebase.firestore()
+                .collection('questions')
+                .doc(id).collection('replies')
+                .get().then((doc) => {
+                    if (doc.docs[0] !== undefined) {
+                        aUser = (doc.docs[0].data().upvotes)
+                    }
+                })
+
+                
+            this.answers.push(new Answer(aTitle, aUser, "unkown time", aUp, null))
+
+
+        }
 
         //answerText, user, time, id, upvotes=0, tags=null
 
@@ -24,14 +74,18 @@ export default class Question {
         this.tags = tags;
         this.isClicked = false;
         this.time = time
+
+
+
         firebase.firestore()
             .collection('questions')
             .doc(id).collection('replies')
             .get().then((doc) => {
                 if (doc.docs[0] !== undefined) {
-                    console.log(doc.docs[0].data())
+                    console.log(doc.docs[0].data().title)
                 }
             })
+
         // firebase.firestore().collection('questions').doc(id).collection('replies').get().then((doc) => {
         //     console.log(doc.docs[0].data())
 
