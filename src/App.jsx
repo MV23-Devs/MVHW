@@ -75,28 +75,28 @@ const AboutModal = (props) => {
             <Card className="card">
               <CardImg top width="100%" src={jason} alt="Jason Zhang" />
               <CardBody>
-                <h3 class="aboutname">Jason Zhang</h3>
+                <h3 className="aboutname">Jason Zhang</h3>
                 <SocialDropdown github="https://github.com/minisounds" instagram="https://www.instagram.com/jason.zhang848/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jzscuba@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
             <Card className="card">
               <CardImg top width="100%" src={jacob} alt="Jacob Ismael" />
               <CardBody>
-                <h3 class="aboutname">Jacob Ismael</h3>
+                <h3 className="aboutname">Jacob Ismael</h3>
                 <SocialDropdown github="https://github.com/jacobismael" instagram="https://www.instagram.com/jacobismael16/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jacob.ismael@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
             <Card className="card">
               <CardImg top width="100%" src={saarang} alt="Saarang Bondalapati" />
               <CardBody>
-                <h3 class="aboutname">Saarang Bondalapati</h3>
+                <h3 className="aboutname">Saarang Bondalapati</h3>
                 <SocialDropdown github="https://github.com/saarangbond" instagram="https://www.instagram.com/saarang.bond.05/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=saarang.bondalapati@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
             <Card className="card">
               <CardImg top width="100%" src={atli} alt="Atli Arnarsson" />
               <CardBody>
-                <h3 class="aboutname">Atli Arnarsson</h3>
+                <h3 className="aboutname">Atli Arnarsson</h3>
                 <SocialDropdown github="https://github.com/atli-a" instagram="" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
