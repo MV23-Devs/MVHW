@@ -1,30 +1,27 @@
 export default class Answer {
-    constructor(answerText, user, time, id, upvotes=0, tags=null){
-        this.answerText = answerText
-        //this.username = username;
+    constructor(questionText, user, time, id, upvotes = 0, tags = null) {
+        this.answerText = questionText
         this.user = user
+        this.id = id
         this.upvotes = upvotes;
-        this.isReplying = false;
-        this.isReplyingInner = false;
-        this.id = id;
-        this.answers = [];
     }
-    upvote(){
-        this.upvotes+=1
+    upvote() {
+        this.upvotes += 1
     }
-    downvote(){
-        this.upvotes-=1
+    downvote() {
+        this.upvotes -= 1
     }
-    getUpvotes(){
+    getUpvotes() {
         return this.upvotes
     }
-    getText(){
+    getText() {
+        console.log(this.answerText)
         return this.answerText
     }
     //getUsername() {
     //     return this.username;
     // }
-    getUser(){
+    getUser() {
         return this.user
     }
 }

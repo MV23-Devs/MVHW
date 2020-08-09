@@ -333,6 +333,7 @@ export default class Feed extends Component {
           <div id="answerBox" style={dark}>
             {user}
             <h5>Answer: {item1.getFirstAnswer().getText()}</h5>
+            {console.log(item1.getFirstAnswer())}
             {/* {respondable} */}
             <p className="links" onClick={
 

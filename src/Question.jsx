@@ -16,115 +16,54 @@ export default class Question {
         this.answersRaw = 0;
         let len = 100;
 
-        firebase.firestore()
+        (firebase.firestore()
             .collection('questions')
             .doc(id).collection('replies')
             .get().then((doc) => {
                 len = doc.docs.length
-            }
-
-            ).then(() => {
-
-                console.log("len " + len)
-
-            }
-            )
-
+            })
+        )
 
         for (let i = 0; i < len; i++) {
             let aTitle;
-            firebase.firestore()
-                .collection('questions')
-                .doc(id).collection('replies')
-                .get().then((doc) => {
-                    if (doc.docs[0] !== undefined) {
-                        console.log(doc.docs[0].data().title)
-                    }
-                })
-
             let aUser;
-            firebase.firestore()
-                .collection('questions')
-                .doc(id).collection('replies')
-                .get().then((doc) => {
-                    if (doc.docs[0] !== undefined) {
-                        aUser = (doc.docs[0].data().uid)
-                    }
-                })
-
+            let aId;
             let aUp;
+            let aTime;
             firebase.firestore()
                 .collection('questions')
                 .doc(id).collection('replies')
                 .get().then((doc) => {
                     if (doc.docs[0] !== undefined) {
-                        aUser = (doc.docs[0].data().upvotes)
+                        aTitle = (doc.docs[0].data().title)
+                        aUser = "pls fix"
+                        aId = (doc.docs[0].data().uid)
+                        aUp = (doc.docs[0].data().aUp)
+                        aTime = "?"
                     }
+                }).then(() => {
+                    this.answers.push(new Answer(aTitle, aUser, aTime, aId, aUp, null))
                 })
 
-                
-            this.answers.push(new Answer(aTitle, aUser, "unkown time", aUp, null))
+            //console.log(this.answers[this.answers.length - 1])
+
+
+
+
+            //answerText, user, time, id, upvotes=0, tags=null
+
+
+            this.tags = tags;
+            this.isClicked = false;
+            this.time = time
+
 
 
         }
 
-        //answerText, user, time, id, upvotes=0, tags=null
-
-
-        this.tags = tags;
-        this.isClicked = false;
-        this.time = time
 
 
 
-        firebase.firestore()
-            .collection('questions')
-            .doc(id).collection('replies')
-            .get().then((doc) => {
-                if (doc.docs[0] !== undefined) {
-                    console.log(doc.docs[0].data().title)
-                }
-            })
-
-        // firebase.firestore().collection('questions').doc(id).collection('replies').get().then((doc) => {
-        //     console.log(doc.docs[0].data())
-
-        // })
-
-        // for (let i = 0; i < this.answersRaw.length; i++) {
-        //     let a = firebase.firestore()
-        //         .collection('questions')
-        //         .doc(id).collection('replies').get().then((doc) => {
-        //             if (doc.docs[0] !== undefined) {
-        //                 console.log(doc.docs[i].data().title)
-        //             }
-        //         }
-        //         )
-        //     let b = firebase.firestore()
-        //         .collection('questions')
-        //         .doc(id).collection('replies').get().then((doc) => {
-        //             if (doc.docs[0] !== undefined) {
-        //                 console.log(doc.docs[i].data().author)
-        //             }
-        //         }
-        //         )
-        //     let c = firebase.firestore()
-        //         .collection('questions')
-        //         .doc(id).collection('replies').get().then((doc) => {
-        //             if (doc.docs[0] !== undefined) {
-        //                 console.log(doc.docs[i].data().time)
-        //             }
-        //         }
-        //         )
-        //     let d = firebase.firestore()
-        //         .collection('questions')
-        //         .doc(id).collection('replies').get().then((doc) => {
-        //             if (doc.docs[0] !== undefined) {
-        //                 console.log(doc.docs[i].data().upvotes)
-        //             }
-        //         }
-        //         )
-        // }
     }
 
     getImgUrl() {
@@ -196,12 +135,16 @@ export default class Question {
             let topAnswer = this.answers[0];
             for (let i = 0; i < this.answers.length; i++) {
                 if (this.answers[i].getUpvotes() > topVoted) {
-                    topAnswer = this.answers[i];
+                    topAnswer = i;
+                    console.log("topAns: " + topAnswer)
                     topVoted = this.answers[i].getUpvotes()
                 }
-            }
 
-            return topAnswer;
+
+
+            }
+            //console.log(this.answers[0])
+            return this.answers[0]
         }
     }
     getAllAnswers() {
