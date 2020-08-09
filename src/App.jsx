@@ -385,7 +385,7 @@ export default class App extends Component {
                 <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
                 {this.state.errormessage}
                 <br />
-                <input type="file" ref={this.fileinputref} onChange={this.handleFileInput} />
+                <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
                 <br />
                 <br />
                 <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>

@@ -43,6 +43,16 @@ body {
   align-items: center;
   justify-content: center;
 }
+#uploadFile {
+  border-radius: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  border: #222222;
+  color: white;
+  background-color: #111111;
+  max-width: 100px;
+  outline: none;
+}
 
 #searchBar {
   margin-left: 15%;
