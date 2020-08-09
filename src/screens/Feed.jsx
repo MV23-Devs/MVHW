@@ -333,7 +333,7 @@ export default class Feed extends Component {
           <div id="answerBox" style={dark}>
             {user}
             <h5>Answer: {item1.getFirstAnswer().getText()}</h5>
-            {respondable}
+            {/* {respondable} */}
             <p className="links" onClick={
 
               this.openInnerReply.bind(this, item1)
