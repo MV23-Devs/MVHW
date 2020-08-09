@@ -133,7 +133,7 @@ export default class App extends Component {
         auth: null,
         name: 'Anonymous',
       },
-      filterBy: "popularity"
+      filterBy: "Popularity"
     };
 
 
@@ -185,7 +185,7 @@ export default class App extends Component {
           }
         })
         this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
-        if (this.state.filterBy === "popularity") {
+        if (this.state.filterBy === "Popularity") {
           this.orderByPopularity()
         }
       })
@@ -424,14 +424,14 @@ export default class App extends Component {
 
   filterQuestionsBy = () => {
     //console.log("filterBy");
-    let temp = ((this.state.filterBy === "popularity") ? "none" : "popularity");
+    let temp = ((this.state.filterBy === "Popularity") ? "None" : "Popularity");
     //this.setState({filterBy: temp});
     this.state.filterBy = temp;
     //console.log(this.state.filterBy === "popularity");
-    if (this.state.filterBy === "popularity") {
+    if (this.state.filterBy === "Popularity") {
       //console.log("popular")
       this.orderByPopularity();
-    } else if (this.state.filterBy === "none") {
+    } else if (this.state.filterBy === "None") {
       //console.log("none")
     }
     //console.log(this.state.filteredQuestions);
