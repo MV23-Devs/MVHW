@@ -16,50 +16,52 @@ export default class Question {
         this.answersRaw = 0;
         let len = 100;
 
-        (firebase.firestore()
+        firebase.firestore()
             .collection('questions')
             .doc(id).collection('replies')
             .get().then((doc) => {
                 len = doc.docs.length
+            }).then(() => {
+
+                for (let i = 0; i < len; i++) {
+                    let aTitle;
+                    let aUser;
+                    let aId;
+                    let aUp;
+                    let aTime;
+                    firebase.firestore()
+                        .collection('questions')
+                        .doc(id).collection('replies')
+                        .get().then((doc) => {
+                            if (doc.docs[0] !== undefined) {
+                                aTitle = (doc.docs[0].data().title)
+                                aUser = "pls fix"
+                                aId = (doc.docs[0].data().author)
+                                aUp = (doc.docs[0].data().aUp)
+                                aUser = JSON.parse(aId).displayName
+                                console.log(aUser)
+                                aTime = "?"
+                            }
+                        }).then(() => {
+                            this.answers.push(new Answer(aTitle, aUser, aTime, aId, aUp, null))
+                        })
+
+                    //console.log(this.answers[this.answers.length - 1])
+
+
+
+
+                    //answerText, user, time, id, upvotes=0, tags=null
+
+
+                    this.tags = tags;
+                    this.isClicked = false;
+                    this.time = time
+
+
+
+                }
             })
-        )
-
-        for (let i = 0; i < len; i++) {
-            let aTitle;
-            let aUser;
-            let aId;
-            let aUp;
-            let aTime;
-            firebase.firestore()
-                .collection('questions')
-                .doc(id).collection('replies')
-                .get().then((doc) => {
-                    if (doc.docs[0] !== undefined) {
-                        aTitle = (doc.docs[0].data().title)
-                        aUser = "pls fix"
-                        aId = (doc.docs[0].data().uid)
-                        aUp = (doc.docs[0].data().aUp)
-                        aTime = "?"
-                    }
-                }).then(() => {
-                    this.answers.push(new Answer(aTitle, aUser, aTime, aId, aUp, null))
-                })
-
-            //console.log(this.answers[this.answers.length - 1])
-
-
-
-
-            //answerText, user, time, id, upvotes=0, tags=null
-
-
-            this.tags = tags;
-            this.isClicked = false;
-            this.time = time
-
-
-
-        }
 
 
 
