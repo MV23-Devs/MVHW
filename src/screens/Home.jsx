@@ -1,4 +1,16 @@
-import React, { Component, useState } from 'react';
+import React, { 
+  Component, 
+  useState 
+} from 'react';
+import {
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation,
+  withRouter
+} from 'react-router-dom'
 import '../App.css';
 import Feed from "./Feed.jsx";
 import FullThread from "./fullThread.jsx";
@@ -110,7 +122,7 @@ const AboutModal = (props) => {
   );
 }
 
-export default class Home extends Component {
+class Home extends Component{
   constructor(props) {
     super(props);
 
@@ -199,19 +211,19 @@ export default class Home extends Component {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
-  signinwithGoogle() {
-    var provider = new firebase.auth.GoogleAuthProvider();
+  signinwithGoogle = () => {
+    let provider = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth().signInWithPopup(provider).then((result) => {
-
       var token = result.credential.accessToken;
       // The signed-in user info.
       var user = result.user;
 
       if(result.additionalUserInfo.isNewUser){
-        
+        this.props.history.push('/profile')
       }
-
+      //console.log(this.props, history)
+      
       //console.log(`the goog token is: ${token}`);
       //console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
       // return response.json(); // parses JSON response into native JavaScript objects
@@ -496,3 +508,4 @@ export default class Home extends Component {
   //   return theme1.footer.backgroundColor;
   // }
 }
+export default withRouter(Home)
