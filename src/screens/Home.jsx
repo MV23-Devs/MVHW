@@ -215,12 +215,19 @@ class Home extends Component{
     let provider = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth().signInWithPopup(provider).then((result) => {
-      var token = result.credential.accessToken;
+      //var token = result.credential.accessToken;
       // The signed-in user info.
       var user = result.user;
 
-      if(result.additionalUserInfo.isNewUser){
-        this.props.history.push('/profile')
+      if (result.additionalUserInfo.isNewUser) {
+        firebase.firestore()
+          .collection('users')
+          .doc(user.uid).set({
+            name: user.displayName,
+          }).then((docRef) => {
+            firebase.database().ref('audit log').push(new Date().toString() + ": new user joined: " + user);
+            this.props.history.push('/profile');
+          });
       }
       //console.log(this.props, history)
       
@@ -368,7 +375,6 @@ class Home extends Component{
     }
     return (
       <React.Fragment>
-        
 
         <div className="height"></div>
 
