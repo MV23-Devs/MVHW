@@ -290,10 +290,7 @@ a {
 
 #logOut {
   /* margin: 0; */
-  width: 15%;
-  border-radius: 50%;
-}
-
-#socialdrop {
+  width: 3.5%;
   float: right;
+  border-radius: 50%;
 }
