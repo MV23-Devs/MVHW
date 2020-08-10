@@ -15,6 +15,9 @@ export default class Question {
 
         this.answersRaw = 0;
         let len = 100;
+        this.tags = tags;
+        this.isClicked = false;
+        this.time = time
 
         firebase.firestore()
             .collection('questions')
@@ -52,11 +55,6 @@ export default class Question {
 
 
                     //answerText, user, time, id, upvotes=0, tags=null
-
-
-                    this.tags = tags;
-                    this.isClicked = false;
-                    this.time = time
 
 
 

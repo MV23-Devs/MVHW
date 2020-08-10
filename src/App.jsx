@@ -392,10 +392,28 @@ export default class App extends Component {
                 <Input type="select" name="select" id="tags">
                   <option>None</option>
                   <option>Math</option>
+                  <option>Geometry</option>
+                  <option>Algebra</option>
+                  <option>Trigonometry</option>
+                  <option>Calculus</option>
                   <option>Science</option>
+                  <option>Biology</option>
+                  <option>Chemistry</option>
+                  <option>Physics</option>
                   <option>English</option>
+                  <option>Survey</option>
+                  <option>AP Comp</option>
                   <option>History</option>
+                  <option>World Studies</option>
+                  <option>AP Euro</option>
+                  <option>WHAP</option>
+                  <option>USHAP</option>
+                  <option>Spanish</option>
+                  <option>Anime</option>
+                  <option>Chinese</option>
                   <option>Computer Science</option>
+                  <option>Art</option>
+                  <option>Music</option>
                 </Input>
               </FormGroup>
               <Button color="light" block>Submit</Button>
