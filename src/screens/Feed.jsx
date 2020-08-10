@@ -44,9 +44,6 @@ export default class Feed extends Component {
   componentDidUpdate() {
   }
 
-
-
-
   render() {
     return (
       <React.Fragment>

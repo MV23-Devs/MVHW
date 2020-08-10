@@ -1,18 +1,18 @@
 import React, { Component, useState } from 'react';
-import './App.css';
-import Feed from "./screens/Feed.jsx";
-import FullThread from "./screens/fullThread.jsx";
-import Question from './Question';
+import '../App.css';
+import Feed from "./Feed.jsx";
+import FullThread from "./fullThread.jsx";
+import Question from '../Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
-import firebase from './firebase.js';
-import { storage } from './firebase.js';
+import firebase from '../firebase.js';
+import { storage } from '../firebase.js';
 // import { get as _get } from "lodash";
-import jacob from "./img/jacob.jpg";
-import saarang from "./img/saarang.jpg";
-import jason from "./img/jason.jpg";
-import atli from "./img/atli-sucks.jpg";
+import jacob from "../img/jacob.jpg";
+import saarang from "../img/saarang.jpg";
+import jason from "../img/jason.jpg";
+import atli from "../img/atli-sucks.jpg";
 
 const db = firebase.firestore();
 
@@ -110,7 +110,7 @@ const AboutModal = (props) => {
   );
 }
 
-export default class App extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
 
@@ -207,6 +207,10 @@ export default class App extends Component {
       var token = result.credential.accessToken;
       // The signed-in user info.
       var user = result.user;
+
+      if(result.additionalUserInfo.isNewUser){
+        
+      }
 
       //console.log(`the goog token is: ${token}`);
       //console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
