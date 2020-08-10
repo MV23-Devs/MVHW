@@ -72,7 +72,7 @@ const ProfilePictureDropdown = (props) => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+    <Dropdown isOpen={dropdownOpen} toggle={toggle} id="socialdrop">
       <DropdownToggle
         tag="span"
         data-toggle="dropdown"
@@ -466,9 +466,9 @@ class Home extends Component {
         <div className="feed">
           {
             this.state.loading_data ?
-            <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
-            :
-            <Feed theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
+              <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
+              :
+              <Feed theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
           }
         </div>
 

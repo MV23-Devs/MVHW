@@ -135,8 +135,15 @@ export default class Feed extends Component {
 
           <ul className="feed-list">
             {
-              item.getAllAnswers().map(answer => {
-                
+              item.getAllAnswers().map((answer, i) => {
+                return (
+                  <li key={"answer" + i} id="answerBox" style={dark}>
+                    {user}
+                    <h5>Answer: {answer.getText()}</h5>
+                    {/* {respondable} */}
+                    <p className="links">reply</p>
+                  </li>
+                );
               })
             }
           </ul>
