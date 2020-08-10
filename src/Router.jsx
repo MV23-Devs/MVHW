@@ -13,12 +13,6 @@ export default class AppRouter extends Component{
     render(){
         return (
             <Router>
-                <div id="navbar" name="navbar">
-                    <nav>
-                        <Link to="/">Home</Link>
-                        <Link to="/profile">Profile</Link>
-                    </nav>
-                </div>
                 <Switch>
                     <Route exact path='/'>
                         <Home/>

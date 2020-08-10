@@ -17,6 +17,7 @@ export default class Profile extends Component{
     render(){
         return (
             <React.Fragment>
+                <Link to="/">Home</Link>
                 <h1>Profile</h1>
             </React.Fragment>
         )

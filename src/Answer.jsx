@@ -1,7 +1,7 @@
 export default class Answer {
     constructor(questionText, user, time, id, upvotes = 0) {
         this.answerText = questionText
-        this.user = user
+        this.user = user;
         this.id = id
         this.upvotes = upvotes;
     }
