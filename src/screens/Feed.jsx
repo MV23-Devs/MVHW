@@ -37,14 +37,104 @@ export default class Feed extends Component {
   state = {
     update: 0,
     d: new Date(),
-    focus: 0,
+    focus: -1,
     notification: '',
   }
 
-  componentDidUpdate() {
-  }
-
   render() {
+
+    if (this.state.focus !== -1) {
+      let i = 1;
+      let item = this.props.filteredQuestions[i];
+      let user = <h5>User: {item.getUsername()}</h5>;
+      if (item.getUsername() === 'devs') {
+        user = <h6>User: <Badge color="dark">devs</Badge></h6>;
+      } if (this.props.user.auth !== null) {
+        if (item.getUser().uid === this.props.user.auth.uid) {
+          user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+        }
+      }
+
+      let color = '';
+      switch (item.getTags()) {
+        case 'Math':
+          color = 'info';
+          break;
+        case 'Science':
+          color = 'warning';
+          break;
+        case 'English':
+          color = 'danger';
+          break;
+        case 'History':
+          color = 'success';
+          break;
+        case 'Computer Science':
+          color = 'primary';
+          break;
+
+        default:
+          color = 'secondary';
+          break;
+      }
+      let tag = <Badge color={color}>{item.getTags()}</Badge>;
+      if (item.getTags() === "None") {
+        tag = null;
+      }
+
+      let upvotes = item.getUpvotes() + "";
+
+      if (item.getUpvotes() >= 1000) {
+        upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
+      }
+
+      let deletedata = null;
+      if (this.props.user.name === item.getUsername()) {
+        deletedata = (
+          <span>
+            <span> | </span>
+            <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+          </span>
+        );
+      }
+
+      return (
+        <React.Fragment>
+          <Container>
+            <div style={dark} className="questionBox">
+              <Row>
+                <Col xs="1" className="updown">
+                  <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
+                  <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                  <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
+                </Col>
+                <Col xs="11">
+                  <div style={dark}>
+                    {user}
+                    <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
+                    <h4>Question: {item.getText()}  {tag}</h4>
+                    {
+                      item.getImgUrl() !== "" ?
+                        <img src={item.getImgUrl()} alt="aa" width="100%" />
+                        :
+                        null
+                    }
+                    {this.renderAnswer(item)}
+                  </div>
+                  <hr style={dark.line} />
+                  <span className="links" onClick={
+
+                    this.openReply.bind(this, item)
+
+                  }>reply</span>
+                  {deletedata}
+                </Col>
+              </Row>
+            </div>
+          </Container>
+        </React.Fragment >
+      )
+    }
     return (
       <React.Fragment>
         <ul className="feed-list">
@@ -118,7 +208,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
-                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
+                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, i)} >See full Thread</Button>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
@@ -270,14 +360,11 @@ export default class Feed extends Component {
 
   callBoth(item1) {
     item1.click();
-    console.log(item1.getClicked())
-    console.log(item1.getUser());
     //this.renderAnswer(item1);
     this.setState({ update: 0 })
   }
   submitHandler = (event, item) => {
     event.preventDefault();
-    console.log(event.target)
     let val = event.target["text"].value;
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
@@ -300,8 +387,6 @@ export default class Feed extends Component {
           timestamp: item.getTime(),
         });
       }
-
-      //console.log(event.target["text"].value);
 
       // this.setState({ update: 0 });
       event.target["text"].value = "";
@@ -330,7 +415,6 @@ export default class Feed extends Component {
           <div id="answerBox" style={dark}>
             {user}
             <h5>Answer: {item1.getFirstAnswer().getText()}</h5>
-            {console.log(item1.getFirstAnswer())}
             {/* {respondable} */}
             <p className="links" onClick={
 

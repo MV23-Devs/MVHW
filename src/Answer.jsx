@@ -15,7 +15,6 @@ export default class Answer {
         return this.upvotes
     }
     getText() {
-        console.log(this.answerText)
         return this.answerText
     }
     //getUsername() {

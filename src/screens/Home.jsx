@@ -13,7 +13,6 @@ import {
 } from 'react-router-dom'
 import '../App.css';
 import Feed from "./Feed.jsx";
-import FullThread from "./fullThread.jsx";
 import Question from '../Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
@@ -367,11 +366,6 @@ class Home extends Component{
     if (this.state.loading_data) {
       feed = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
 
-    }
-
-    let solo = <FullThread theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
-    if (this.state.loading_data) {
-      solo = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
     }
     return (
       <React.Fragment>
