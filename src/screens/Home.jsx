@@ -208,8 +208,14 @@ export default class Home extends Component {
       // The signed-in user info.
       var user = result.user;
 
-      if(result.additionalUserInfo.isNewUser){
-        
+      if (result.additionalUserInfo.isNewUser) {
+        firebase.firestore()
+          .collection('users')
+          .doc(user.uid).set({
+            name: user.displayName,
+          }).then((docRef) => {
+            firebase.database().ref('audit log').push(new Date().toString() + ": new user joined: " + user);
+          });
       }
 
       //console.log(`the goog token is: ${token}`);
@@ -356,7 +362,7 @@ export default class Home extends Component {
     }
     return (
       <React.Fragment>
-        
+
 
         <div className="height"></div>
 
