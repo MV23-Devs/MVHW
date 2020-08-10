@@ -42,7 +42,6 @@ export default class Question {
                                 aId = (doc.docs[0].data().author)
                                 aUp = (doc.docs[0].data().aUp)
                                 aUser = JSON.parse(aId).displayName
-                                console.log(aUser)
                                 aTime = "?"
                             }
                         }).then(() => {
