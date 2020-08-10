@@ -57,7 +57,7 @@ const SocialDropdown = (props) => {
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
       <DropdownToggle color="light" caret>
         Social
-        </DropdownToggle>
+      </DropdownToggle>
       <DropdownMenu>
         <DropdownItem><a href={props.github}>Github</a></DropdownItem>
         <DropdownItem><a href={props.instagram}>Instagram</a></DropdownItem>
@@ -67,6 +67,26 @@ const SocialDropdown = (props) => {
   );
 }
 
+const ProfilePictureDropdown = (props) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen(prevState => !prevState);
+
+  return (
+    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+      <DropdownToggle
+        tag="span"
+        data-toggle="dropdown"
+        aria-expanded={dropdownOpen}
+      >
+        {props.children}
+      </DropdownToggle>
+      <DropdownMenu id="ProfileMenu">
+        <Link to="/profile"><DropdownItem >Profile</DropdownItem></Link>
+        <DropdownItem onClick={props.signout}>Sign Out</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
+}
 const AboutModal = (props) => {
   const {
     className,
@@ -377,7 +397,7 @@ class Home extends Component{
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {
             this.state.user.auth !== null ?
-              <img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" onClick={this.signoutwithGoogle} />
+              <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
               :
               <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
           }
