@@ -20,7 +20,7 @@ export default class AppRouter extends Component{
                     </nav>
                 </div>
                 <Switch>
-                    <Route path='/'>
+                    <Route exact path='/'>
                         <Home/>
                     </Route>
                     <Route path='/profile'>
