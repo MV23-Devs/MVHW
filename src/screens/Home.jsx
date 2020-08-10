@@ -1,6 +1,6 @@
-import React, { 
-  Component, 
-  useState 
+import React, {
+  Component,
+  useState
 } from 'react';
 import {
   Switch,
@@ -121,7 +121,7 @@ const AboutModal = (props) => {
   );
 }
 
-class Home extends Component{
+class Home extends Component {
   constructor(props) {
     super(props);
 
@@ -229,7 +229,7 @@ class Home extends Component{
           });
       }
       //console.log(this.props, history)
-      
+
       //console.log(`the goog token is: ${token}`);
       //console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
       // return response.json(); // parses JSON response into native JavaScript objects
@@ -361,12 +361,7 @@ class Home extends Component{
   }
 
   render() {
-    let feed = <Feed theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />;
 
-    if (this.state.loading_data) {
-      feed = <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />;
-
-    }
     return (
       <React.Fragment>
 
@@ -449,7 +444,12 @@ class Home extends Component{
 
 
         <div className="feed">
-          {feed}
+          {
+            this.state.loading_data ?
+            <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
+            :
+            <Feed theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
+          }
         </div>
 
       </React.Fragment>

@@ -19,46 +19,53 @@ export default class Question {
         this.isClicked = false;
         this.time = time
 
-        firebase.firestore()
-            .collection('questions')
-            .doc(id).collection('replies')
-            .get().then((doc) => {
-                len = doc.docs.length
-            }).then(() => {
+        // firebase.firestore()
+        //     .collection('questions')
+        //     .doc(id).collection('replies')
+        //     .get().then((doc) => {
+        //         len = doc.docs.length
+        //     }).then(() => {
 
-                for (let i = 0; i < len; i++) {
-                    let aTitle;
-                    let aUser;
-                    let aId;
-                    let aUp;
-                    let aTime;
-                    firebase.firestore()
-                        .collection('questions')
-                        .doc(id).collection('replies')
-                        .get().then((doc) => {
-                            if (doc.docs[0] !== undefined) {
-                                aTitle = (doc.docs[0].data().title)
-                                aUser = "pls fix"
-                                aId = (doc.docs[0].data().author)
-                                aUp = (doc.docs[0].data().aUp)
-                                aUser = JSON.parse(aId).displayName
-                                aTime = "?"
-                            }
-                        }).then(() => {
-                            this.answers.push(new Answer(aTitle, aUser, aTime, aId, aUp, null))
-                        })
+        //         for (let i = 0; i < len; i++) {
+        //             let aTitle;
+        //             let aUser;
+        //             let aId;
+        //             let aUp;
+        //             let aTime;
+        //             firebase.firestore()
+        //                 .collection('questions')
+        //                 .doc(id).collection('replies')
+        //                 .get().then((doc) => {
+        //                     if (doc.docs[0] !== undefined) {
+        //                         aTitle = (doc.docs[0].data().title)
+        //                         aUser = "pls fix"
+        //                         aId = (doc.docs[0].data().author)
+        //                         aUp = (doc.docs[0].data().aUp)
+        //                         aUser = JSON.parse(aId).displayName
+        //                         aTime = "?"
+        //                     }
+        //                 }).then(() => {
+        //                     this.answers.push(new Answer(aTitle, aUser, aTime, aId, aUp, null))
+        //                 })
 
-                    //console.log(this.answers[this.answers.length - 1])
-
-
-
-
-                    //answerText, user, time, id, upvotes=0, tags=null
+        //             //console.log(this.answers[this.answers.length - 1])
 
 
 
-                }
+
+        //             //answerText, user, time, id, upvotes=0, tags=null
+
+
+
+        //         }
+        //     })
+
+        
+        firebase.firestore().collection("questions").doc(this.id).collection("replies").get().then(querySnapshot => {
+            querySnapshot.docs.forEach(doc => {
+                this.answers.push(new Answer(doc.data().title, doc.data().user, doc.data().timestamp, doc.id, doc.data().upvotes))
             })
+        })
 
 
 
@@ -100,7 +107,7 @@ export default class Question {
         return this.tags
     }
     click() {
-        this.isClicked = (this.isClicked === true ? false : true)
+        this.isClicked = !this.isClicked;
     }
     reply() {
         this.isReplying = (this.isReplying === true ? false : true)

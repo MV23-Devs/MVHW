@@ -44,7 +44,7 @@ export default class Feed extends Component {
   render() {
 
     if (this.state.focus !== -1) {
-      let i = 1;
+      let i = this.state.focus;
       let item = this.props.filteredQuestions[i];
       let user = <h5>User: {item.getUsername()}</h5>;
       if (item.getUsername() === 'devs') {
@@ -111,7 +111,7 @@ export default class Feed extends Component {
                 <Col xs="11">
                   <div style={dark}>
                     {user}
-                    <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, item.getId())} >See full Thread</Button>
+                    <Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
                     <h4>Question: {item.getText()}  {tag}</h4>
                     {
                       item.getImgUrl() !== "" ?
@@ -119,7 +119,6 @@ export default class Feed extends Component {
                         :
                         null
                     }
-                    {this.renderAnswer(item)}
                   </div>
                   <hr style={dark.line} />
                   <span className="links" onClick={
@@ -128,10 +127,20 @@ export default class Feed extends Component {
 
                   }>reply</span>
                   {deletedata}
+                  {this.renderReply(item)}
                 </Col>
               </Row>
             </div>
           </Container>
+
+          <ul className="feed-list">
+            {
+              item.getAllAnswers().map(answer => {
+                
+              })
+            }
+          </ul>
+
         </React.Fragment >
       )
     }
@@ -325,12 +334,14 @@ export default class Feed extends Component {
     if (item1.getReplying() === true) {
       return (
         <React.Fragment>
+          <br />
+          <br />
           <Form onSubmit={(e) => { this.submitHandler(e, item1) }}>
             <FormGroup>
               <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
               {this.state.errormessage}
             </FormGroup>
-            <Button color={this.state.theme === 1 ? 'light' : 'dark'} block>Post Reply</Button>
+            <Button color="light" block>Post Reply</Button>
           </Form>
         </React.Fragment>
 
@@ -338,7 +349,6 @@ export default class Feed extends Component {
     }
   }
   renderInnerReply(item1) {
-    item1.click();
     if (item1.getReplyingInner() === true) {
       return (
         <React.Fragment>
