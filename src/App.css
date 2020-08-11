@@ -213,10 +213,9 @@ button {
     display: none;
   }
 
-  #searchBar {
-    margin-left: 0;
-  }
+  
 
+  
   .cardcontainer {
     flex-direction: column;
   }
@@ -229,6 +228,12 @@ button {
 }
 
 
+#searchBar {
+  margin-left: 0;
+  height: 50px;
+  margin-left: 15%;
+}
+
 
 #logOut {
   /* margin: 0; */
@@ -239,6 +244,17 @@ button {
   float: right;
   border-radius: 100%;
   width: 50px;
+}
+#logIn {
+  /* margin: 0; */
+  display: inline-block;
+  
+  /* width: 10% !important; */
+  /* margin-top: -46px; */
+  float: right;
+  height: 50px;
+
+  /* width: 50px; */
 }
 
 
