@@ -200,7 +200,25 @@ class Home extends Component {
         querySnapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             let doc = change.doc;
-            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url));
+
+            let ups, downs, votes = 0;
+
+            if(doc.data().usersUpvoted.length > 0 && doc.data().usersDownvoted.length > 0) {
+              ups = doc.data().usersUpvoted.length
+              downs = doc.data().usersDownvoted.length
+              votes = ups - downs;
+            } else if(doc.data().usersUpvoted.length > 0) {
+              ups = doc.data().usersUpvoted.length
+              votes = ups;
+            } else if(doc.data().usersDownvoted.length > 0) {
+              downs = doc.data().usersDownvoted.length
+              votes = 0 - downs;
+            }
+
+            console.log(votes)
+            
+
+            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url));
             db.collection("questions").doc(doc.id).collection("replies").get().then(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
                 // console.log(doc.data());
@@ -325,8 +343,8 @@ class Home extends Component {
                 img_url: this.state.url,
                 username: this.state.user.name,
                 auth: JSON.stringify(this.state.user.auth),
-                upvotes: 0,
-                downvotes: 0,
+                usersUpvoted: [],
+                usersDownvoted: [],
                 timestamp: date,
                 tags: t,
               }).then((docRef) => {
@@ -341,8 +359,8 @@ class Home extends Component {
             img_url: this.state.url,
             username: this.state.user.name,
             auth: JSON.stringify(this.state.user.auth),
-            upvotes: 0,
-            downvotes: 0,
+            usersUpvoted: [],
+            usersDownvoted: [],
             timestamp: date,
             tags: t,
           }).then((docRef) => {

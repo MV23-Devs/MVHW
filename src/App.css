@@ -156,6 +156,54 @@ button {
   width: 100%;
 }
 
+
+#places {
+  text-align: center;
+  margin: 40%;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  width: 20%;
+  outline: none;
+  color: white;
+  
+  
+}
+.tickBoxes {
+  color: white;
+}
+
+#checkBoxSelect {
+  text-align: left;
+  margin: 10%;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  width: 80%;
+  outline: none;
+  color: white;
+}
+
+
+.tickBoxSurround {
+  display: inline-block;
+  width: 200px;
+}
+#submitClasses {
+  margin-left: 40%;
+  width: 20%;
+}
+.tickBoxes {
+  
+}
 .upvotes-num {
   text-align: center;
   margin: 0;

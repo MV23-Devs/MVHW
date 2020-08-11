@@ -86,28 +86,34 @@ export default class Profile extends Component {
     render() {
         return (
             <React.Fragment>
-                <div className="profilePage">
+                <div >
+                    <div id="places">
+                        <Link to="/">Home</Link>
+                        <h1>Profile</h1>
+                    </div>
+                    <div id="checkBoxSelect">
+                        <Form onSubmit={this.submitHandler} >
+                            <FormGroup check>
+                                {
+                                    this.classes.map(cless => {
+                                        return (
+                                            <React.Fragment>
+                                                <div className="tickBoxSurround">
+                                                    <Label for={cless} >
+                                                        <Input onChange={this.handleInputChange} classname="tickboxes" id={cless} name={cless} type="checkbox" />
+                                                        {cless}
+                                                    </Label>
+                                                    <br />
+                                                </div>
+                                            </React.Fragment>
+                                        );
+                                    })
+                                }
+                            </FormGroup>
 
-                    <Link to="/">Home</Link>
-                    <h1>Profile</h1>
-                    <Form onSubmit={this.submitHandler}>
-                        <FormGroup check>
-                            {
-                                this.classes.map(cless => {
-                                    return (
-                                        <React.Fragment>
-                                            <Label for={cless}>
-                                                <Input onChange={this.handleInputChange} id={cless} name={cless} type="checkbox" />
-                                                {cless}
-                                            </Label>
-                                            <br />
-                                        </React.Fragment>
-                                    );
-                                })
-                            }
-                        </FormGroup>
-                        <Button color="info">Submit</Button>
-                    </Form>
+                            <Button color="info" id="submitClasses">Submit</Button>
+                        </Form>
+                    </div>
                 </div>
             </React.Fragment>
         )
