@@ -54,7 +54,7 @@ const SocialDropdown = (props) => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle} id="profileMenu">
+    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
       <DropdownToggle color="light" caret>
         Social
       </DropdownToggle>
@@ -80,7 +80,7 @@ const ProfilePictureDropdown = (props) => {
       >
         {props.children}
       </DropdownToggle>
-      <DropdownMenu>
+      <DropdownMenu id="ProfileMenu">
         <Link to="/profile"><DropdownItem >Profile</DropdownItem></Link>
         <DropdownItem onClick={props.signout}>Sign Out</DropdownItem>
       </DropdownMenu>
@@ -200,7 +200,7 @@ class Home extends Component {
         querySnapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             let doc = change.doc;
-            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url, doc.data().usersUpvoted));
+            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url));
             db.collection("questions").doc(doc.id).collection("replies").get().then(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
                 // console.log(doc.data());
@@ -272,7 +272,7 @@ class Home extends Component {
     e.preventDefault();
     if (e.target.files[0] !== null) {
       const image = e.target.files[0];
-      console.log(image);
+      //console.log(image);
       this.setState(() => ({ image }));
       console.log(image);
     }
@@ -328,8 +328,6 @@ class Home extends Component {
                 downvotes: 0,
                 timestamp: date,
                 tags: t,
-                usersUpvoted: [],
-                usersDownvoted: [],
               }).then((docRef) => {
                 firebase.database().ref('audit log').push(date + ": created a new post");
               });
@@ -421,6 +419,12 @@ class Home extends Component {
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
 
+                {
+                  this.state.image !== null ?
+                    <img src={this.state.image.image_url} alt="preview" />
+                    :
+                    null
+                }
                 <br />
                 <br />
                 <Label for="tags"><Badge color="info">Mandatory</Badge> Tag:</Label>
