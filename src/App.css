@@ -64,6 +64,7 @@ body {
   border-radius: 5px;
   outline: none;
   margin-right: 10px;
+  border-top: 50px;
 }
 
 #titleArea {
@@ -212,10 +213,14 @@ button {
     display: none;
   }
 
-  #searchBar {
-    margin-left: 0;
+
+  #profileMenu {
+    float: right !important;
   }
 
+  
+
+  
   .cardcontainer {
     flex-direction: column;
   }
@@ -225,13 +230,41 @@ button {
     margin-bottom: 10px;
   }
 
-  #logOut {
-    /* margin: 0; */
-    width: 10% !important;
-    float: right;
-    border-radius: 50%;
-  }
 }
+
+#socialDrop {
+  float: right !important;
+  margin-top: 0px;
+
+}
+
+#searchBar {
+  margin-left: 0;
+  height: 50px;
+  margin-left: 15%;
+}
+
+
+#logOut {
+  /* margin: 0; */
+  display: inline-block;
+  
+  float: right;
+  border-radius: 100%;
+  width: 50px;
+}
+#logIn {
+  /* margin: 0; */
+  display: inline-block;
+  
+  /* width: 10% !important; */
+  /* margin-top: -46px; */
+  float: right;
+  height: 50px;
+
+  /* width: 50px; */
+}
+
 
 a {
   font-weight: bold;
@@ -246,8 +279,10 @@ a {
 }
 
 .voteButton {
+  text-align: none !important;
   outline: none !important; 
-  text-align: center !important;
+  margin-top: 0px !important;
+  
 
   display: block;
   border: none;
@@ -288,9 +323,7 @@ a {
   flex-direction: row;
 }
 
-#logOut {
-  /* margin: 0; */
-  width: 3.5%;
+#profileMenu {
   float: right;
-  border-radius: 50%;
+  margin-top: 45px !important;
 }

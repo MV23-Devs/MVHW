@@ -72,7 +72,7 @@ const ProfilePictureDropdown = (props) => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle} id="socialdrop">
+    <Dropdown isOpen={dropdownOpen} toggle={toggle} id="socialDrop">
       <DropdownToggle
         tag="span"
         data-toggle="dropdown"
