@@ -275,7 +275,7 @@ export default class Feed extends Component {
         tempUsersDownvoted = doc.data().usersDownvoted;
       })
       console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
-      if(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted)){
+      if(!this.isIn(!this.props.user.auth.uid, tempUsersUpvoted)){
         this.props.filteredQuestions[i].upvote();
         tempUsersUpvoted.push(this.props.user.auth.uid);
         if(this.props.user.auth.uid in tempUsersDownvoted){
@@ -310,7 +310,7 @@ export default class Feed extends Component {
         tempUsersDownvoted = doc.data().usersDownvoted;
       })
       console.log(!this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
-      if(!this.isIn(this.props.user.auth.uid, tempUsersDownvoted)){
+      if(!this.isIn(!this.props.user.auth.uid, tempUsersDownvoted)){
         this.props.filteredQuestions[i].downvote();
         tempUsersDownvoted.push(this.props.user.auth.uid);
         if(this.props.user.auth.uid in tempUsersUpvoted){
