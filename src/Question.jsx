@@ -3,7 +3,7 @@ import firebase from './firebase.js';
 
 
 export default class Question {
-    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url = "", usersUpvoted) {
+    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url = "") {
         this.questionText = questionText
         this.img_url = img_url;
         this.isReplying = false;
@@ -12,7 +12,7 @@ export default class Question {
         this.id = id
         this.upvotes = upvotes;
         this.answers = [];
-        this.usersUpvoted = usersUpvoted;
+        // this.usersUpvoted = usersUpvoted;
         this.answersRaw = 0;
         let len = 100;
         this.tags = tags;

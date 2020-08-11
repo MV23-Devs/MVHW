@@ -115,7 +115,7 @@ export default class Feed extends Component {
                     <h4>Question: {item.getText()}  {tag}</h4>
                     {
                       item.getImgUrl() !== "" ?
-                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
+                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
                         :
                         null
                     }
@@ -140,7 +140,7 @@ export default class Feed extends Component {
                 if (answer.getUser().displayName === 'devs') {
                   user = <h6>User: <Badge color="dark">devs</Badge></h6>;
                 }
-                if(this.props.user.auth !== null) {
+                if (this.props.user.auth !== null) {
                   if (answer.getUser().uid === this.props.user.auth.uid) {
                     user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                   }
@@ -237,7 +237,7 @@ export default class Feed extends Component {
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
-                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
+                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
                                 :
                                 null
                             }
@@ -275,18 +275,17 @@ export default class Feed extends Component {
         tempUsersDownvoted = doc.data().usersDownvoted;
       })
       console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
-      if(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted)){
+      if (!this.isIn(this.props.user.auth.uid, tempUsersUpvoted)) {
         this.props.filteredQuestions[i].upvote();
         tempUsersUpvoted.push(this.props.user.auth.uid);
-        if(this.props.user.auth.uid in tempUsersDownvoted){
+        if (this.props.user.auth.uid in tempUsersDownvoted) {
           tempUsersDownvoted = tempUsersDownvoted.filter(item => (item === this.props.user.auth.uid ? true : false))
         }
         db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-          upvotes: up + 1,
           usersUpvoted: tempUsersUpvoted,
           usersDownvoted: tempUsersDownvoted,
         })
-      }else{
+      } else {
         console.log("You already upvoted!")
       }
       this.setState({ update: 0 })
@@ -310,10 +309,10 @@ export default class Feed extends Component {
         tempUsersDownvoted = doc.data().usersDownvoted;
       })
       console.log(!this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
-      if(!this.isIn(this.props.user.auth.uid, tempUsersDownvoted)){
+      if (!this.isIn(this.props.user.auth.uid, tempUsersDownvoted)) {
         this.props.filteredQuestions[i].downvote();
         tempUsersDownvoted.push(this.props.user.auth.uid);
-        if(this.props.user.auth.uid in tempUsersUpvoted){
+        if (this.props.user.auth.uid in tempUsersUpvoted) {
           tempUsersUpvoted = tempUsersUpvoted.filter(item => (item === this.props.user.auth.uid ? true : false))
         }
         db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
@@ -321,7 +320,7 @@ export default class Feed extends Component {
           usersUpvoted: tempUsersUpvoted,
           usersDownvoted: tempUsersDownvoted,
         })
-      }else{
+      } else {
         console.log("You already downvoted!")
       }
       this.setState({ update: 0 })
@@ -335,12 +334,12 @@ export default class Feed extends Component {
   }
 
   isIn = (item, array) => {
-    for(let elem in array){
-      if(item === elem){
+    array.forEach(elem => {
+      if (item === elem) {
         return true;
       }
-      return false;
-    }
+    })
+    return false;
   }
 
   deleteQ = (item) => {
