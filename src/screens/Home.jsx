@@ -275,6 +275,7 @@ class Home extends Component {
       //console.log(image);
       this.setState(() => ({ image }));
       console.log(image);
+      console.log(e.target.files);
     }
     else {
       this.setState({ image: null })
@@ -421,7 +422,7 @@ class Home extends Component {
 
                 {
                   this.state.image !== null ?
-                    <img src={this.state.image.image_url} alt="preview" />
+                    <img src={this.state.image} alt="Image Uploaded!" />
                     :
                     null
                 }
