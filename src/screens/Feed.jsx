@@ -274,16 +274,17 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
       })
-      console.log(! (this.props.user.auth.uid in tempUsersUpvoted))
-      if(!(this.props.user.auth.uid in tempUsersUpvoted)){
+      console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
+      if(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted)){
         this.props.filteredQuestions[i].upvote();
         tempUsersUpvoted.push(this.props.user.auth.uid);
         if(this.props.user.auth.uid in tempUsersDownvoted){
-          tempUsersDownvoted = tempUsersDownvoted.filter(item => item === this.props.user.auth.uid ? true : false)
+          tempUsersDownvoted = tempUsersDownvoted.filter(item => (item === this.props.user.auth.uid ? true : false))
         }
         db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
           upvotes: up + 1,
           usersUpvoted: tempUsersUpvoted,
+          usersDownvoted: tempUsersDownvoted,
         })
       }else{
         console.log("You already upvoted!")
@@ -308,15 +309,16 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
       })
-      console.log(! (this.props.user.auth.uid in tempUsersDownvoted))
-      if(!(this.props.user.auth.uid in tempUsersDownvoted)){
+      console.log(!this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
+      if(!this.isIn(this.props.user.auth.uid, tempUsersDownvoted)){
         this.props.filteredQuestions[i].downvote();
         tempUsersDownvoted.push(this.props.user.auth.uid);
         if(this.props.user.auth.uid in tempUsersUpvoted){
-          tempUsersUpvoted = tempUsersUpvoted.filter(item => item === this.props.user.auth.uid ? true : false)
+          tempUsersUpvoted = tempUsersUpvoted.filter(item => (item === this.props.user.auth.uid ? true : false))
         }
         db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
           upvotes: up - 1,
+          usersUpvoted: tempUsersUpvoted,
           usersDownvoted: tempUsersDownvoted,
         })
       }else{
@@ -329,6 +331,15 @@ export default class Feed extends Component {
       firebase.auth().signInWithPopup(provider).catch((error) => {
         console.error('Error Code ' + error.code + ': ' + error.message)
       });
+    }
+  }
+
+  isIn = (item, array) => {
+    for(let elem in array){
+      if(item === elem){
+        return true;
+      }
+      return false;
     }
   }
 
