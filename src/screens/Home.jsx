@@ -200,7 +200,7 @@ class Home extends Component {
         querySnapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             let doc = change.doc;
-            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url));
+            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags, doc.data().img_url, doc.data().usersUpvoted));
             db.collection("questions").doc(doc.id).collection("replies").get().then(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
                 // console.log(doc.data());
@@ -327,6 +327,8 @@ class Home extends Component {
                 downvotes: 0,
                 timestamp: date,
                 tags: t,
+                usersUpvoted: [],
+                usersDownvoted: [],
               }).then((docRef) => {
                 firebase.database().ref('audit log').push(date + ": created a new post");
               });
