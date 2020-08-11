@@ -274,6 +274,7 @@ class Home extends Component {
       const image = e.target.files[0];
       //console.log(image);
       this.setState(() => ({ image }));
+      console.log(image);
     }
     else {
       this.setState({ image: null })
@@ -417,6 +418,7 @@ class Home extends Component {
                 {this.state.errormessage}
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
+
                 <br />
                 <br />
                 <Label for="tags"><Badge color="info">Mandatory</Badge> Tag:</Label>
