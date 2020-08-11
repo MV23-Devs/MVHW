@@ -27,19 +27,22 @@ export default class Profile extends Component {
             },
             userClasses: [],
         }
-        this.setUserClasses();
+        setTimeout(
+            this.setUserClasses(), 5000
+        )
         this.handleInputChange = this.handleInputChange.bind(this);
+
+
     }
 
-    setUserClasses(){
+    setUserClasses() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({ user: { auth: user, name: user.displayName } })
-                //console.log(this.state.user.auth)
+                console.log("user auth = " + this.state.user.auth)
                 firebase.firestore().collection("users").doc(this.state.user.auth.uid).get().then(doc => {
-                    this.setState({userClasses: doc.data().classes});
+                    this.setState({ userClasses: doc.data().classes });
                 })
-                
             } else {
                 this.setState({ user: { auth: user, name: 'Anonymous' } })
             }
@@ -67,7 +70,7 @@ export default class Profile extends Component {
                     // console.log(userdata[0].data())
                     // console.log(doc.data().classes)
                 })
-                
+
             } else {
                 this.setState({ user: { auth: user, name: 'Anonymous' } })
             }
@@ -91,17 +94,19 @@ export default class Profile extends Component {
             }
             target.value = false;
         }
-        this.setState({update: 0});
+
+        this.setState({ update: 1 });
+        this.submitHandler(event);
     }
 
     submitHandler = (event) => {
         event.preventDefault();
-        
+
         firebase.firestore().collection("users").doc(this.state.user.auth.uid).update({
             classes: this.state.selected,
         });
         this.setUserClasses()
-        this.setState({update: 0});
+        this.setState({ update: 0 });
     }
 
     render() {
@@ -114,7 +119,7 @@ export default class Profile extends Component {
                     </div>
                     <div id="checkBoxTitle">
                         <a href="#">Select Classes: <span className="badge"> {this.state.selected.length}</span></a>
-                        <br/>
+                        <br />
                     </div>
                     <div id="checkBoxSelect">
                         <Form onSubmit={this.submitHandler} >
@@ -128,7 +133,7 @@ export default class Profile extends Component {
                                             <React.Fragment>
                                                 <div className="tickBoxSurround">
                                                     <Label for={cless} >
-                                                        <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1}/>
+                                                        <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
                                                         {cless}
                                                     </Label>
                                                     <br />
@@ -139,7 +144,7 @@ export default class Profile extends Component {
                                 }
                             </FormGroup>
 
-                            <Button color="info" id="submitClasses">Save Classes</Button>
+                            {/* <Button color="info" id="submitClasses">Save Classes</Button> */}
                         </Form>
                     </div>
                 </div>
