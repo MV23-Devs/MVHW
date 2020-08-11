@@ -294,3 +294,8 @@ a {
   float: right;
   border-radius: 50%;
 }
+
+.profilePage {
+  color: white;
+  padding: 20px;
+}
