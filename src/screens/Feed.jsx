@@ -115,7 +115,7 @@ export default class Feed extends Component {
                     <h4>Question: {item.getText()}  {tag}</h4>
                     {
                       item.getImgUrl() !== "" ?
-                        <img src={item.getImgUrl()} alt="aa" width="100%" />
+                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
                         :
                         null
                     }
@@ -237,7 +237,7 @@ export default class Feed extends Component {
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
-                                <img src={item.getImgUrl()} alt="aa" width="100%" />
+                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
                                 :
                                 null
                             }

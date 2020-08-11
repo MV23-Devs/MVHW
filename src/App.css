@@ -327,3 +327,7 @@ a {
   float: right;
   margin-top: 45px !important;
 }
+
+.post-img {
+  max-height: 500px;
+}
