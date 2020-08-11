@@ -419,7 +419,7 @@ class Home extends Component {
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
                 <br />
                 <br />
-                <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
+                <Label for="tags"><Badge color="info">Mandatory</Badge> Tag:</Label>
                 <Input type="select" name="select" id="tags">
                   <option>None</option>
                   <option>Math</option>
