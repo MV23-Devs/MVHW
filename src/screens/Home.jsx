@@ -54,7 +54,7 @@ const SocialDropdown = (props) => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+    <Dropdown isOpen={dropdownOpen} toggle={toggle} id="profileMenu">
       <DropdownToggle color="light" caret>
         Social
       </DropdownToggle>
@@ -80,7 +80,7 @@ const ProfilePictureDropdown = (props) => {
       >
         {props.children}
       </DropdownToggle>
-      <DropdownMenu id="ProfileMenu">
+      <DropdownMenu>
         <Link to="/profile"><DropdownItem >Profile</DropdownItem></Link>
         <DropdownItem onClick={props.signout}>Sign Out</DropdownItem>
       </DropdownMenu>
@@ -272,7 +272,7 @@ class Home extends Component {
     e.preventDefault();
     if (e.target.files[0] !== null) {
       const image = e.target.files[0];
-      //console.log(image);
+      console.log(image);
       this.setState(() => ({ image }));
     }
     else {
