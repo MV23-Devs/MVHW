@@ -192,6 +192,10 @@ button {
   color: white;
 }
 
+#anonymousBox{
+  padding: 10px;
+}
+
 #checkBoxTitle{
   text-align: center;
   align-content: center;
