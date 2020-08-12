@@ -108,29 +108,31 @@ export default class Profile extends Component {
     }
 
     render() {
+        console.log(this.state.user)
         return (
             <React.Fragment>
                 <div >
-                    <div id="places">
-                        <Link to="/">Home</Link>
-                        <h1>Profile</h1>
-                    </div>
-                    {
-                        this.state.userClasses ?
-                            <div id="checkBoxTitle">
-                                <a href="#">Select Classes: <span className="badge"> {this.state.selected.length}</span></a>
-                                <br />
-                            </div>
-                            :
-                            null
-
-                    }
                     <div id="checkBoxSelect">
-                        <Form onSubmit={this.submitHandler} >
+                        <Link to="/">Home</Link>
+                        <h1 className="pf-title">Profile</h1>
+                        {
+                            // this.state.user.auth.photoURL ?
+                            // <img src={this.state.user.auth.photoURL} alt="pfp"/>
+                            // :
+                            // null
+                        }
+                        <hr className="line"/>
+                        {
+                            this.state.userClasses ?
+                                <div id="checkBoxTitle">
+                                    <h1 className="classSelect">Select Classes: <span className="badge"> {this.state.selected.length}</span></h1>
+                                    <br />
+                                </div>
+                                :
+                                null
+                        }
+                        <Form className="checkform" onSubmit={this.submitHandler} >
                             <FormGroup check>
-                                {
-                                    //console.log(this.state.userClasses)
-                                }
                                 {
                                     this.classes.map(cless => {
                                         return (

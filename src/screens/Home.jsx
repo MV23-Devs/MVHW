@@ -466,7 +466,6 @@ class Home extends Component {
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
 
                 <br />
-                <br/>
                 
                 {
 
