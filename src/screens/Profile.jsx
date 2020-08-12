@@ -10,8 +10,6 @@ import {
     useLocation,
     withRouter
 } from 'react-router-dom'
-
-import { get as _get } from "lodash";
 import firebase from '../firebase.js';
 
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
@@ -113,24 +111,26 @@ export default class Profile extends Component {
         return (
             <React.Fragment>
                 <div >
-                    <div id="checkBoxSelect">
+                    <div id="places">
                         <Link to="/">Home</Link>
-                        <h1 className="pf-title">Profile</h1>
-                        <center>
-                            <img src={_get(this.state.user.auth, 'photoURL', "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} className="profilePic" alt="pfp" />
-                        </center>
-                        <hr className="line" />
-                        {
-                            this.state.userClasses ?
-                                <div id="checkBoxTitle">
-                                    <h1 className="classSelect">Select Classes: <span className="badge"> {this.state.selected.length}</span></h1>
-                                    <br />
-                                </div>
-                                :
-                                null
-                        }
-                        <Form className="checkform" onSubmit={this.submitHandler} >
+                        <h1>Profile</h1>
+                    </div>
+                    {
+                        this.state.userClasses ?
+                            <div id="checkBoxTitle">
+                                <a href="#">Select Classes: <span className="badge"> {this.state.selected.length}</span></a>
+                                <br />
+                            </div>
+                            :
+                            null
+
+                    }
+                    <div id="checkBoxSelect">
+                        <Form onSubmit={this.submitHandler} >
                             <FormGroup check>
+                                {
+                                    //console.log(this.state.userClasses)
+                                }
                                 {
                                     this.classes.map(cless => {
                                         return (

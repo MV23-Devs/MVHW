@@ -179,12 +179,15 @@ button {
 
 #checkBoxSelect {
   text-align: left;
-  margin: auto;
+  margin: 10%;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  display: inline-block;
   padding: 10px;
-  /* border: 1px solid #fff; */
-  width: 70%;
-  background-color: #000;
-  height: 100vh;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  width: 80%;
   outline: none;
   color: white;
 }
@@ -208,15 +211,11 @@ button {
 }
 
 
-#previewImage {
-  margin: 10px;
-}
-
 
 
 .tickBoxSurround {
   display: inline-block;
-  width: 30%;
+  width: 200px;
 }
 
 
@@ -402,21 +401,4 @@ a {
 
 .post-img {
   max-height: 500px;
-}
-
-.classSelect {
-  color: white !important;
-}
-
-.pf-title {
-  text-align: center;
-}
-
-.line {
-  background-color: white;
-}
-
-.profilePic {
-  border-radius: 50%;
-  max-width: 300px;
 }
