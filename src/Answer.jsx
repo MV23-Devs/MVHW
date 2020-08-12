@@ -1,7 +1,10 @@
+import get from "lodash";
+
 export default class Answer {
-    constructor(questionText, user, time, id, upvotes = 0) {
+    constructor(questionText, user, username, time, id, upvotes = 0) {
         this.answerText = questionText
         this.user = user;
+        this.username = username;
         this.id = id
         this.upvotes = upvotes;
     }
@@ -18,7 +21,7 @@ export default class Answer {
         return this.answerText
     }
     getUsername() {
-        return this.user.displayName;
+        return this.username;
     }
     getUser() {
         return this.user

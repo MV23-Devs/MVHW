@@ -135,7 +135,7 @@ export default class Question {
     getFirstAnswer() {
         //answer contructor
         //answerText, user, time, id, upvotes=0, tags=null
-        let topAns = new Answer("There are no answers to this question yet", "bot", this.getTime(), 0, null)
+        let topAns = new Answer("There are no answers to this question yet", "bot", "bot", this.getTime(), 0, null)
 
         if (this.answers.length === 0) {
             return topAns

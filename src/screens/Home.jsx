@@ -221,7 +221,7 @@ class Home extends Component {
             docs.push(q);
             db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
-                q.addAnswer(doc.data().title, JSON.parse(doc.data().author), doc.data().timestamp, doc.id)
+                q.addAnswer(doc.data().title, JSON.parse(doc.data().author), JSON.parse(doc.data().author).displayName, doc.data().timestamp, doc.id)
               })
             })
           } else if (change.type === 'removed') {
