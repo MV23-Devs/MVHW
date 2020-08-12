@@ -3,12 +3,13 @@ import firebase from './firebase.js';
 
 
 export default class Question {
-    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url = "") {
+    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url = "", name) {
         this.questionText = questionText
         this.img_url = img_url;
         this.isReplying = false;
         this.isReplyingInner = false;
         this.user = user
+        this.name = name
         this.id = id
         this.upvotes = upvotes;
         this.answers = [];
@@ -102,7 +103,7 @@ export default class Question {
         return this.questionText
     }
     getUsername() {
-        return this.user.displayName;
+        return this.name;
     }
     getUser() {
         return this.user

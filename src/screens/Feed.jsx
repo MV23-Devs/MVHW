@@ -168,6 +168,8 @@ export default class Feed extends Component {
               this.props.filteredQuestions.map(
                 (item, i) => {
                   let user = <h5>User: {item.getUsername()}</h5>;
+                  //console.log("item", item)
+                  //console.log("user", user)
                   if (item.getUsername() === 'devs') {
                     user = <h6>User: <Badge color="dark">devs</Badge></h6>;
                   } if (this.props.user.auth !== null) {
