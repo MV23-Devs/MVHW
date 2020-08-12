@@ -215,13 +215,11 @@ class Home extends Component {
               downs = doc.data().usersDownvoted.length
               votes = 0 - downs;
             }
-
-            console.log(votes)
-            
-            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username));
-            db.collection("questions").doc(doc.id).collection("replies").get().then(querySnapshot => {
+            let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
+            docs.push(q);
+            db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
-                // console.log(doc.data());
+                q.addAnswer(doc.data().title, JSON.parse(doc.data().author), doc.data().timestamp, doc.id)
               })
             })
           } else if (change.type === 'removed') {

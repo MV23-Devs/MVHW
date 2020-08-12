@@ -17,9 +17,9 @@ export default class Answer {
     getText() {
         return this.answerText
     }
-    //getUsername() {
-    //     return this.username;
-    // }
+    getUsername() {
+        return this.user.displayName;
+    }
     getUser() {
         return this.user
     }

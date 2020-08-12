@@ -37,7 +37,6 @@ export default class Profile extends Component {
             if (user) {
                 this.setState({ user: { auth: user, name: user.displayName } })
                 //console.log("user auth = " + this.state.user.auth)
-                console.log("uid", user.uid)
                 firebase.firestore().collection("users").doc(user.uid).get().then(doc => {
                     this.setState({ userClasses: doc.data().classes });
                 })

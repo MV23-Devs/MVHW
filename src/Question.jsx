@@ -62,11 +62,11 @@ export default class Question {
         //     })
 
         
-        firebase.firestore().collection("questions").doc(this.id).collection("replies").get().then(querySnapshot => {
-            querySnapshot.docs.forEach(doc => {
-                this.answers.push(new Answer(doc.data().title, JSON.parse(doc.data().author), doc.data().timestamp, doc.id, doc.data().upvotes))
-            })
-        })
+        // firebase.firestore().collection("questions").doc(this.id).collection("replies").get().then(querySnapshot => {
+        //     querySnapshot.docs.forEach(doc => {
+        //         this.answers.push(new Answer(doc.data().title, JSON.parse(doc.data().author), doc.data().timestamp, doc.id, doc.data().upvotes))
+        //     })
+        // })
 
 
 
@@ -85,10 +85,9 @@ export default class Question {
         return this.id
     }
 
-    addAnswer(answerText, user) {
-        let answer = new Answer(answerText, user)
+    addAnswer(answerText, user, time, id,) {
+        let answer = new Answer(answerText, user, time, id)
         this.answers.push(answer)
-        this.answers.append(answer)
     }
     upvote() {
         this.upvotes += 1;
