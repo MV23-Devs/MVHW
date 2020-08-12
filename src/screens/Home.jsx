@@ -465,7 +465,7 @@ class Home extends Component {
                 {this.state.errormessage}
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
-                <br/>
+
                 <br/>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
                 <label for="anonymousBox"> Anonymous</label>
@@ -514,7 +514,6 @@ class Home extends Component {
             <a href="https://github.com/MV23-Devs/MVHW" className='link-dark'>Github</a>
             <br />
             <a href="https://www.instagram.com/mvhs.2023/?hl=en" className='link-dark'>Instagram</a>
-            <br />
             <br />
             <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
             <AboutModal></AboutModal>
