@@ -413,3 +413,8 @@ a {
 .line {
   background-color: white;
 }
+
+.profilePic {
+  border-radius: 50%;
+  max-width: 300px;
+}

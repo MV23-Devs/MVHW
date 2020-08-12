@@ -10,6 +10,8 @@ import {
     useLocation,
     withRouter
 } from 'react-router-dom'
+
+import { get as _get } from "lodash";
 import firebase from '../firebase.js';
 
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
@@ -108,20 +110,16 @@ export default class Profile extends Component {
     }
 
     render() {
-        console.log(this.state.user)
         return (
             <React.Fragment>
                 <div >
                     <div id="checkBoxSelect">
                         <Link to="/">Home</Link>
                         <h1 className="pf-title">Profile</h1>
-                        {
-                            // this.state.user.auth.photoURL ?
-                            // <img src={this.state.user.auth.photoURL} alt="pfp"/>
-                            // :
-                            // null
-                        }
-                        <hr className="line"/>
+                        <center>
+                            <img src={_get(this.state.user.auth, 'photoURL', "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} className="profilePic" alt="pfp" />
+                        </center>
+                        <hr className="line" />
                         {
                             this.state.userClasses ?
                                 <div id="checkBoxTitle">

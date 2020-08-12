@@ -115,7 +115,7 @@ export default class Feed extends Component {
                     <h4>Question: {item.getText()}  {tag}</h4>
                     {
                       item.getImgUrl() !== "" ?
-                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
+                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
                         :
                         null
                     }
@@ -140,17 +140,29 @@ export default class Feed extends Component {
                 if (answer.getUser().displayName === 'devs') {
                   user = <h6>User: <Badge color="dark">devs</Badge></h6>;
                 }
-                if(this.props.user.auth !== null) {
+                if (this.props.user.auth !== null) {
                   if (answer.getUser().uid === this.props.user.auth.uid) {
                     user = <h6>User: <Badge color="secondary">you</Badge></h6>;
                   }
                 }
+
+                upvotes = answer.getUpvotes();
+
                 return (
                   <li key={"answer" + i} id="answerBox" style={dark}>
-                    {user}
-                    <h5>Answer: {answer.getText()}</h5>
-                    {/* {respondable} */}
-                    <p className="links">reply</p>
+                    <Row>
+                      <Col xs="1" className="updown">
+                        {/* <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button> */}
+                        <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                        {/* <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button> */}
+                      </Col>
+                      <Col xs="11">
+                        {user}
+                        <h5>Answer: {answer.getText()}</h5>
+                        {/* {respondable} */}
+                        <p className="links">reply</p>
+                      </Col>
+                    </Row>
                   </li>
                 );
               })
@@ -239,7 +251,7 @@ export default class Feed extends Component {
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
-                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
+                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
                                 :
                                 null
                             }
@@ -276,10 +288,10 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
         console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
-        if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1){
+        if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
           this.props.filteredQuestions[i].upvote();
           tempUsersUpvoted.push(this.props.user.auth.uid);
-          if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1){
+          if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
             tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
           }
           db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
@@ -287,11 +299,11 @@ export default class Feed extends Component {
             usersUpvoted: tempUsersUpvoted,
             usersDownvoted: tempUsersDownvoted,
           })
-        }else{
+        } else {
           console.log("You already upvoted!")
         }
       })
-      
+
       this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -312,10 +324,10 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
         console.log(this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
-        if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1){
+        if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1) {
           this.props.filteredQuestions[i].downvote();
           tempUsersDownvoted.push(this.props.user.auth.uid);
-          if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1){
+          if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1) {
             tempUsersUpvoted = tempUsersUpvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
           }
           db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
@@ -323,11 +335,11 @@ export default class Feed extends Component {
             usersUpvoted: tempUsersUpvoted,
             usersDownvoted: tempUsersDownvoted,
           })
-        }else{
+        } else {
           console.log("You already downvoted!")
         }
       })
-      
+
       this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -339,8 +351,8 @@ export default class Feed extends Component {
   }
 
   isIn = (item, array) => {
-    for(let elem in array){
-      if(item === elem){
+    for (let elem in array) {
+      if (item === elem) {
         return true;
       }
       return false;
