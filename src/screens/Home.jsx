@@ -355,7 +355,7 @@ class Home extends Component {
       }else{
         name=this.state.user.name;
       }
-      if (this.handleImageUpload() !== null) {
+      if (this.fileinputref.current.value !== null) {
         this.handleImageUpload()
           .then(url => {
             this.fileinputref.current.value = null
@@ -376,6 +376,7 @@ class Home extends Component {
                 tags: t,
               }).then((docRef) => {
                 firebase.database().ref('audit log').push(date + ": created a new post");
+                this.setState({image: null});
               });
           });
       } else {
