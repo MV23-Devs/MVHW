@@ -275,22 +275,23 @@ export default class Feed extends Component {
       db.collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
-      })
-      console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
-      if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1){
-        this.props.filteredQuestions[i].upvote();
-        tempUsersUpvoted.push(this.props.user.auth.uid);
-        if(this.props.user.auth.uid in tempUsersDownvoted){
-          tempUsersDownvoted = tempUsersDownvoted.filter(item => (item === this.props.user.auth.uid ? true : false))
+        console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
+        if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1){
+          this.props.filteredQuestions[i].upvote();
+          tempUsersUpvoted.push(this.props.user.auth.uid);
+          if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1){
+            tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+          }
+          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+            upvotes: up + 1,
+            usersUpvoted: tempUsersUpvoted,
+            usersDownvoted: tempUsersDownvoted,
+          })
+        }else{
+          console.log("You already upvoted!")
         }
-        db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-          upvotes: up + 1,
-          usersUpvoted: tempUsersUpvoted,
-          usersDownvoted: tempUsersDownvoted,
-        })
-      }else{
-        console.log("You already upvoted!")
-      }
+      })
+      
       this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -310,22 +311,23 @@ export default class Feed extends Component {
       db.collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
-      })
-      console.log(this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
-      if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1){
-        this.props.filteredQuestions[i].downvote();
-        tempUsersDownvoted.push(this.props.user.auth.uid);
-        if(this.props.user.auth.uid in tempUsersUpvoted){
-          tempUsersUpvoted = tempUsersUpvoted.filter(item => (item === this.props.user.auth.uid ? true : false))
+        console.log(this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
+        if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1){
+          this.props.filteredQuestions[i].downvote();
+          tempUsersDownvoted.push(this.props.user.auth.uid);
+          if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1){
+            tempUsersUpvoted = tempUsersUpvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+          }
+          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+            upvotes: up - 1,
+            usersUpvoted: tempUsersUpvoted,
+            usersDownvoted: tempUsersDownvoted,
+          })
+        }else{
+          console.log("You already downvoted!")
         }
-        db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
-          upvotes: up - 1,
-          usersUpvoted: tempUsersUpvoted,
-          usersDownvoted: tempUsersDownvoted,
-        })
-      }else{
-        console.log("You already downvoted!")
-      }
+      })
+      
       this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
