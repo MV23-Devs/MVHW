@@ -468,7 +468,7 @@ class Home extends Component {
 
                 <br/>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
-                <label for="anonymousBox"> Anonymous</label>
+                <label for="anonymousBox"><Badge color="info">Anonymous</Badge></label>
                 
                 {
 
