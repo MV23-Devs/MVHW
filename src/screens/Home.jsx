@@ -466,8 +466,6 @@ class Home extends Component {
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
 
                 <br/>
-                <label for="anonymousBox"><Badge color="info">Anonymous</Badge></label>
-                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
                 
                 {
 
@@ -504,6 +502,11 @@ class Home extends Component {
                   <option>Art</option>
                   <option>Music</option>
                 </Input>
+                <br/>
+                <label id="anonymousBoxLabel" for="anonymousBox">Anonymous</label>
+                <span id = "spacer1"></span>
+                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
+                
               </FormGroup>
               <Button color="light" block>Submit</Button>
             </Form>
