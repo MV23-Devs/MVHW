@@ -355,7 +355,7 @@ class Home extends Component {
       } else {
         name = this.state.user.name;
       }
-      if (this.fileinputref.current.value !== null) {
+      if (this.handleImageUpload() !== null) {
         this.handleImageUpload()
           .then(url => {
             this.fileinputref.current.value = null
@@ -465,13 +465,7 @@ class Home extends Component {
                 {this.state.errormessage}
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
-<<<<<<< HEAD
-
-                <br />
-                
-=======
                 <br/>
->>>>>>> 0b278041120a99c37dce33a2aa910491b1d49500
                 {
 
                   this.state.image !== null ?

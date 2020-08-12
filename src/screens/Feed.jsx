@@ -154,8 +154,8 @@ export default class Feed extends Component {
                         {/* {respondable} */}
 
                         <p className="links">reply</p>
+                        <br/>
                       </li>
-                      <br/>
                     );
                   })
                 }
@@ -169,7 +169,6 @@ export default class Feed extends Component {
 
           </Container>
 
-<<<<<<< HEAD
           <ul className="feed-list">
             {
               item.getAllAnswers().map((answer, i) => {
@@ -205,9 +204,6 @@ export default class Feed extends Component {
               })
             }
           </ul>
-=======
-
->>>>>>> 0b278041120a99c37dce33a2aa910491b1d49500
 
         </React.Fragment >
       )
