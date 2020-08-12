@@ -467,8 +467,8 @@ class Home extends Component {
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
                 <br/>
                 <br/>
-                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
                 <label for="anonymousBox"><Badge color="info">Anonymous</Badge></label>
+                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
                 
                 {
 
