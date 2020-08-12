@@ -27,15 +27,12 @@ export default class Profile extends Component {
             },
             userClasses: [],
         }
-        setTimeout(
-            this.setUserClasses(), 5000
-        )
         this.handleInputChange = this.handleInputChange.bind(this);
 
 
     }
 
-    setUserClasses() {
+    componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({ user: { auth: user, name: user.displayName } })
@@ -47,8 +44,7 @@ export default class Profile extends Component {
                 this.setState({ user: { auth: user, name: 'Anonymous' } })
             }
         });
-    }
-    componentDidMount() {
+
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({ user: { auth: user, name: user.displayName } })
@@ -105,7 +101,9 @@ export default class Profile extends Component {
         firebase.firestore().collection("users").doc(this.state.user.auth.uid).update({
             classes: this.state.selected,
         });
-        this.setUserClasses()
+        firebase.firestore().collection("users").doc(this.state.user.auth.uid).get().then(doc => {
+            this.setState({ userClasses: doc.data().classes });
+        })
         this.setState({ update: 0 });
     }
 
