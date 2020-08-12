@@ -17,7 +17,7 @@ import Question from '../Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import firebase from '../firebase.js';
 import { storage } from '../firebase.js';
 // import { get as _get } from "lodash";
@@ -206,14 +206,14 @@ class Home extends Component {
 
             let ups, downs, votes = 0;
 
-            if(doc.data().usersUpvoted.length > 0 && doc.data().usersDownvoted.length > 0) {
+            if (doc.data().usersUpvoted.length > 0 && doc.data().usersDownvoted.length > 0) {
               ups = doc.data().usersUpvoted.length
               downs = doc.data().usersDownvoted.length
               votes = ups - downs;
-            } else if(doc.data().usersUpvoted.length > 0) {
+            } else if (doc.data().usersUpvoted.length > 0) {
               ups = doc.data().usersUpvoted.length
               votes = ups;
-            } else if(doc.data().usersDownvoted.length > 0) {
+            } else if (doc.data().usersDownvoted.length > 0) {
               downs = doc.data().usersDownvoted.length
               votes = 0 - downs;
             }
@@ -304,7 +304,7 @@ class Home extends Component {
 
   handleAnonymousInput = (event) => {
     let target = event.target;
-    this.setState({anonymousPost: target.checked})
+    this.setState({ anonymousPost: target.checked })
   }
 
   handleImageUpload = () => {
@@ -323,11 +323,11 @@ class Home extends Component {
   readURL = (input) => {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
-      
-      reader.onload = function(e) {
+
+      reader.onload = function (e) {
         document.getElementById("previewImage").src = e.target.result;
       }
-      
+
       reader.readAsDataURL(input.files[0]); // convert to base64 string
     }
   }
@@ -350,10 +350,10 @@ class Home extends Component {
       let date = (new Date()).toString();
       let name = "";
       console.log("anonymous: ", anonymous)
-      if(anonymous === true){
+      if (anonymous === true) {
         name = "Anonymous";
-      }else{
-        name=this.state.user.name;
+      } else {
+        name = this.state.user.name;
       }
       if (this.fileinputref.current.value !== null) {
         this.handleImageUpload()
@@ -362,7 +362,7 @@ class Home extends Component {
             this.forceUpdate()
             this.setState({ url });
             //console.log(this.fileinputref)
-            console.log("url",this.state.url);
+            console.log("url", this.state.url);
             firebase.firestore()
               .collection('questions')
               .add({
@@ -466,17 +466,18 @@ class Home extends Component {
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
 
+                <br />
                 <br/>
                 
                 {
 
                   this.state.image !== null ?
-                    <img id="previewImage" alt="Image Uploaded!" width="100px"/>
+                    <img id="previewImage" alt="Image Uploaded!" width="100px" />
                     :
                     null
                 }
                 <br />
-                <Label for="tags"><Badge color="info">Mandatory</Badge> Tag:</Label>
+                <Label for="tags"><Badge color="danger">Mandatory</Badge> Tag:</Label>
                 <Input type="select" name="select" id="tags">
                   <option>None</option>
                   <option>Math</option>

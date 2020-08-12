@@ -115,10 +115,16 @@ export default class Profile extends Component {
                         <Link to="/">Home</Link>
                         <h1>Profile</h1>
                     </div>
-                    <div id="checkBoxTitle">
-                        <a href="#">Select Classes: <span className="badge"> {this.state.selected.length}</span></a>
-                        <br />
-                    </div>
+                    {
+                        this.state.userClasses ?
+                            <div id="checkBoxTitle">
+                                <a href="#">Select Classes: <span className="badge"> {this.state.selected.length}</span></a>
+                                <br />
+                            </div>
+                            :
+                            null
+
+                    }
                     <div id="checkBoxSelect">
                         <Form onSubmit={this.submitHandler} >
                             <FormGroup check>
@@ -131,7 +137,12 @@ export default class Profile extends Component {
                                             <React.Fragment>
                                                 <div className="tickBoxSurround">
                                                     <Label for={cless} >
-                                                        <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
+                                                        {
+                                                            this.state.userClasses ?
+                                                                <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
+                                                                :
+                                                                <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" />
+                                                        }
                                                         {cless}
                                                     </Label>
                                                     <br />
