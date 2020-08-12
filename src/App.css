@@ -207,10 +207,11 @@ button {
   padding: 10px;
 }
 
-.checkform {
-  padding: 20px;
-  margin: auto;
+
+#previewImage {
+  margin: 10px;
 }
+
 
 
 .tickBoxSurround {
