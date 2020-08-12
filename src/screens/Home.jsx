@@ -294,6 +294,7 @@ class Home extends Component {
       this.setState(() => ({ image }));
       console.log(image);
       console.log(e.target.files);
+      this.readURL(e.target);
     }
     else {
       this.setState({ image: null })
@@ -313,6 +314,19 @@ class Home extends Component {
     }
     return null;
   };
+  readURL = (input) => {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) {
+        document.getElementById("previewImage").src = e.target.result;
+      }
+      
+      reader.readAsDataURL(input.files[0]); // convert to base64 string
+    }
+  }
+  
+
 
   submitHandler = (event) => {
     event.preventDefault();
@@ -336,6 +350,7 @@ class Home extends Component {
             this.forceUpdate()
             this.setState({ url });
             //console.log(this.fileinputref)
+            console.log("url",this.state.url);
             firebase.firestore()
               .collection('questions')
               .add({
@@ -439,8 +454,9 @@ class Home extends Component {
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
 
                 {
+
                   this.state.image !== null ?
-                    <img src={this.state.image} alt="Image Uploaded!" />
+                    <img id="previewImage" alt="Image Uploaded!" width="100px"/>
                     :
                     null
                 }
