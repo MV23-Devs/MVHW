@@ -477,7 +477,6 @@ class Home extends Component {
                     null
                 }
                 <br />
-                <br />
                 <Label for="tags"><Badge color="info">Mandatory</Badge> Tag:</Label>
                 <Input type="select" name="select" id="tags">
                   <option>None</option>
