@@ -164,7 +164,8 @@ class Home extends Component {
         auth: null,
         name: 'Anonymous',
       },
-      filterBy: "Popularity"
+      filterBy: "Popularity",
+      anonymousPost: false,
     };
 
 
@@ -217,8 +218,7 @@ class Home extends Component {
 
             console.log(votes)
             
-
-            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url));
+            docs.push(new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username));
             db.collection("questions").doc(doc.id).collection("replies").get().then(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
                 // console.log(doc.data());
@@ -301,6 +301,11 @@ class Home extends Component {
     }
   };
 
+  handleAnonymousInput = (event) => {
+    let target = event.target;
+    this.setState({anonymousPost: target.checked})
+  }
+
   handleImageUpload = () => {
     if (this.state.image !== null) {
       const { image } = this.state;
@@ -332,6 +337,8 @@ class Home extends Component {
     event.preventDefault();
     let val = event.target["text"].value;
     let t = event.target["select"].value;
+    let anonymous = this.state.anonymousPost
+    console.log(anonymous)
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
@@ -342,7 +349,13 @@ class Home extends Component {
       this.setState({ errormessage: '' });
 
       let date = (new Date()).toString();
-
+      let name = "";
+      console.log("anonymous: ", anonymous)
+      if(anonymous === true){
+        name = "Anonymous";
+      }else{
+        name=this.state.user.name;
+      }
       if (this.handleImageUpload() !== null) {
         this.handleImageUpload()
           .then(url => {
@@ -356,7 +369,7 @@ class Home extends Component {
               .add({
                 title: val,
                 img_url: this.state.url,
-                username: this.state.user.name,
+                username: name,
                 auth: JSON.stringify(this.state.user.auth),
                 usersUpvoted: [],
                 usersDownvoted: [],
@@ -372,7 +385,7 @@ class Home extends Component {
           .add({
             title: val,
             img_url: this.state.url,
-            username: this.state.user.name,
+            username: name,
             auth: JSON.stringify(this.state.user.auth),
             usersUpvoted: [],
             usersDownvoted: [],
@@ -452,7 +465,10 @@ class Home extends Component {
                 {this.state.errormessage}
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
-
+                <br/>
+                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
+                <label for="anonymousBox"> Anonymous</label>
+                
                 {
 
                   this.state.image !== null ?
