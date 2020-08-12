@@ -355,7 +355,7 @@ class Home extends Component {
       } else {
         name = this.state.user.name;
       }
-      if (this.fileinputref.current.value !== null) {
+      if (this.handleImageUpload() !== null) {
         this.handleImageUpload()
           .then(url => {
             this.fileinputref.current.value = null
