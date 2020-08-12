@@ -54,7 +54,7 @@ export default class Feed extends Component {
           user = <h6>User: <Badge color="secondary">you</Badge></h6>;
         }
       }
-      const inlineStuff = {marginLeft:"6%"}
+      const inlineStuff = { marginLeft: "6%" }
       let color = '';
       switch (item.getTags()) {
         case 'Math':
@@ -131,39 +131,6 @@ export default class Feed extends Component {
                   {this.renderReply(item)}
                 </Col>
               </Row>
-
-              {/* answers */}
-              <div style={inlineStuff}>
-
-              <ul className="feed-list" >
-                {
-                  item.getAllAnswers().map((answer, i) => {
-                    user = <h6>User: {answer.getUser().displayName}</h6>;
-                    if (answer.getUser().displayName === 'devs') {
-                      user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                    }
-                    if (this.props.user.auth !== null) {
-                      if (answer.getUser().uid === this.props.user.auth.uid) {
-                        user = <h6>User: <Badge color="secondary">you</Badge></h6>;
-                      }
-                    }
-                    return (
-                      <li key={"answer" + i} id="answerBox" style={dark}>
-                        {user}
-                        <h5>Answer: {answer.getText()}</h5>
-                        {/* {respondable} */}
-
-                        <p className="links">reply</p>
-                        <br/>
-                      </li>
-                    );
-                  })
-                }
-              </ul>
-              </div>
-
-
-
             </div>
 
 
