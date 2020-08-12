@@ -25,6 +25,7 @@ import jacob from "../img/jacob.jpg";
 import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";
 import atli from "../img/atli-sucks.jpg";
+import { result } from 'lodash';
 
 const db = firebase.firestore();
 
@@ -253,6 +254,7 @@ class Home extends Component {
     firebase.auth().signInWithPopup(provider).then((result) => {
       //var token = result.credential.accessToken;
       // The signed-in user info.
+      console.log(result, provider)
       var user = result.user;
 
       if (result.additionalUserInfo.isNewUser) {
@@ -272,7 +274,7 @@ class Home extends Component {
       // return response.json(); // parses JSON response into native JavaScript objects
 
     }).catch((error) => {
-      console.error('Error Code ' + error.code + ': ' + error.message)
+      console.error('Error Code: ' + error.code + ': ' + error.message)
     });
   }
 
@@ -329,9 +331,7 @@ class Home extends Component {
       reader.readAsDataURL(input.files[0]); // convert to base64 string
     }
   }
-
-
-
+  
   submitHandler = (event) => {
     event.preventDefault();
     let val = event.target["text"].value;
@@ -467,10 +467,7 @@ class Home extends Component {
 
                 <br />
                 <br/>
-                <label for="anonymousBox"><Badge color="info">Anonymous{' '}
-                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput} />
-                </Badge></label>
-
+                
                 {
 
                   this.state.image !== null ?
@@ -506,6 +503,11 @@ class Home extends Component {
                   <option>Art</option>
                   <option>Music</option>
                 </Input>
+                <br/>
+                <label id="anonymousBoxLabel" for="anonymousBox">Anonymous</label>
+                <span id = "spacer1"></span>
+                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
+                
               </FormGroup>
               <Button color="light" block>Submit</Button>
             </Form>

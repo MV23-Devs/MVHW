@@ -192,8 +192,8 @@ button {
   color: white;
 }
 
-#anonymousBox{
-  padding: 10px;
+#anonymousBoxLabel{
+  
 }
 
 #checkBoxTitle{
@@ -202,10 +202,23 @@ button {
   font-size: 20px;
 }
 
+
+
+/* SPACERS */
+
+#spacer1 {
+  padding: 10px;
+}
+
+
+
+
 .tickBoxSurround {
   display: inline-block;
   width: 200px;
 }
+
+
 #submitClasses {
   margin-left: 40%;
   width: 20%;

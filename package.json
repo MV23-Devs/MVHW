@@ -1,5 +1,6 @@
 {
   "name": "mvhw",
+  "homepage": "https://mvhw.saarang.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
