@@ -465,10 +465,7 @@ class Home extends Component {
                 {this.state.errormessage}
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
-
-                <br />
                 <br/>
-                
                 {
 
                   this.state.image !== null ?
