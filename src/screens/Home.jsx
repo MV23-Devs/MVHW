@@ -17,6 +17,7 @@ import Question from '../Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import firebase from '../firebase.js';
 import { storage } from '../firebase.js';
 // import { get as _get } from "lodash";
@@ -575,6 +576,27 @@ class Home extends Component {
       { filteredQuestions }
     )
   }
+
+  createNotification = (type) => {
+    return () => {
+      switch (type) {
+        case 'info':
+          NotificationManager.info('Info message');
+          break;
+        case 'success':
+          NotificationManager.success('Success message', 'Title here');
+          break;
+        case 'warning':
+          NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
+          break;
+        case 'error':
+          NotificationManager.error('Error message', 'Click me!', 5000, () => {
+            alert('callback');
+          });
+          break;
+      }
+    };
+  };
 
   // getFooterColor = () => {
   //   this.setState({
