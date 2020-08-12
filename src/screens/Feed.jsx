@@ -54,7 +54,7 @@ export default class Feed extends Component {
           user = <h6>User: <Badge color="secondary">you</Badge></h6>;
         }
       }
-
+      const inlineStuff = {marginLeft:"6%"}
       let color = '';
       switch (item.getTags()) {
         case 'Math':
@@ -100,6 +100,7 @@ export default class Feed extends Component {
 
       return (
         <React.Fragment>
+
           <Container>
             <div style={dark} className="questionBox">
               <Row>
@@ -115,7 +116,7 @@ export default class Feed extends Component {
                     <h4>Question: {item.getText()}  {tag}</h4>
                     {
                       item.getImgUrl() !== "" ?
-                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
+                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
                         :
                         null
                     }
@@ -130,38 +131,52 @@ export default class Feed extends Component {
                   {this.renderReply(item)}
                 </Col>
               </Row>
+
+              {/* answers */}
+              <div style={inlineStuff}>
+
+              <ul className="feed-list" >
+                {
+                  item.getAllAnswers().map((answer, i) => {
+                    user = <h6>User: {answer.getUser().displayName}</h6>;
+                    if (answer.getUser().displayName === 'devs') {
+                      user = <h6>User: <Badge color="dark">devs</Badge></h6>;
+                    }
+                    if (this.props.user.auth !== null) {
+                      if (answer.getUser().uid === this.props.user.auth.uid) {
+                        user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                      }
+                    }
+                    return (
+                      <li key={"answer" + i} id="answerBox" style={dark}>
+                        {user}
+                        <h5>Answer: {answer.getText()}</h5>
+                        {/* {respondable} */}
+
+                        <p className="links">reply</p>
+                      </li>
+                      <br/>
+                    );
+                  })
+                }
+              </ul>
+              </div>
+
+
+
             </div>
+
+
           </Container>
 
-          <ul className="feed-list">
-            {
-              item.getAllAnswers().map((answer, i) => {
-                user = <h6>User: {answer.getUser().displayName}</h6>;
-                if (answer.getUser().displayName === 'devs') {
-                  user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                }
-                if(this.props.user.auth !== null) {
-                  if (answer.getUser().uid === this.props.user.auth.uid) {
-                    user = <h6>User: <Badge color="secondary">you</Badge></h6>;
-                  }
-                }
-                return (
-                  <li key={"answer" + i} id="answerBox" style={dark}>
-                    {user}
-                    <h5>Answer: {answer.getText()}</h5>
-                    {/* {respondable} */}
-                    <p className="links">reply</p>
-                  </li>
-                );
-              })
-            }
-          </ul>
+
 
         </React.Fragment >
       )
     }
     return (
       <React.Fragment>
+
         <ul className="feed-list">
           <Container>
             {
@@ -239,7 +254,7 @@ export default class Feed extends Component {
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
-                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img"/>
+                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
                                 :
                                 null
                             }
@@ -276,10 +291,10 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
         console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
-        if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1){
+        if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
           this.props.filteredQuestions[i].upvote();
           tempUsersUpvoted.push(this.props.user.auth.uid);
-          if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1){
+          if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
             tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
           }
           db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
@@ -287,11 +302,11 @@ export default class Feed extends Component {
             usersUpvoted: tempUsersUpvoted,
             usersDownvoted: tempUsersDownvoted,
           })
-        }else{
+        } else {
           console.log("You already upvoted!")
         }
       })
-      
+
       this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -312,10 +327,10 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
         console.log(this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
-        if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1){
+        if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1) {
           this.props.filteredQuestions[i].downvote();
           tempUsersDownvoted.push(this.props.user.auth.uid);
-          if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1){
+          if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1) {
             tempUsersUpvoted = tempUsersUpvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
           }
           db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
@@ -323,11 +338,11 @@ export default class Feed extends Component {
             usersUpvoted: tempUsersUpvoted,
             usersDownvoted: tempUsersDownvoted,
           })
-        }else{
+        } else {
           console.log("You already downvoted!")
         }
       })
-      
+
       this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -339,8 +354,8 @@ export default class Feed extends Component {
   }
 
   isIn = (item, array) => {
-    for(let elem in array){
-      if(item === elem){
+    for (let elem in array) {
+      if (item === elem) {
         return true;
       }
       return false;
