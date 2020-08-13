@@ -101,62 +101,65 @@ export default class Feed extends Component {
 
       return (
         <React.Fragment>
-          <Container>
-            <div style={dark} className="questionBox">
-              <Row>
-                <Col xs="1" className="updown">
-                  <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-                  <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                  <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
-                </Col>
-                <Col xs="11">
-                  <div style={dark}>
-                    {user}
-                    <Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
-                    <h4>Question: {item.getText()}  {tag}</h4>
-                    {
-                      item.getImgUrl() !== "" ?
-                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                        :
-                        null
-                    }
-                  </div>
-                  <hr style={dark.line} />
-                  <span className="links" onClick={
+          <div className="containerthread">
 
-                    this.openReply.bind(this, item)
+            <Container>
+              <div style={dark} className="questionBox">
+                <Row>
+                  <Col xs="1" className="updown">
+                    <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
+                    <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                    <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
+                  </Col>
+                  <Col xs="11">
+                    <div style={dark}>
+                      {user}
+                      <Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
+                      <h4>Question: {item.getText()}  {tag}</h4>
+                      {
+                        item.getImgUrl() !== "" ?
+                          <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                          :
+                          null
+                      }
+                    </div>
+                    <hr style={dark.line} />
+                    <span className="links" onClick={
 
-                  }>reply</span>
-                  {deletedata}
-                  {this.renderReply(item)}
-                </Col>
-              </Row>
-            </div>
-          </Container>
+                      this.openReply.bind(this, item)
 
-          <ul className="feed-list">
-            {
-              item.getAllAnswers().map((answer, i) => {
-                user = <h6>User: {answer.getUser().displayName}</h6>;
-                if (answer.getUser().displayName === 'devs') {
-                  user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                }
-                if (this.props.user.auth !== null) {
-                  if (answer.getUser().uid === this.props.user.auth.uid) {
-                    user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                    }>reply</span>
+                    {deletedata}
+                    {this.renderReply(item)}
+                  </Col>
+                </Row>
+              </div>
+            </Container>
+
+            <ul className="feed-list">
+              {
+                item.getAllAnswers().map((answer, i) => {
+                  user = <h6>User: {answer.getUser().displayName}</h6>;
+                  if (answer.getUser().displayName === 'devs') {
+                    user = <h6>User: <Badge color="dark">devs</Badge></h6>;
                   }
-                }
-                return (
-                  <li key={"answer" + i} id="answerBox" style={dark}>
-                    {user}
-                    <h5>Answer: {answer.getText()}</h5>
-                    {/* {respondable} */}
-                    <p className="links">reply</p>
-                  </li>
-                );
-              })
-            }
-          </ul>
+                  if (this.props.user.auth !== null) {
+                    if (answer.getUser().uid === this.props.user.auth.uid) {
+                      user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                    }
+                  }
+                  return (
+                    <li key={"answer" + i} id="answerBox" style={dark}>
+                      {user}
+                      <h5>Answer: {answer.getText()}</h5>
+                      {/* {respondable} */}
+                      <p className="links">reply</p>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </div>
 
         </React.Fragment >
       )
@@ -475,7 +478,9 @@ export default class Feed extends Component {
         });
       }
 
+      
       // this.setState({ update: 0 });
+      this.openReply(item)
       event.target["text"].value = "";
     }
   }

@@ -204,7 +204,7 @@ export default class Profile extends Component {
                         {
                             this.state.userClasses ?
                                 <div id="checkBoxTitle">
-                                    <h1 className="pf-title">Select Classes: <span className="badge"> {this.state.selected.length}</span></h1>
+                                    <h1 className="pf-title">Select Classes: <span className="badge"> {0 + this.state.selected.length + 0}</span></h1>
                                     <br />
                                 </div>
                                 :
