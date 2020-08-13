@@ -100,7 +100,9 @@ export default class Feed extends Component {
       }
 
       return (
+
         <React.Fragment>
+
           <div className="containerthread">
 
             <Container>
@@ -133,10 +135,7 @@ export default class Feed extends Component {
                     {this.renderReply(item)}
                   </Col>
                 </Row>
-              </div>
-            </Container>
-
-            <ul className="feed-list">
+                <ul className="feed-list">
               {
                 item.getAllAnswers().map((answer, i) => {
                   user = <h6>User: {answer.getUser().displayName}</h6>;
@@ -159,6 +158,10 @@ export default class Feed extends Component {
                 })
               }
             </ul>
+              </div>
+            </Container>
+
+            
           </div>
 
         </React.Fragment >
@@ -478,7 +481,7 @@ export default class Feed extends Component {
         });
       }
 
-      
+
       // this.setState({ update: 0 });
       this.openReply(item)
       event.target["text"].value = "";
