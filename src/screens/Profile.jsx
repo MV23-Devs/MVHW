@@ -5,7 +5,7 @@ import {
     Link
 } from 'react-router-dom'
 import firebase from '../firebase.js';
-
+import { get as _get } from "lodash";
 import Question from '../Question';
 
 
@@ -183,7 +183,6 @@ export default class Profile extends Component {
     }
 
     render() {
-
         return (
             <React.Fragment>
                 <div >
@@ -191,6 +190,9 @@ export default class Profile extends Component {
                         <Link to="/">Home</Link>
                         <h1>Profile</h1>
                     </div>
+                    <center>
+                        <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
+                    </center>
                     <div id="checkBoxSelect">
                         {
                             this.state.userClasses ?
@@ -210,18 +212,18 @@ export default class Profile extends Component {
                                 {
                                     this.classes.map((cless, key) => {
                                         return (
-                                                <div key={key} className="tickBoxSurround">
-                                                    <Label for={cless} >
-                                                        {
-                                                            this.state.userClasses ?
-                                                                <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
-                                                                :
-                                                                <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" />
-                                                        }
-                                                        {cless}
-                                                    </Label>
-                                                    <br />
-                                                </div>
+                                            <div key={key} className="tickBoxSurround">
+                                                <Label for={cless} >
+                                                    {
+                                                        this.state.userClasses ?
+                                                            <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
+                                                            :
+                                                            <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" />
+                                                    }
+                                                    {cless}
+                                                </Label>
+                                                <br />
+                                            </div>
                                         );
                                     })
                                 }

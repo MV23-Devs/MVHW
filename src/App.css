@@ -423,3 +423,8 @@ a {
   width: 80%;
   margin: auto;
 }
+
+.pfp {
+  width: 25%;
+  border-radius: 50%;
+}
