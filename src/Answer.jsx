@@ -16,9 +16,6 @@ export default class Answer {
     getUpvotes() {
         return this.upvotes
     }
-    getId() {
-        return this.id;
-    }
     getText() {
         return this.answerText
     }
@@ -27,5 +24,8 @@ export default class Answer {
     }
     getUser() {
         return this.user
+    }
+    getId() {
+        return this.id
     }
 }

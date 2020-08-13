@@ -191,6 +191,42 @@ export default class Feed extends Component {
                     {this.renderReply(item)}
                   </Col>
                 </Row>
+                <ul className="feed-list">
+                  {
+                    item.getAllAnswers().map((answer, i) => {
+                      user = <h6>User: {answer.getUser().displayName}</h6>;
+                      if (answer.getUser().displayName === 'devs') {
+                        user = <h6>User: <Badge color="dark">devs</Badge></h6>;
+                      }
+                      if (this.props.user.auth !== null) {
+                        if (answer.getUser().uid === this.props.user.auth.uid) {
+                          user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                        }
+                      }
+                      return (
+                        //--------------------------------------------------------------------------------
+                        //ANSWERS
+                        <li key={"answer" + i} id="answerBox" style={dark}>
+
+                          <Row>
+                            <Col xs="1" className="updown">
+                              <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                              <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
+                              <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                            </Col>
+                            <Col>
+                              {user}
+                              <h5>Answer: {answer.getText()}</h5>
+                              {/* {respondable} */}
+                              <p className="links">reply</p>
+                            </Col>
+                          </Row>
+
+                        </li>
+                      );
+                    })
+                  }
+                </ul>
                 {answers}
               </div>
             </Container>
@@ -309,6 +345,43 @@ export default class Feed extends Component {
       </React.Fragment >
     )
   }
+
+  upvoteAnswer(i, a) {
+    if (this.props.user.auth !== null) {
+      let tempUsersUpvoted = []
+      let tempUsersDownvoted = []
+      let answerObject = this.props.filteredQuestions[i].getAllAnswers()[a];
+      let up = answerObject.getUpvotes();
+      db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies")
+      .doc(answerObject.getId()).get().then(doc => {
+        tempUsersUpvoted = doc.data().usersUpvoted;
+        tempUsersDownvoted = doc.data().usersDownvoted;
+        if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
+          this.props.filteredQuestions[i].upvote();
+          tempUsersUpvoted.push(this.props.user.auth.uid);
+          if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
+            tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+          }
+          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies").doc(answerObject.getId()).update({
+            upvotes: up + 1,
+            usersUpvoted: tempUsersUpvoted,
+            usersDownvoted: tempUsersDownvoted,
+          })
+        } else {
+          console.log("You already upvoted!")
+        }
+      })
+
+      this.setState({ update: 0 })
+    } else {
+      var provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase.auth().signInWithPopup(provider).catch((error) => {
+        console.error('Error Code ' + error.code + ': ' + error.message)
+      });
+    }
+  }
+
 
   upvote(i) {
     if (this.props.user.auth !== null) {
@@ -503,6 +576,7 @@ export default class Feed extends Component {
   submitHandler = (event, item) => {
     event.preventDefault();
     let val = event.target["text"].value;
+   
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
@@ -522,7 +596,11 @@ export default class Feed extends Component {
           upvotes: 0,
           downvotes: 0,
           timestamp: item.getTime(),
-        });
+        }).then(doc => {
+          console.log(doc)
+
+          item.addAnswer(val, JSON.stringify(this.props.user.auth), item.getTime(), doc.id);
+        })
       }
 
 
