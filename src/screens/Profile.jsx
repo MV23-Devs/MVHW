@@ -1,19 +1,35 @@
 import React, { Component } from 'react';
 import '../App.css';
-import NavBar from '../components/NavBar.jsx'
+import { Row, Col, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
 import {
-    Switch,
-    Route,
-    Link,
-    Redirect,
-    useHistory,
-    useLocation,
-    withRouter
+    Link
 } from 'react-router-dom'
 import firebase from '../firebase.js';
 
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
-import { isThrowStatement } from 'typescript';
+import Question from '../Question';
+
+
+const Votes = (props) => {
+    let id = "vote-num-" + props.listvalue;
+    return (
+        <div>
+            <h5 id={id} className="upvotes-num">{props.num}</h5>
+            <UncontrolledPopover trigger="legacy" placement="bottom" target={id}>
+                <PopoverBody>
+                    {props.actualNumber}
+                </PopoverBody>
+            </UncontrolledPopover>
+        </div>
+    );
+}
+
+const dark = {
+    backgroundColor: '#222',
+    color: '#fff',
+    line: {
+        backgroundColor: '#fff',
+    }
+};
 
 export default class Profile extends Component {
     constructor(props) {
@@ -26,6 +42,7 @@ export default class Profile extends Component {
                 name: "Anonymous",
             },
             userClasses: [],
+            posts: [],
         }
         this.handleInputChange = this.handleInputChange.bind(this);
 
@@ -36,18 +53,9 @@ export default class Profile extends Component {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({ user: { auth: user, name: user.displayName } })
-                //console.log("user auth = " + this.state.user.auth)
                 firebase.firestore().collection("users").doc(user.uid).get().then(doc => {
                     this.setState({ userClasses: doc.data().classes });
                 })
-            } else {
-                this.setState({ user: { auth: user, name: 'Anonymous' } })
-            }
-        });
-
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                this.setState({ user: { auth: user, name: user.displayName } })
                 //console.log(this.state.user.auth)
                 firebase.firestore().collection("users").get().then(querySnapshot => {
                     let raw = querySnapshot.docs;
@@ -67,26 +75,66 @@ export default class Profile extends Component {
                     // console.log(doc.data().classes)
                 })
 
+
+                firebase.firestore().collection("users").doc(this.state.user.auth.uid).collection("posts")
+                    .onSnapshot((querySnapshot) => {
+                        let docs = this.state.posts;
+                        querySnapshot.docChanges().forEach(change => {
+                            if (change.type === 'added') {
+                                let doc = change.doc;
+                                let id = doc.data().original;
+
+                                firebase.firestore().collection("questions").doc(id).get().then(doc => {
+                                    let raw = doc.data();
+                                    let ups, downs, votes = 0;
+                                    if (raw) {
+                                        if (doc.data().usersUpvoted.length > 0 && doc.data().usersDownvoted.length > 0) {
+                                            ups = doc.data().usersUpvoted.length
+                                            downs = doc.data().usersDownvoted.length
+                                            votes = ups - downs;
+                                        } else if (doc.data().usersUpvoted.length > 0) {
+                                            ups = doc.data().usersUpvoted.length
+                                            votes = ups;
+                                        } else if (doc.data().usersDownvoted.length > 0) {
+                                            downs = doc.data().usersDownvoted.length
+                                            votes = 0 - downs;
+                                        }
+                                        docs.push(new Question(raw.title, JSON.parse(raw.auth), raw.timestamp, doc.id, votes, raw.tags, raw.img_url, raw.username));
+                                        this.setState({ posts: docs })
+                                    }
+                                })
+                            } else if (change.type === 'removed') {
+                                let doc = change.doc;
+                                for (var i = 0; i < docs.length; i++) {
+                                    if (docs[i].getId() === doc.id) {
+                                        docs.splice(i, 1);
+                                    }
+                                }
+                                this.setState({ posts: docs })
+                            }
+                        })
+                    })
+
             } else {
                 this.setState({ user: { auth: user, name: 'Anonymous' } })
             }
         });
     }
 
+    componentWillUnmount() {
+
+    }
+
     handleInputChange(event) {
         const target = event.target;
-        var value = target.value;
-        console.log(target.checked && !(this.state.selected.includes(target.name)));
 
         if (target.checked && !(this.state.selected.includes(target.name))) {
             this.state.selected.push(target.name);
-            console.log("pushed elem", this.state.selected)
             target.value = true;
         } else {
             const index = this.state.selected.indexOf(target.name);
             if (index > -1) {
                 this.state.selected.splice(index, 1);
-                console.log("remove elem", this.state.selected)
             }
             target.value = false;
         }
@@ -107,7 +155,35 @@ export default class Profile extends Component {
         this.setState({ update: 0 });
     }
 
+    deleteQ = (item) => {
+
+        this.setState({ focus: -1 });
+        let replies = [];
+
+        firebase.firestore().collection("questions").doc(item.getId()).collection("replies").get().then(querySnapshot => {
+            querySnapshot.docs.forEach(doc => {
+                replies.push(doc.id);
+            })
+            return replies;
+        }).then(replies => {
+            replies.forEach(id => {
+                firebase.firestore().collection("questions").doc(item.getId()).collection("replies").doc(id).delete().then(doc => {
+                    console.log("Successfully deleted reply with id: ", id);
+                })
+            })
+        }).then(() => {
+            firebase.firestore().collection("questions").doc(item.getId()).delete().then(() => {
+                firebase.firestore().collection("users").doc(this.state.user.auth.uid).collection("posts").doc(item.getId()).delete().then(() => {
+                    console.log("Document successfully deleted!");
+                })
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            })
+        });
+    }
+
     render() {
+
         return (
             <React.Fragment>
                 <div >
@@ -115,27 +191,26 @@ export default class Profile extends Component {
                         <Link to="/">Home</Link>
                         <h1>Profile</h1>
                     </div>
-                    {
-                        this.state.userClasses ?
-                            <div id="checkBoxTitle">
-                                <a href="#">Select Classes: <span className="badge"> {this.state.selected.length}</span></a>
-                                <br />
-                            </div>
-                            :
-                            null
-
-                    }
                     <div id="checkBoxSelect">
+                        {
+                            this.state.userClasses ?
+                                <div id="checkBoxTitle">
+                                    <h1 className="pf-title">Select Classes: <span className="badge"> {this.state.selected.length}</span></h1>
+                                    <br />
+                                </div>
+                                :
+                                null
+
+                        }
                         <Form onSubmit={this.submitHandler} >
                             <FormGroup check>
                                 {
                                     //console.log(this.state.userClasses)
                                 }
                                 {
-                                    this.classes.map(cless => {
+                                    this.classes.map((cless, key) => {
                                         return (
-                                            <React.Fragment>
-                                                <div className="tickBoxSurround">
+                                                <div key={key} className="tickBoxSurround">
                                                     <Label for={cless} >
                                                         {
                                                             this.state.userClasses ?
@@ -147,7 +222,6 @@ export default class Profile extends Component {
                                                     </Label>
                                                     <br />
                                                 </div>
-                                            </React.Fragment>
                                         );
                                     })
                                 }
@@ -156,6 +230,89 @@ export default class Profile extends Component {
                             {/* <Button color="info" id="submitClasses">Save Classes</Button> */}
                         </Form>
                     </div>
+                    <div id="checkBoxSelect">
+
+                        <div className="posts">
+                            <h1 className="pf-title">Your Posts:</h1>
+                            <ul className="list-posts">
+
+                                {
+
+                                    this.state.posts.map((item, i) => {
+                                        let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
+
+                                        let color = '';
+                                        switch (item.getTags()) {
+                                            case 'Math':
+                                                color = 'info';
+                                                break;
+                                            case 'Science':
+                                                color = 'warning';
+                                                break;
+                                            case 'English':
+                                                color = 'danger';
+                                                break;
+                                            case 'History':
+                                                color = 'success';
+                                                break;
+                                            case 'Computer Science':
+                                                color = 'primary';
+                                                break;
+
+                                            default:
+                                                color = 'secondary';
+                                                break;
+                                        }
+                                        let tag = <Badge color={color}>{item.getTags()}</Badge>;
+                                        if (item.getTags() === "None") {
+                                            tag = null;
+                                        }
+
+                                        let upvotes = item.getUpvotes() + "";
+
+                                        if (item.getUpvotes() >= 1000) {
+                                            upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
+                                        }
+
+                                        let deletedata = null;
+                                        if (this.state.user.auth) {
+                                            if (this.state.user.auth.uid === item.getUser().uid) {
+                                                deletedata = (
+                                                    <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                                                );
+                                            }
+                                        }
+
+                                        return (
+                                            <li key={i} style={dark} className="pf-questionBox">
+                                                <Row>
+                                                    <Col xs="1" className="updown">
+                                                        <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                                                    </Col>
+                                                    <Col xs="11">
+                                                        <div style={dark}>
+                                                            {user}
+                                                            <h4>Question: {item.getText()}  {tag}</h4>
+                                                            {
+                                                                item.getImgUrl() !== "" ?
+                                                                    <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                                                                    :
+                                                                    null
+                                                            }
+                                                        </div>
+                                                        <hr style={dark.line} />
+                                                        {deletedata}
+                                                    </Col>
+                                                </Row>
+                                            </li>
+
+                                        );
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </React.Fragment>
         )

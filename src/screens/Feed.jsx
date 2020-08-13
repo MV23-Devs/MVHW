@@ -89,7 +89,7 @@ export default class Feed extends Component {
 
       let deletedata = null;
       if (this.props.user.auth !== null) {
-        if (this.props.user.auth.uid == item.getUser().uid) {
+        if (this.props.user.auth.uid === item.getUser().uid) {
           deletedata = (
             <span>
               <span> | </span>
@@ -214,7 +214,7 @@ export default class Feed extends Component {
 
                   let deletedata = null;
                   if (this.props.user.auth !== null) {
-                    if (this.props.user.auth.uid == item.getUser().uid) {
+                    if (this.props.user.auth.uid === item.getUser().uid) {
                       deletedata = (
                         <span>
                           <span> | </span>
@@ -278,7 +278,6 @@ export default class Feed extends Component {
       db.collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
-        console.log(!this.isIn(this.props.user.auth.uid, tempUsersUpvoted), "upvote")
         if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
           this.props.filteredQuestions[i].upvote();
           tempUsersUpvoted.push(this.props.user.auth.uid);
@@ -314,7 +313,6 @@ export default class Feed extends Component {
       db.collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
-        console.log(this.isIn(this.props.user.auth.uid, tempUsersDownvoted), "downvote")
         if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1) {
           this.props.filteredQuestions[i].downvote();
           tempUsersDownvoted.push(this.props.user.auth.uid);
@@ -368,11 +366,11 @@ export default class Feed extends Component {
       })
     }).then(() => {
       db.collection("questions").doc(item.getId()).delete().then(() => {
-        console.log("Document successfully deleted!");
-        this.setState({ notification: 'successfully deleted post. Reload page to view changes and dismiss this notification' });
-      }).catch(function (error) {
+        firebase.firestore().collection("users").doc(this.state.user.auth.uid).collection("posts").doc(item.getId()).delete().then(() => {
+          console.log("Document successfully deleted!");
+        })
+      }).catch((error) => {
         console.error("Error removing document: ", error);
-        this.setState({ notification: 'failed to deleted post. Try again in few seconds' });
       })
     });
   }
@@ -473,20 +471,22 @@ export default class Feed extends Component {
 
   renderAnswer(item1) {
     let user = <h6>User: {item1.getFirstAnswer().getUsername()}</h6>;
-    let respondable = (
-      <Form onSubmit={this.submitHandler}>
-        <FormGroup>
-          <Label for="text">Text:</Label>
-          <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
-          {this.state.errormessage}
-        </FormGroup>
-        <Button color={this.props.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
-      </Form>
-    );
-    console.log(item1.getFirstAnswer().getUsername())
+
+    // Save this code for later use when implementing replying to replies
+
+    // let respondable = (
+    //   <Form onSubmit={this.submitHandler}>
+    //     <FormGroup>
+    //       <Label for="text">Text:</Label>
+    //       <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
+    //       {this.state.errormessage}
+    //     </FormGroup>
+    //     <Button color={this.props.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
+    //   </Form>
+    // );
     if (item1.getFirstAnswer().getUsername() === "bot") {
       user = <h6>User: <Badge color="secondary">bot</Badge></h6>;
-      respondable = null;
+      // respondable = null;
     }
     if (item1.getClicked() === true) {
       return (
@@ -502,7 +502,6 @@ export default class Feed extends Component {
             }>reply</p>
             {this.renderInnerReply(item1)}
           </div>
-
         </React.Fragment>
       )
     }

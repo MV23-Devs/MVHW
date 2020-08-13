@@ -1,5 +1,4 @@
 import Answer from './Answer.jsx'
-import firebase from './firebase.js';
 
 
 export default class Question {
@@ -13,64 +12,10 @@ export default class Question {
         this.id = id
         this.upvotes = upvotes;
         this.answers = [];
-        // this.usersUpvoted = usersUpvoted;
         this.answersRaw = 0;
-        let len = 100;
         this.tags = tags;
         this.isClicked = false;
         this.time = time
-
-        // firebase.firestore()
-        //     .collection('questions')
-        //     .doc(id).collection('replies')
-        //     .get().then((doc) => {
-        //         len = doc.docs.length
-        //     }).then(() => {
-
-        //         for (let i = 0; i < len; i++) {
-        //             let aTitle;
-        //             let aUser;
-        //             let aId;
-        //             let aUp;
-        //             let aTime;
-        //             firebase.firestore()
-        //                 .collection('questions')
-        //                 .doc(id).collection('replies')
-        //                 .get().then((doc) => {
-        //                     if (doc.docs[0] !== undefined) {
-        //                         aTitle = (doc.docs[0].data().title)
-        //                         aUser = "pls fix"
-        //                         aId = (doc.docs[0].data().author)
-        //                         aUp = (doc.docs[0].data().aUp)
-        //                         aUser = JSON.parse(aId).displayName
-        //                         aTime = "?"
-        //                     }
-        //                 }).then(() => {
-        //                     this.answers.push(new Answer(aTitle, aUser, aTime, aId, aUp, null))
-        //                 })
-
-        //             //console.log(this.answers[this.answers.length - 1])
-
-
-
-
-        //             //answerText, user, time, id, upvotes=0, tags=null
-
-
-
-        //         }
-        //     })
-
-        
-        // firebase.firestore().collection("questions").doc(this.id).collection("replies").get().then(querySnapshot => {
-        //     querySnapshot.docs.forEach(doc => {
-        //         this.answers.push(new Answer(doc.data().title, JSON.parse(doc.data().author), doc.data().timestamp, doc.id, doc.data().upvotes))
-        //     })
-        // })
-
-
-
-
     }
 
     hasUpvoted(uid){
@@ -133,8 +78,6 @@ export default class Question {
         return this.time
     }
     getFirstAnswer() {
-        //answer contructor
-        //answerText, user, time, id, upvotes=0, tags=null
         let topAns = new Answer("There are no answers to this question yet", "bot", "bot", this.getTime(), 0, null)
 
         if (this.answers.length === 0) {
@@ -153,7 +96,6 @@ export default class Question {
 
 
             }
-            //console.log(this.answers[0])
             return this.answers[0]
         }
     }

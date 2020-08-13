@@ -1,5 +1,3 @@
-import get from "lodash";
-
 export default class Answer {
     constructor(questionText, user, username, time, id, upvotes = 0) {
         this.answerText = questionText

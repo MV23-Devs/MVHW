@@ -3,12 +3,7 @@ import React, {
   useState
 } from 'react';
 import {
-  Switch,
-  Route,
   Link,
-  Redirect,
-  useHistory,
-  useLocation,
   withRouter
 } from 'react-router-dom'
 import '../App.css';
@@ -17,7 +12,6 @@ import Question from '../Question';
 import {
   Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
 import firebase from '../firebase.js';
 import { storage } from '../firebase.js';
 // import { get as _get } from "lodash";
@@ -25,7 +19,6 @@ import jacob from "../img/jacob.jpg";
 import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";
 import atli from "../img/atli-sucks.jpg";
-import { result } from 'lodash';
 
 const db = firebase.firestore();
 
@@ -254,7 +247,6 @@ class Home extends Component {
     firebase.auth().signInWithPopup(provider).then((result) => {
       //var token = result.credential.accessToken;
       // The signed-in user info.
-      console.log(result, provider)
       var user = result.user;
 
       if (result.additionalUserInfo.isNewUser) {
@@ -293,8 +285,6 @@ class Home extends Component {
       const image = e.target.files[0];
       //console.log(image);
       this.setState(() => ({ image }));
-      console.log(image);
-      console.log(e.target.files);
       this.readURL(e.target);
     }
     else {
@@ -310,7 +300,7 @@ class Home extends Component {
   handleImageUpload = () => {
     if (this.state.image !== null) {
       const { image } = this.state;
-      const uploadTask = storage.ref(`images/${image.name}`).put(image);
+      storage.ref(`images/${image.name}`).put(image);
       return (
         storage
           .ref("images")
@@ -331,13 +321,12 @@ class Home extends Component {
       reader.readAsDataURL(input.files[0]); // convert to base64 string
     }
   }
-  
+
   submitHandler = (event) => {
     event.preventDefault();
     let val = event.target["text"].value;
     let t = event.target["select"].value;
     let anonymous = this.state.anonymousPost
-    console.log(anonymous)
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
@@ -349,7 +338,6 @@ class Home extends Component {
 
       let date = (new Date()).toString();
       let name = "";
-      console.log("anonymous: ", anonymous)
       if (anonymous === true) {
         name = "Anonymous";
       } else {
@@ -362,7 +350,6 @@ class Home extends Component {
             this.forceUpdate()
             this.setState({ url });
             //console.log(this.fileinputref)
-            console.log("url", this.state.url);
             firebase.firestore()
               .collection('questions')
               .add({
@@ -375,8 +362,20 @@ class Home extends Component {
                 timestamp: date,
                 tags: t,
               }).then((docRef) => {
+                firebase.firestore()
+                  .collection('users').doc(this.state.user.auth.uid).collection("posts")
+                  .add({
+                    title: val,
+                    img_url: this.state.url,
+                    timestamp: date,
+                    tags: t,
+                    original: docRef.id,
+                  }).then((docRef) => {
+                    firebase.database().ref('audit log').push(date + ": created a new post");
+                    this.setState({ image: null });
+                  });
                 firebase.database().ref('audit log').push(date + ": created a new post");
-                this.setState({image: null});
+                this.setState({ image: null });
               });
           });
       } else {
@@ -392,6 +391,18 @@ class Home extends Component {
             timestamp: date,
             tags: t,
           }).then((docRef) => {
+            firebase.firestore()
+              .collection('users').doc(this.state.user.auth.uid).collection("posts")
+              .add({
+                title: val,
+                img_url: this.state.url,
+                timestamp: date,
+                tags: t,
+                original: docRef.id,
+              }).then((docRef) => {
+                firebase.database().ref('audit log').push(date + ": created a new post");
+                this.setState({ image: null });
+              });
             firebase.database().ref('audit log').push(date + ": created a new post");
           });
       }
@@ -465,11 +476,11 @@ class Home extends Component {
                 {this.state.errormessage}
                 <br />
                 <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
-                <br/>
+                <br />
                 {
 
                   this.state.image !== null ?
-                    <img id="previewImage" alt="Image Uploaded!" width="100px" />
+                    <img id="previewImage" alt={this.state.image} width="100px" />
                     :
                     null
                 }
@@ -501,11 +512,11 @@ class Home extends Component {
                   <option>Art</option>
                   <option>Music</option>
                 </Input>
-                <br/>
-                <label id="anonymousBoxLabel" for="anonymousBox">Anonymous</label>
-                <span id = "spacer1"></span>
-                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput}/>
-                
+                <br />
+                <Label id="anonymousBoxLabel" for="anonymousBox">Anonymous</Label>
+                <span id="spacer1"></span>
+                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput} />
+
               </FormGroup>
               <Button color="light" block>Submit</Button>
             </Form>
@@ -538,15 +549,15 @@ class Home extends Component {
   filterQuestionsBy = () => {
     //console.log("filterBy");
     let temp = ((this.state.filterBy === "Popularity") ? "None" : "Popularity");
-    //this.setState({filterBy: temp});
-    this.state.filterBy = temp;
+    // this.state.filterBy = temp;
     //console.log(this.state.filterBy === "popularity");
-    if (this.state.filterBy === "Popularity") {
+    if (temp === "Popularity") {
       //console.log("popular")
       this.orderByPopularity();
-    } else if (this.state.filterBy === "None") {
+    } else if (temp === "None") {
       //console.log("none")
     }
+    this.setState({filterBy: temp});
     //console.log(this.state.filteredQuestions);
     this.setState({ update: 0 });
   }
@@ -578,27 +589,6 @@ class Home extends Component {
       { filteredQuestions }
     )
   }
-
-  createNotification = (type) => {
-    return () => {
-      switch (type) {
-        case 'info':
-          NotificationManager.info('Info message');
-          break;
-        case 'success':
-          NotificationManager.success('Success message', 'Title here');
-          break;
-        case 'warning':
-          NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
-          break;
-        case 'error':
-          NotificationManager.error('Error message', 'Click me!', 5000, () => {
-            alert('callback');
-          });
-          break;
-      }
-    };
-  };
 
   // getFooterColor = () => {
   //   this.setState({

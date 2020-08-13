@@ -402,3 +402,24 @@ a {
 .post-img {
   max-height: 500px;
 }
+
+.pf-title {
+  color: white;
+  text-align: center;
+}
+
+.pf-questionBox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: left;
+  padding-bottom: 2px;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.list-posts {
+  width: 80%;
+  margin: auto;
+}

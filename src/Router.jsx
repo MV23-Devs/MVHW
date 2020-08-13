@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import {
     BrowserRouter as Router,
     Route, 
-    Switch, 
-    Link
+    Switch
 } from 'react-router-dom'
 import Profile from './screens/Profile.jsx'
 import Home from './screens/Home.jsx'
