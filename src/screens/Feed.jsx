@@ -148,6 +148,8 @@ export default class Feed extends Component {
                         }
                       }
                       return (
+                        //--------------------------------------------------------------------------------
+                        //ANSWERS
                         <li key={"answer" + i} id="answerBox" style={dark}>
 
                           <Row>
@@ -286,6 +288,45 @@ export default class Feed extends Component {
       </React.Fragment >
     )
   }
+
+  upvoteAnswer(i, a) {
+    if (this.props.user.auth !== null) {
+      let tempUsersUpvoted = []
+      let tempUsersDownvoted = []
+      let answerObject = this.props.filteredQuestions[i].getAllAnswers()[a];
+      let up = answerObject.getUpvotes();
+      db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies")
+      
+      
+      .doc(answerObject.getId()).get().then(doc => {
+        tempUsersUpvoted = doc.data().usersUpvoted;
+        tempUsersDownvoted = doc.data().usersDownvoted;
+        if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
+          this.props.filteredQuestions[i].upvote();
+          tempUsersUpvoted.push(this.props.user.auth.uid);
+          if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
+            tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+          }
+          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+            upvotes: up + 1,
+            usersUpvoted: tempUsersUpvoted,
+            usersDownvoted: tempUsersDownvoted,
+          })
+        } else {
+          console.log("You already upvoted!")
+        }
+      })
+
+      this.setState({ update: 0 })
+    } else {
+      var provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase.auth().signInWithPopup(provider).catch((error) => {
+        console.error('Error Code ' + error.code + ': ' + error.message)
+      });
+    }
+  }
+
 
   upvote(i) {
     if (this.props.user.auth !== null) {
@@ -470,6 +511,7 @@ export default class Feed extends Component {
   submitHandler = (event, item) => {
     event.preventDefault();
     let val = event.target["text"].value;
+   
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
@@ -489,7 +531,11 @@ export default class Feed extends Component {
           upvotes: 0,
           downvotes: 0,
           timestamp: item.getTime(),
-        });
+        }).then(doc => {
+          console.log(doc)
+
+          item.addAnswer(val, JSON.stringify(this.props.user.auth), item.getTime(), doc.id);
+        })
       }
 
 

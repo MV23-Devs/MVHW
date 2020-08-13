@@ -24,4 +24,7 @@ export default class Answer {
     getUser() {
         return this.user
     }
+    getId() {
+        return this.id
+    }
 }
