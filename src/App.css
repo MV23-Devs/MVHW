@@ -17,6 +17,7 @@ body {
   color: black;
   background: #f6c733;
   padding: 0px 10px;
+  user-select: none;
   margin-bottom: none !important;
 }
 
