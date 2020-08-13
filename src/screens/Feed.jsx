@@ -136,32 +136,43 @@ export default class Feed extends Component {
                   </Col>
                 </Row>
                 <ul className="feed-list">
-              {
-                item.getAllAnswers().map((answer, i) => {
-                  user = <h6>User: {answer.getUser().displayName}</h6>;
-                  if (answer.getUser().displayName === 'devs') {
-                    user = <h6>User: <Badge color="dark">devs</Badge></h6>;
+                  {
+                    item.getAllAnswers().map((answer, i) => {
+                      user = <h6>User: {answer.getUser().displayName}</h6>;
+                      if (answer.getUser().displayName === 'devs') {
+                        user = <h6>User: <Badge color="dark">devs</Badge></h6>;
+                      }
+                      if (this.props.user.auth !== null) {
+                        if (answer.getUser().uid === this.props.user.auth.uid) {
+                          user = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                        }
+                      }
+                      return (
+                        <li key={"answer" + i} id="answerBox" style={dark}>
+
+                          <Row>
+                            <Col xs="1" className="updown">
+                              <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                              <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
+                              <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                            </Col>
+                            <Col>
+                              {user}
+                              <h5>Answer: {answer.getText()}</h5>
+                              {/* {respondable} */}
+                              <p className="links">reply</p>
+                            </Col>
+                          </Row>
+
+                        </li>
+                      );
+                    })
                   }
-                  if (this.props.user.auth !== null) {
-                    if (answer.getUser().uid === this.props.user.auth.uid) {
-                      user = <h6>User: <Badge color="secondary">you</Badge></h6>;
-                    }
-                  }
-                  return (
-                    <li key={"answer" + i} id="answerBox" style={dark}>
-                      {user}
-                      <h5>Answer: {answer.getText()}</h5>
-                      {/* {respondable} */}
-                      <p className="links">reply</p>
-                    </li>
-                  );
-                })
-              }
-            </ul>
+                </ul>
               </div>
             </Container>
 
-            
+
           </div>
 
         </React.Fragment >
