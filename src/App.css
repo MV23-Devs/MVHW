@@ -263,6 +263,7 @@ button {
   list-style-type: none;
   height: 100%;
   padding: 10px;
+  margin-left: 5%;
 }
 
 @media(max-width: 800px) {
