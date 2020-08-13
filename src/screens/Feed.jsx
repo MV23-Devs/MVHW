@@ -366,8 +366,19 @@ export default class Feed extends Component {
       })
     }).then(() => {
       db.collection("questions").doc(item.getId()).delete().then(() => {
-        firebase.firestore().collection("users").doc(this.state.user.auth.uid).collection("posts").doc(item.getId()).delete().then(() => {
-          console.log("Document successfully deleted!");
+        firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").get().then(querySnapshot => {
+          querySnapshot.docs.forEach(doc => {
+            replies.push(doc.id);
+          })
+          return replies;
+        }).then(replies => {
+          replies.forEach(id => {
+            firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
+              console.log("Successfully deleted reply with id: ", id);
+            })
+          })
+        }).catch((error) => {
+          console.error("Error removing document: ", error);
         })
       }).catch((error) => {
         console.error("Error removing document: ", error);
