@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
+import React, {
+    Component,
+    useState
+} from 'react';
 import '../App.css';
-import { Row, Col, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
+import { Row, Col, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import {
     Link
 } from 'react-router-dom'
@@ -22,6 +25,43 @@ const Votes = (props) => {
         </div>
     );
 }
+
+
+const deleteAccount = (toggle) => {
+    firebase.auth().currentUser.delete().then(() => {
+        toggle()
+    }).catch(err => {
+        console.error("Error: ", err)
+    })
+}
+
+
+const DeleteModal = (props) => {
+    const {
+        className,
+    } = props;
+
+    const [modal, setModal] = useState(false);
+
+    const toggle = () => setModal(!modal);
+
+    return (
+        <div>
+            <Button color="danger" outline onClick={toggle}>Delete Account?</Button>
+            <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
+                <ModalHeader toggle={toggle}>Delete Your Account?</ModalHeader>
+                <ModalBody>
+                    <p>Warning! You cannot undo this action</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                    <Button color="danger" onClick={() => deleteAccount(toggle)}>Confirm</Button>
+                </ModalFooter>
+            </Modal>
+        </div>
+    );
+}
+
 
 const dark = {
     backgroundColor: '#222',
@@ -193,24 +233,29 @@ export default class Profile extends Component {
         return (
             <React.Fragment>
                 <div >
-                    <div id="places">
-                        <Link to="/">Home</Link>
-                        <h1>Profile</h1>
-                    </div>
-                    <center>
-                        <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
-                    </center>
                     <div id="checkBoxSelect">
+
+                        <Link to="/">Home</Link>
+                        <h1 id="pfp-title">Profile</h1>
+
+                        <center>
+                            <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
+                        </center>
+                        
+                        <hr style={dark.line} />
+
                         {
                             this.state.userClasses ?
                                 <div id="checkBoxTitle">
-                                    <h1 className="pf-title">Select Classes: <span className="badge"> {0 + this.state.selected.length + 0}</span></h1>
+                                    <h1 className="pf-title">Select Classes: <span className="badge"> {this.state.selected.length + 0}</span></h1>
                                     <br />
                                 </div>
                                 :
                                 null
 
                         }
+
+
                         <Form onSubmit={this.submitHandler} >
                             <FormGroup check>
                                 {
@@ -238,8 +283,8 @@ export default class Profile extends Component {
 
                             {/* <Button color="info" id="submitClasses">Save Classes</Button> */}
                         </Form>
-                    </div>
-                    <div id="checkBoxSelect">
+
+                        <hr style={dark.line} />
 
                         <div className="posts">
                             <h1 className="pf-title">Your Posts:</h1>
@@ -319,9 +364,13 @@ export default class Profile extends Component {
                                     })
                                 }
                             </ul>
+                            <hr style={dark.line} />
+                            <center>
+                                <h1>Danger Zone</h1>
+                                <DeleteModal></DeleteModal>
+                            </center>
                         </div>
                     </div>
-
                 </div>
             </React.Fragment>
         )

@@ -25,6 +25,10 @@ body {
   margin: 0;
 }
 
+#pfp-title {
+  text-align: center;
+}
+
 .main {
   background-color: blue;
   /* flex: auto; */
