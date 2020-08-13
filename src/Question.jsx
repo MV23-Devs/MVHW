@@ -18,7 +18,7 @@ export default class Question {
         this.time = time
     }
 
-    hasUpvoted(uid){
+    hasUpvoted(uid) {
         return uid in this.usersUpvoted ? true : false;
     }
 
@@ -30,9 +30,16 @@ export default class Question {
         return this.id
     }
 
-    addAnswer(answerText, user, time, id,) {
-        let answer = new Answer(answerText, user, time, id)
+    addAnswer(answerText, user, username, time, id) {
+        let answer = new Answer(answerText, user, username, time, id)
         this.answers.push(answer)
+    }
+    removeAnswer(id) {
+        for (let i = 0; i < this.answers.length; i++) {
+            if (this.answers[i].getId() === id) {
+                this.answers.splice(i, 1);
+            }
+        }
     }
     upvote() {
         this.upvotes += 1;

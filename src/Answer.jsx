@@ -3,7 +3,8 @@ export default class Answer {
         this.answerText = questionText
         this.user = user;
         this.username = username;
-        this.id = id
+        this.time = time;
+        this.id = id;
         this.upvotes = upvotes;
     }
     upvote() {
@@ -14,6 +15,9 @@ export default class Answer {
     }
     getUpvotes() {
         return this.upvotes
+    }
+    getId() {
+        return this.id;
     }
     getText() {
         return this.answerText

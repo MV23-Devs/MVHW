@@ -87,6 +87,62 @@ export default class Feed extends Component {
         upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
       }
 
+      let answers = null;
+      if(item.getAllAnswers().length > 0) {
+        answers = (
+          <ul className="feed-list">
+                  {
+                    item.getAllAnswers().map((answer, i) => {
+                      let auser = <h6>User: {answer.getUser().displayName}</h6>;
+                      if (answer.getUser().displayName === 'devs') {
+                        auser = <h6>User: <Badge color="dark">devs</Badge></h6>;
+                      }
+                      if (this.props.user.auth !== null) {
+                        if (answer.getUser().uid === this.props.user.auth.uid) {
+                          auser = <h6>User: <Badge color="secondary">you</Badge></h6>;
+                        }
+                      }
+
+                      let deletedata = null;
+                      if (this.props.user.auth) {
+
+                        if (answer.getUser().uid === this.props.user.auth.uid) {
+                          deletedata = (
+                            <span>
+                              <span> | </span>
+                              <span className="links" onClick={() => this.deleteA(item, answer)}>delete</span>
+                            </span>
+                          );
+                        }
+
+                      }
+
+                      return (
+                        <li key={"answer" + i} id="answerBox" style={dark}>
+
+                          <Row>
+                            <Col xs="1" className="updown">
+                              <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                              <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
+                              <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                            </Col>
+                            <Col>
+                              {auser}
+                              <h5>Answer: {answer.getText()}</h5>
+                              {/* {respondable} */}
+                              <span className="links">reply</span>
+                              {deletedata}
+                            </Col>
+                          </Row>
+
+                        </li>
+                      );
+                    })
+                  }
+                </ul>
+        )
+      }
+
       let deletedata = null;
       if (this.props.user.auth !== null) {
         if (this.props.user.auth.uid === item.getUser().uid) {
@@ -171,6 +227,7 @@ export default class Feed extends Component {
                     })
                   }
                 </ul>
+                {answers}
               </div>
             </Container>
 
@@ -444,6 +501,16 @@ export default class Feed extends Component {
     });
   }
 
+  deleteA = (item, answer) => {
+    db.collection("questions").doc(item.getId()).collection("replies").doc(answer.getId()).delete().then(() => {
+      console.log("deleted reply with id: " + answer.getId())
+      item.removeAnswer(item.getId());
+      this.setState({update: 0})
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+  }
+
 
   changeFocus(elem) {
     this.setState({ focus: elem });
@@ -560,6 +627,7 @@ export default class Feed extends Component {
     //     <Button color={this.props.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
     //   </Form>
     // );
+
     if (item1.getFirstAnswer().getUsername() === "bot") {
       user = <h6>User: <Badge color="secondary">bot</Badge></h6>;
       // respondable = null;
