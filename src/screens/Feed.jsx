@@ -353,8 +353,6 @@ export default class Feed extends Component {
       let answerObject = this.props.filteredQuestions[i].getAllAnswers()[a];
       let up = answerObject.getUpvotes();
       db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies")
-      
-      
       .doc(answerObject.getId()).get().then(doc => {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
@@ -364,7 +362,7 @@ export default class Feed extends Component {
           if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
             tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
           }
-          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies").doc(answerObject.getId()).update({
             upvotes: up + 1,
             usersUpvoted: tempUsersUpvoted,
             usersDownvoted: tempUsersDownvoted,
