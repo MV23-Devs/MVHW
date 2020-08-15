@@ -487,7 +487,7 @@ export default class Feed extends Component {
         }).then(replies => {
           replies.forEach(id => {
             firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
-              console.log("Successfully deleted reply with id: ", id);
+              console.log("Successfully deleted post in user section with id: ", id);
             })
           })
         }).catch((error) => {

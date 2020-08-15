@@ -214,7 +214,6 @@ class Home extends Component {
             docs.push(q);
             db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
-                console.log(doc.id);
                 q.addAnswer(doc.data().title, JSON.parse(doc.data().author), JSON.parse(doc.data().author).displayName, doc.data().timestamp, doc.id)
               })
             })
@@ -247,14 +246,14 @@ class Home extends Component {
 
     provider.setCustomParameters({
       'hd': 'mvla.net'
-     });
+    });
 
     firebase.auth().signInWithPopup(provider).then((result) => {
       //var token = result.credential.accessToken;
       // The signed-in user info.
       var user = result.user;
 
-      if(user.email.substring(user.email.indexOf('@')+1) !== "mvla.net") {
+      if (user.email.substring(user.email.indexOf('@') + 1) !== "mvla.net") {
         firebase.auth().currentUser.delete()
         return null;
       }
@@ -264,6 +263,7 @@ class Home extends Component {
           .collection('users')
           .doc(user.uid).set({
             name: user.displayName,
+            email: user.email,
           }).then((docRef) => {
             firebase.database().ref('audit log').push(new Date().toString() + ": new user joined: " + user);
             this.props.history.push('/profile');
@@ -526,7 +526,6 @@ class Home extends Component {
                 <Label id="anonymousBoxLabel" for="anonymousBox">Anonymous</Label>
                 <span id="spacer1"></span>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput} />
-
               </FormGroup>
               <Button color="light" block>Submit</Button>
             </Form>
@@ -567,7 +566,7 @@ class Home extends Component {
     } else if (temp === "None") {
       //console.log("none")
     }
-    this.setState({filterBy: temp});
+    this.setState({ filterBy: temp });
     //console.log(this.state.filteredQuestions);
     this.setState({ update: 0 });
   }

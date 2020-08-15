@@ -11,7 +11,6 @@ import firebase from '../firebase.js';
 import { get as _get } from "lodash";
 import Question from '../Question';
 
-
 const Votes = (props) => {
     let id = "vote-num-" + props.listvalue;
     return (
@@ -28,6 +27,24 @@ const Votes = (props) => {
 
 
 const deleteAccount = (toggle) => {
+    let posts = [];
+    firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("posts").get().then(querySnapshot => {
+        querySnapshot.docs.forEach(post => {
+            posts.push(post.data().original);
+            firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("posts").doc(post.id).delete();
+        })
+        return posts
+    }).then(posts => {
+        posts.forEach(post => {
+            firebase.firestore().collection("questions").doc(post).collection("replies").get().then(querySnapshot => {
+                querySnapshot.docs.forEach(reply => {
+                    firebase.firestore().collection("questions").doc(post).collection("replies").doc(reply.id).delete();
+                })
+            }).then(() => {
+                firebase.firestore().collection("questions").doc(post).delete();
+            })
+        })
+    })
     firebase.auth().currentUser.delete().then(() => {
         toggle()
     }).catch(err => {
@@ -241,7 +258,7 @@ export default class Profile extends Component {
                         <center>
                             <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
                         </center>
-                        
+
                         <hr style={dark.line} />
 
                         {
