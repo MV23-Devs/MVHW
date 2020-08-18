@@ -11,6 +11,9 @@ import firebase from '../firebase.js';
 import { get as _get } from "lodash";
 import Question from '../Question';
 
+// the start of cleaning up the firestore pull from database
+// const db = firebase.firestore()
+
 const Votes = (props) => {
     let id = "vote-num-" + props.listvalue;
     return (
@@ -98,6 +101,7 @@ export default class Profile extends Component {
                 auth: null,
                 name: "Anonymous",
             },
+            isTutor: false,
             userClasses: [],
             posts: [],
         }
@@ -112,6 +116,11 @@ export default class Profile extends Component {
                 this.setState({ user: { auth: user, name: user.displayName } })
                 firebase.firestore().collection("users").doc(user.uid).get().then(doc => {
                     this.setState({ userClasses: doc.data().classes });
+                    if (doc.data().isTutor === true) {
+                        this.setState({ isTutor: true });
+
+                    }
+
                 })
                 //console.log(this.state.user.auth)
                 firebase.firestore().collection("users").get().then(querySnapshot => {
@@ -258,6 +267,16 @@ export default class Profile extends Component {
                         <center>
                             <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
                         </center>
+                        <div>
+                            {
+                                this.state.isTutor !== true ?
+                                <div></div>
+                                :
+                                <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
+
+                            }
+                            
+                        </div>
 
                         <hr style={dark.line} />
 

@@ -31,7 +31,41 @@ const Votes = (props) => {
     </div>
   );
 }
-
+// Function that Renders User Info
+class RenderUser extends Component {
+  state = {
+    isTutor: false,
+    username: "",
+  }
+  componentDidMount() {
+    firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
+      if (doc.data().isTutor === true) {
+        this.setState({isTutor: true})
+      }
+      this.setState({username: doc.data().name})
+      if (this.props.currentUser) {
+        if (this.props.currentUser.auth.uid === this.props.uid) {
+          this.setState({username: <Badge color='secondary'>you</Badge>})
+        }
+      }  
+    })
+  }
+  render() {
+    return(
+      <React.Fragment>
+        <span>{this.state.username}</span>
+        {
+          this.state.isTutor === true ?
+  
+          <Badge color="success">AVID TUTOR</Badge>
+          :
+          null
+        }
+      </React.Fragment> 
+    )
+  }
+}
+  
 export default class Feed extends Component {
 
   state = {
@@ -46,14 +80,10 @@ export default class Feed extends Component {
     if (this.state.focus !== -1) {
       let i = this.state.focus;
       let item = this.props.filteredQuestions[i];
-      let user = <h5>User: {item.getUsername()}</h5>;
-      if (item.getUsername() === 'devs') {
-        user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-      } if (this.props.user.auth !== null) {
-        if (item.getUser().uid === this.props.user.auth.uid) {
-          user = <h6>User: <Badge color="secondary">you</Badge></h6>;
-        }
-      }
+      console.log(this.props.user)
+      let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
+
+
       let color = '';
       switch (item.getTags()) {
         case 'Math':
@@ -93,15 +123,7 @@ export default class Feed extends Component {
           <ul className="feed-list">
                   {
                     item.getAllAnswers().map((answer, i) => {
-                      let auser = <h6>User: {answer.getUser().displayName}</h6>;
-                      if (answer.getUser().displayName === 'devs') {
-                        auser = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                      }
-                      if (this.props.user.auth !== null) {
-                        if (answer.getUser().uid === this.props.user.auth.uid) {
-                          auser = <h6>User: <Badge color="secondary">you</Badge></h6>;
-                        }
-                      }
+                      let auser = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
 
                       let deletedata = null;
                       if (this.props.user.auth) {
@@ -194,15 +216,7 @@ export default class Feed extends Component {
                 <ul className="feed-list">
                   {
                     item.getAllAnswers().map((answer, i) => {
-                      user = <h6>User: {answer.getUser().displayName}</h6>;
-                      if (answer.getUser().displayName === 'devs') {
-                        user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                      }
-                      if (this.props.user.auth !== null) {
-                        if (answer.getUser().uid === this.props.user.auth.uid) {
-                          user = <h6>User: <Badge color="secondary">you</Badge></h6>;
-                        }
-                      }
+                      user = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser> 
                       return (
                         //--------------------------------------------------------------------------------
                         //ANSWERS
@@ -244,16 +258,9 @@ export default class Feed extends Component {
             {
               this.props.filteredQuestions.map(
                 (item, i) => {
-                  let user = <h5>User: {item.getUsername()}</h5>;
+                  let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
                   //console.log("item", item)
                   //console.log("user", user)
-                  if (item.getUsername() === 'devs') {
-                    user = <h6>User: <Badge color="dark">devs</Badge></h6>;
-                  } if (this.props.user.auth !== null) {
-                    if (item.getUser().uid === this.props.user.auth.uid) {
-                      user = <h6>User: <Badge color="secondary">you</Badge></h6>;
-                    }
-                  }
 
                   let color = '';
                   switch (item.getTags()) {
@@ -611,7 +618,7 @@ export default class Feed extends Component {
   }
 
   renderAnswer(item1) {
-    let user = <h6>User: {item1.getFirstAnswer().getUsername()}</h6>;
+    let user = <RenderUser uid={item1.getFirstAnswer().getUid()} currentUser={this.props.user}></RenderUser>;
 
     // Save this code for later use when implementing replying to replies
 

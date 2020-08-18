@@ -30,8 +30,8 @@ export default class Question {
         return this.id
     }
 
-    addAnswer(answerText, user, username, time, id) {
-        let answer = new Answer(answerText, user, username, time, id)
+    addAnswer(answerText, user, username, time, id, uid) {
+        let answer = new Answer(answerText, user, username, time, id, uid)
         this.answers.push(answer)
     }
     removeAnswer(id) {

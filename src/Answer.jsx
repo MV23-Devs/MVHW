@@ -1,10 +1,11 @@
 export default class Answer {
-    constructor(questionText, user, username, time, id, upvotes = 0) {
+    constructor(questionText, user, username, time, id, uid, upvotes = 0) {
         this.answerText = questionText
         this.user = user;
         this.username = username;
         this.time = time;
         this.id = id;
+        this.uid = uid;
         this.upvotes = upvotes;
     }
     upvote() {
@@ -27,5 +28,8 @@ export default class Answer {
     }
     getId() {
         return this.id
+    }
+    getUid() {
+        return this.uid
     }
 }
