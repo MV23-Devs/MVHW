@@ -199,19 +199,11 @@ class Home extends Component {
           if (change.type === 'added') {
             let doc = change.doc;
 
-            let ups, downs, votes = 0;
-
-            if (doc.data().usersUpvoted.length > 0 && doc.data().usersDownvoted.length > 0) {
-              ups = doc.data().usersUpvoted.length
-              downs = doc.data().usersDownvoted.length
-              votes = ups - downs;
-            } else if (doc.data().usersUpvoted.length > 0) {
-              ups = doc.data().usersUpvoted.length
-              votes = ups;
-            } else if (doc.data().usersDownvoted.length > 0) {
-              downs = doc.data().usersDownvoted.length
-              votes = 0 - downs;
-            }
+            
+            let ups = doc.data().usersUpvoted.length
+            let downs = doc.data().usersDownvoted.length
+            let votes = ups - downs;
+            
             let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
             docs.push(q);
             db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {

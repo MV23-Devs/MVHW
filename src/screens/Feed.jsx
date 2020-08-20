@@ -32,7 +32,7 @@ const Votes = (props) => {
   );
 }
 // Function that Renders User Info
-class RenderUser extends Component {
+export class RenderUser extends Component {
   state = {
     isTutor: false,
     username: "",
@@ -43,7 +43,8 @@ class RenderUser extends Component {
         this.setState({isTutor: true})
       }
       this.setState({username: doc.data().name})
-      if (this.props.currentUser) {
+
+      if (this.props.currentUser && this.props.currentUser.auth) {
         if (this.props.currentUser.auth.uid === this.props.uid) {
           this.setState({username: <Badge color='secondary'>you</Badge>})
         }
@@ -321,7 +322,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
-                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, i)} >See full Thread</Button>
+                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, i)} >See Full Thread</Button>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
