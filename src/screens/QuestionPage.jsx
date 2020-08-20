@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import '../App.css'
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { Container, Row, Col, Button, Form, FormGroup, Label, FormText, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
+import { Container, Row, Col, Button, Badge} from 'reactstrap';
 import Question from '../Question';
-import {Votes, RenderUser} from './Feed.jsx';
-import { data } from 'jquery';
+import {Votes, RenderUser, deleteQ} from './Feed.jsx';
+//import { data } from 'jquery';
 
+import firebase from '../firebase.js';
 
 const dark = {
     backgroundColor: '#222',
@@ -20,9 +21,14 @@ export default class QuestionPage extends Component{
     state={
         id: this.props.match.params.id,
         question: null,
+        user: null,
     }
 
     componentDidMount(){
+        firebase.auth().onAuthStateChanged(user => {
+            console.log(user);
+            this.setState({user});
+        });
         firebase.firestore().collection("questions").doc(this.state.id).get().then(doc => {
             let data = doc.data()
             let q = new Question(data.title, JSON.parse(data.auth), data.timestamp, doc.id, data.usersUpvoted.length - data.usersDownvoted.length, data.tags, data.img_url, data.username);
@@ -35,19 +41,115 @@ export default class QuestionPage extends Component{
         })
     }
 
-    render(){
-        return (
+    getUpvoteString(upvotes){
 
+        if (upvotes >= 1000) {
+            upvotes = ((upvotes / 1000)).toFixed(1) + "k";
+        }
+        return upvotes;
+    }
+
+    render(){
+        let item = this.state.question;
+        if(!item){
+            return null;
+        }
+        let {user} = this.state;
+        let color = '';
+        switch (item.getTags()) {
+            case 'Math':
+                color = 'info';
+                break;
+            case 'Science':
+                color = 'warning';
+                break;
+            case 'English':
+                color = 'danger';
+                break;
+            case 'History':
+                color = 'success';
+                break;
+            case 'Computer Science':
+                color = 'primary';
+                break;
+
+            default:
+                color = 'secondary';
+                break;
+        }
+        let tag = <Badge color={color}>{item.getTags()}</Badge>;
+        if (item.getTags() === "None") {
+            tag = null;
+        }
+        let deletedata = null;
+            if (this.state.user !== null) {
+            if (this.state.user.uid === item.getUser().uid) {
+                deletedata = (
+                <span>
+                    <span> | </span>
+                    <span className="links" onClick={() => deleteQ(item)}>delete</span>
+                </span>
+                );
+            }
+        }
+        let answers = null;
+        if (item.getAllAnswers().length > 0) {
+            answers = (
+            <ul className="feed-list">
+                {
+                    item.getAllAnswers().map((answer, i) => {
+                        let auser = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
+
+                        let deletedata = null;
+                        if (this.state.user) {
+
+                        if (answer.getUser().uid === this.state.user.uid) {
+                            deletedata = (
+                            <span>
+                                <span> | </span>
+                                <span className="links" onClick={() => this.deleteA(item, answer)}>delete</span>
+                            </span>
+                            );
+                        }
+
+                        }
+
+                        return (
+                        <li key={"answer" + i} id="answerBox" style={dark}>
+
+                            <Row>
+                            <Col xs="1" className="updown">
+                                <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                                <Votes num={this.getUpvoteString(answer.getUpvotes())} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
+                                <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                            </Col>
+                            <Col>
+                                {auser}
+                                <h5>Answer: {answer.getText()}</h5>
+                                {/* {respondable} */}
+                                <span className="links">reply</span>
+                                {deletedata}
+                            </Col>
+                            </Row>
+
+                        </li>
+                        );
+                    })
+                }
+            </ul>
+            )
+        }
+        return (
             <React.Fragment>
     
               <div className="containerthread">
-    
+
                 <Container>
                   <div style={dark} className="questionBox">
                     <Row>
                       <Col xs="1" className="updown">
                         <button style={dark} onClick={() => this.upvote()} className="voteButton"><MdArrowUpward /></button>
-                        <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                        <Votes num={this.getUpvoteString(item.getUpvotes())} actualNumber={item.getUpvotes()} />
                         <button style={dark} onClick={() => this.downvote()} className="voteButton"><MdArrowDownward /></button>
                       </Col>
                       <Col xs="11">
@@ -63,11 +165,15 @@ export default class QuestionPage extends Component{
                           }
                         </div>
                         <hr style={dark.line} />
-                        <span className="links" onClick={
-    
-                          this.openReply.bind(this, item)
-    
-                        }>reply</span>
+                        {
+                            /*
+                            <span className="links" onClick={
+
+                                this.openReply.bind(this, item)
+
+                            }>reply</span>
+                            */
+                        }
                         {deletedata}
                         {this.renderReply(item)}
                       </Col>
@@ -84,7 +190,7 @@ export default class QuestionPage extends Component{
                               <Row>
                                 <Col xs="1" className="updown">
                                   <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
-                                  <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
+                                  <Votes num={this.getUpvoteString(answer.getUpvotes())} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
                                   <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
                                 </Col>
                                 <Col>
@@ -112,20 +218,20 @@ export default class QuestionPage extends Component{
     }
 
     upvote() {
-        if (this.props.user.auth !== null) {
+        if (this.state.user !== null) {
           let tempUsersUpvoted = []
           let tempUsersDownvoted = []
-          let up = this.props.filteredQuestions[i].getUpvotes();
-          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
+          let up = this.state.question.getUpvotes();
+          firebase.firestore().collection("questions").doc(this.state.question.getId()).get().then(doc => {
             tempUsersUpvoted = doc.data().usersUpvoted;
             tempUsersDownvoted = doc.data().usersDownvoted;
-            if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
-              this.props.filteredQuestions[i].upvote();
-              tempUsersUpvoted.push(this.props.user.auth.uid);
-              if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
-                tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+            if (tempUsersUpvoted.indexOf(this.state.user.uid) === -1) {
+              this.state.question.upvote();
+              tempUsersUpvoted.push(this.state.user.uid);
+              if (tempUsersDownvoted.indexOf(this.state.user.uid) > -1) {
+                tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.state.user.uid ? true : false))
               }
-              db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+              firebase.firestore().collection("questions").doc(this.state.question.getId()).update({
                 upvotes: up + 1,
                 usersUpvoted: tempUsersUpvoted,
                 usersDownvoted: tempUsersDownvoted,
@@ -146,21 +252,21 @@ export default class QuestionPage extends Component{
     }
     
     downvote(i) {
-        if (this.props.user.auth !== null) {
+        if (this.state.user !== null) {
             let tempUsersUpvoted = []
             let tempUsersDownvoted = []
-            let up = this.props.filteredQuestions[i].getUpvotes();
-            //this.props.filteredQuestions[i].downvote();
-            db.collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
+            let up = this.state.question.getUpvotes();
+            //this.state.question.downvote();
+            firebase.firestore().collection("questions").doc(this.state.question.getId()).get().then(doc => {
             tempUsersUpvoted = doc.data().usersUpvoted;
             tempUsersDownvoted = doc.data().usersDownvoted;
-            if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1) {
-                this.props.filteredQuestions[i].downvote();
-                tempUsersDownvoted.push(this.props.user.auth.uid);
-                if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1) {
-                tempUsersUpvoted = tempUsersUpvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+            if (tempUsersDownvoted.indexOf(this.state.user.uid) === -1) {
+                this.state.question.downvote();
+                tempUsersDownvoted.push(this.state.user.uid);
+                if (tempUsersUpvoted.indexOf(this.state.user.uid) > -1) {
+                tempUsersUpvoted = tempUsersUpvoted.filter(item => (item !== this.state.user.uid ? true : false))
                 }
-                db.collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+                firebase.firestore().collection("questions").doc(this.state.question.getId()).update({
                 upvotes: up - 1,
                 usersUpvoted: tempUsersUpvoted,
                 usersDownvoted: tempUsersDownvoted,

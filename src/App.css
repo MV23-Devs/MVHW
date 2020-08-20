@@ -352,8 +352,7 @@ a {
 
 .seeFull {
   display: inline-block;
-  float:right;
-  margin-top: -30px;
+  float: right;
   margin-right: 10px;
 }
 

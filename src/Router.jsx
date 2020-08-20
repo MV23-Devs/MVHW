@@ -1,25 +1,20 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
     BrowserRouter as Router,
     Route,
-    Switch
+    Switch,
 } from 'react-router-dom'
 import Profile from './screens/Profile.jsx'
 import Home from './screens/Home.jsx'
 import QuestionPage from './screens/QuestionPage.jsx'
-import { post } from 'jquery'
-
 import firebase from './firebase.js';
-const db = firebase.firestore();
-
-
+//import { post } from 'jquery'
 
 export default class AppRouter extends Component {
     constructor(props) {
         super(props);
         this.getAllPosts.bind(this);
         this.allPosts = [];
-        
     }
     render() {
         this.getAllPosts();
@@ -34,9 +29,8 @@ export default class AppRouter extends Component {
         )
     }
 
-
     getAllPosts() {
-        db.collection('questions').get().then((querySnapshot) => {
+        firebase.firestore().collection('questions').get().then((querySnapshot) => {
             // console.log(querySnapshot.docs);
             querySnapshot.docs.forEach(post => {
             this.allPosts.push(post.id)
@@ -45,7 +39,5 @@ export default class AppRouter extends Component {
 
         console.log(this.allPosts[0]);
 
-        
-       
     }
 }

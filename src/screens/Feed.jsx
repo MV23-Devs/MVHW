@@ -31,6 +31,54 @@ export const Votes = (props) => {
     </div>
   );
 }
+
+export const deleteA = (item, answer) => {
+  db.collection("questions").doc(item.getId()).collection("replies").doc(answer.getId()).delete().then(() => {
+    console.log("deleted reply with id: " + answer.getId())
+    item.removeAnswer(item.getId());
+  }).catch((error) => {
+    console.error("Error removing document: ", error);
+  });
+}
+
+export const deleteQ = (item) => {
+  let replies = [];
+
+  //deletes all replies too???!!!
+
+  db.collection("questions").doc(item.getId()).collection("replies").get().then(querySnapshot => {
+    querySnapshot.docs.forEach(doc => {
+      replies.push(doc.id);
+    })
+    return replies;
+  }).then(replies => {
+    replies.forEach(id => {
+      db.collection("questions").doc(item.getId()).collection("replies").doc(id).delete().then(doc => {
+        console.log("Successfully deleted reply with id: ", id);
+      })
+    })
+  }).then(() => {
+    db.collection("questions").doc(item.getId()).delete().then(() => {
+      firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").get().then(querySnapshot => {
+        querySnapshot.docs.forEach(doc => {
+          replies.push(doc.id);
+        })
+        return replies;
+      }).then(replies => {
+        replies.forEach(id => {
+          firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
+            console.log("Successfully deleted post in user section with id: ", id);
+          })
+        })
+      }).catch((error) => {
+        console.error("Error removing document: ", error);
+      })
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    })
+  });
+}
+
 // Function that Renders User Info
 export class RenderUser extends Component {
   state = {
@@ -38,35 +86,37 @@ export class RenderUser extends Component {
     username: "",
   }
   componentDidMount() {
-    firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
-      if (doc.data().isTutor === true) {
-        this.setState({isTutor: true})
-      }
-      this.setState({username: doc.data().name})
-
-      if (this.props.currentUser && this.props.currentUser.auth) {
-        if (this.props.currentUser.auth.uid === this.props.uid) {
-          this.setState({username: <Badge color='secondary'>you</Badge>})
+    if (this.props.uid) {
+      firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
+        if (doc.data().isTutor === true) {
+          this.setState({ isTutor: true })
         }
-      }  
-    })
+        this.setState({ username: doc.data().name })
+        if (this.props.currentUser.auth) {
+          if (this.props.currentUser.auth.uid === this.props.uid) {
+            this.setState({ username: <Badge color='secondary'>you</Badge> })
+          }
+        }
+      })
+    }
   }
   render() {
-    return(
+    return (
       <React.Fragment>
         <span>{this.state.username}</span>
+        <span> </span>
         {
           this.state.isTutor === true ?
-  
-          <Badge color="success">AVID TUTOR</Badge>
-          :
-          null
+
+            <Badge color="success">AVID TUTOR</Badge>
+            :
+            null
         }
-      </React.Fragment> 
+      </React.Fragment>
     )
   }
 }
-  
+
 export default class Feed extends Component {
 
   state = {
@@ -119,50 +169,50 @@ export default class Feed extends Component {
       }
 
       let answers = null;
-      if(item.getAllAnswers().length > 0) {
+      if (item.getAllAnswers().length > 0) {
         answers = (
           <ul className="feed-list">
-                  {
-                    item.getAllAnswers().map((answer, i) => {
-                      let auser = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
+            {
+              item.getAllAnswers().map((answer, i) => {
+                let auser = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
 
-                      let deletedata = null;
-                      if (this.props.user.auth) {
+                let deletedata = null;
+                if (this.props.user.auth) {
 
-                        if (answer.getUser().uid === this.props.user.auth.uid) {
-                          deletedata = (
-                            <span>
-                              <span> | </span>
-                              <span className="links" onClick={() => this.deleteA(item, answer)}>delete</span>
-                            </span>
-                          );
-                        }
-
-                      }
-
-                      return (
-                        <li key={"answer" + i} id="answerBox" style={dark}>
-
-                          <Row>
-                            <Col xs="1" className="updown">
-                              <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
-                              <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                              <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
-                            </Col>
-                            <Col>
-                              {auser}
-                              <h5>Answer: {answer.getText()}</h5>
-                              {/* {respondable} */}
-                              <span className="links">reply</span>
-                              {deletedata}
-                            </Col>
-                          </Row>
-
-                        </li>
-                      );
-                    })
+                  if (answer.getUser().uid === this.props.user.auth.uid) {
+                    deletedata = (
+                      <span>
+                        <span> | </span>
+                        <span className="links" onClick={() => this.deleteA(item, answer)}>delete</span>
+                      </span>
+                    );
                   }
-                </ul>
+
+                }
+
+                return (
+                  <li key={"answer" + i} id="answerBox" style={dark}>
+
+                    <Row>
+                      <Col xs="1" className="updown">
+                        <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                        <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
+                        <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                      </Col>
+                      <Col>
+                        {auser}
+                        <h5>Answer: {answer.getText()}</h5>
+                        {/* {respondable} */}
+                        <span className="links">reply</span>
+                        {deletedata}
+                      </Col>
+                    </Row>
+
+                  </li>
+                );
+              })
+            }
+          </ul>
         )
       }
 
@@ -217,7 +267,7 @@ export default class Feed extends Component {
                 <ul className="feed-list">
                   {
                     item.getAllAnswers().map((answer, i) => {
-                      user = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser> 
+                      user = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
                       return (
                         //--------------------------------------------------------------------------------
                         //ANSWERS
@@ -361,24 +411,24 @@ export default class Feed extends Component {
       let answerObject = this.props.filteredQuestions[i].getAllAnswers()[a];
       let up = answerObject.getUpvotes();
       db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies")
-      .doc(answerObject.getId()).get().then(doc => {
-        tempUsersUpvoted = doc.data().usersUpvoted;
-        tempUsersDownvoted = doc.data().usersDownvoted;
-        if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
-          this.props.filteredQuestions[i].upvote();
-          tempUsersUpvoted.push(this.props.user.auth.uid);
-          if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
-            tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+        .doc(answerObject.getId()).get().then(doc => {
+          tempUsersUpvoted = doc.data().usersUpvoted;
+          tempUsersDownvoted = doc.data().usersDownvoted;
+          if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
+            this.props.filteredQuestions[i].upvote();
+            tempUsersUpvoted.push(this.props.user.auth.uid);
+            if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
+              tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
+            }
+            db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies").doc(answerObject.getId()).update({
+              upvotes: up + 1,
+              usersUpvoted: tempUsersUpvoted,
+              usersDownvoted: tempUsersDownvoted,
+            })
+          } else {
+            console.log("You already upvoted!")
           }
-          db.collection("questions").doc(this.props.filteredQuestions[i].getId()).collection("replies").doc(answerObject.getId()).update({
-            upvotes: up + 1,
-            usersUpvoted: tempUsersUpvoted,
-            usersDownvoted: tempUsersDownvoted,
-          })
-        } else {
-          console.log("You already upvoted!")
-        }
-      })
+        })
 
       this.setState({ update: 0 })
     } else {
@@ -470,51 +520,13 @@ export default class Feed extends Component {
   }
 
   deleteQ = (item) => {
-
     this.setState({ focus: -1 });
-    let replies = [];
-
-    db.collection("questions").doc(item.getId()).collection("replies").get().then(querySnapshot => {
-      querySnapshot.docs.forEach(doc => {
-        replies.push(doc.id);
-      })
-      return replies;
-    }).then(replies => {
-      replies.forEach(id => {
-        db.collection("questions").doc(item.getId()).collection("replies").doc(id).delete().then(doc => {
-          console.log("Successfully deleted reply with id: ", id);
-        })
-      })
-    }).then(() => {
-      db.collection("questions").doc(item.getId()).delete().then(() => {
-        firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").get().then(querySnapshot => {
-          querySnapshot.docs.forEach(doc => {
-            replies.push(doc.id);
-          })
-          return replies;
-        }).then(replies => {
-          replies.forEach(id => {
-            firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
-              console.log("Successfully deleted post in user section with id: ", id);
-            })
-          })
-        }).catch((error) => {
-          console.error("Error removing document: ", error);
-        })
-      }).catch((error) => {
-        console.error("Error removing document: ", error);
-      })
-    });
+    deleteQ(item);
   }
 
   deleteA = (item, answer) => {
-    db.collection("questions").doc(item.getId()).collection("replies").doc(answer.getId()).delete().then(() => {
-      console.log("deleted reply with id: " + answer.getId())
-      item.removeAnswer(item.getId());
-      this.setState({update: 0})
-    }).catch((error) => {
-      console.error("Error removing document: ", error);
-    });
+    deleteA(item, answer);
+    this.setState({update: 0});
   }
 
 
@@ -552,7 +564,6 @@ export default class Feed extends Component {
             <Button color="light" block>Post Reply</Button>
           </Form>
         </React.Fragment>
-
       )
     }
   }
@@ -584,7 +595,7 @@ export default class Feed extends Component {
   submitHandler = (event, item) => {
     event.preventDefault();
     let val = event.target["text"].value;
-   
+
     if (val === "") {
       let err = <FormText color="danger">You cannot post nothing!</FormText>;
       this.setState({ errormessage: err });
