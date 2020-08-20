@@ -477,6 +477,13 @@ class Home extends Component {
         <section className="sidePanel">
           <div className="sbox">
             <Button color="light" block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
+            <br/>
+            <Label for="text">Filter by Class:</Label>
+            <Input type="select" name="select" id="tags" onChange={this.filterClass}>
+              <option>noo dont pls</option>
+              <option>English</option>
+              <option>Biology</option>
+            </Input>
           </div>
           <div className="sbox">
             <p>Create a Post:</p>
@@ -599,6 +606,22 @@ class Home extends Component {
     this.setState(
       { filteredQuestions }
     )
+  }
+
+  filterClass = (e) => {
+    e.preventDefault();
+    let cless = e.target.value;
+    let filtered = [];
+    if(cless !== "noo dont pls") {
+      for(let i = 0; i < this.state.filteredQuestions.length; i++) {
+        if(this.state.filteredQuestions[i].getTags() === cless) {
+          filtered.push(this.state.filteredQuestions[i]);
+        }
+      }
+      this.setState({filteredQuestions: filtered})
+    } else {
+      this.setState({filteredQuestions: this.state.questions})
+    }
   }
 
   // getFooterColor = () => {

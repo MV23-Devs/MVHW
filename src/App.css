@@ -3,10 +3,6 @@ html,body {
   outline: none;
 }
 
-body {
-  background-color: #333;
-}
-
 #fullQuestion {
   min-height: 100vh;
 }
