@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import Profile from './screens/Profile.jsx'
 import Home from './screens/Home.jsx'
+import Teacher from './screens/Teacher.jsx'
 import QuestionPage from './screens/QuestionPage.jsx'
 import firebase from './firebase.js';
 //import { post } from 'jquery'
@@ -24,6 +25,7 @@ export default class AppRouter extends Component {
                     <Route exact path='/' component={Home}/>
                     <Route path='/profile' component={Profile}/>
                     <Route path="/question/:id" component={QuestionPage}/>
+                    <Route path="/teacher-sign-in" component={Teacher}/>
                 </Switch>
             </Router>
         )

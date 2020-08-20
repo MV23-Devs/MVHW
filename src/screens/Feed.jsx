@@ -131,7 +131,6 @@ export default class Feed extends Component {
     if (this.state.focus !== -1) {
       let i = this.state.focus;
       let item = this.props.filteredQuestions[i];
-      console.log(this.props.user)
       let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
 
 
@@ -616,7 +615,6 @@ export default class Feed extends Component {
           downvotes: 0,
           timestamp: item.getTime(),
         }).then(doc => {
-          console.log(doc)
 
           item.addAnswer(val, JSON.stringify(this.props.user.auth), item.getTime(), doc.id);
         })
