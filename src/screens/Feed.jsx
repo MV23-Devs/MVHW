@@ -18,7 +18,7 @@ const dark = {
  * 
  * @param {*} props 
  */
-const Votes = (props) => {
+export const Votes = (props) => {
   let id = "vote-num-" + props.listvalue;
   return (
     <div>

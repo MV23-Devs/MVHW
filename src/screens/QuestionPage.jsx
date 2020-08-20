@@ -3,6 +3,7 @@ import '../App.css'
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { Container, Row, Col, Button, Form, FormGroup, Label, FormText, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
 import Question from '../Question';
+import {Votes, RenderUser} from './Feed.jsx';
 import { data } from 'jquery';
 
 
@@ -14,23 +15,6 @@ const dark = {
     }
 };
 
-/**
- * 
- * @param {*} props 
- */
-const Votes = (props) => {
-    let id = "vote-num-" + props.listvalue;
-    return (
-        <div>
-        <h5 id={id} className="upvotes-num">{props.num}</h5>
-        <UncontrolledPopover trigger="legacy" placement="bottom" target={id}>
-            <PopoverBody>
-            {props.actualNumber}
-            </PopoverBody>
-        </UncontrolledPopover>
-        </div>
-    );
-}
 
 export default class QuestionPage extends Component{
     state={
