@@ -20,6 +20,8 @@ import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";
 import atli from "../img/atli-sucks.jpg";
 
+const classes = ["None", "English", "Biology"]
+
 const db = firebase.firestore();
 
 // dark theme
@@ -304,6 +306,14 @@ class Home extends Component {
     }
   };
 
+  createClassItems() {
+    let items = [];
+    for (let i = 0; i < (classes.length); i++) {
+      items.push(<option key={i}>{classes[i]}</option>);
+    }
+    return items;
+  }
+
   handleAnonymousInput = (event) => {
     let target = event.target;
     this.setState({ anonymousPost: target.checked })
@@ -477,12 +487,10 @@ class Home extends Component {
         <section className="sidePanel">
           <div className="sbox">
             <Button color="light" block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
-            <br/>
+            <br />
             <Label for="text">Filter by Class:</Label>
             <Input type="select" name="select" id="tags" onChange={this.filterClass}>
-              <option>noo dont pls</option>
-              <option>English</option>
-              <option>Biology</option>
+              {this.createClassItems()}
             </Input>
           </div>
           <div className="sbox">
@@ -506,30 +514,7 @@ class Home extends Component {
                 <br />
                 <Label for="tags"><Badge color="danger">Mandatory</Badge> Tag:</Label>
                 <Input type="select" name="select" id="tags">
-                  <option>None</option>
-                  <option>Math</option>
-                  <option>Geometry</option>
-                  <option>Algebra</option>
-                  <option>Trigonometry</option>
-                  <option>Calculus</option>
-                  <option>Science</option>
-                  <option>Biology</option>
-                  <option>Chemistry</option>
-                  <option>Physics</option>
-                  <option>English</option>
-                  <option>Survey</option>
-                  <option>AP Comp</option>
-                  <option>History</option>
-                  <option>World Studies</option>
-                  <option>AP Euro</option>
-                  <option>WHAP</option>
-                  <option>USHAP</option>
-                  <option>Spanish</option>
-                  <option>Anime</option>
-                  <option>Chinese</option>
-                  <option>Computer Science</option>
-                  <option>Art</option>
-                  <option>Music</option>
+                  {this.createClassItems()}
                 </Input>
                 <br />
                 <Label id="anonymousBoxLabel" for="anonymousBox">Anonymous</Label>
@@ -612,24 +597,17 @@ class Home extends Component {
     e.preventDefault();
     let cless = e.target.value;
     let filtered = [];
-    if(cless !== "noo dont pls") {
-      for(let i = 0; i < this.state.filteredQuestions.length; i++) {
-        if(this.state.filteredQuestions[i].getTags() === cless) {
-          filtered.push(this.state.filteredQuestions[i]);
+    if (cless !== "None") {
+      for (let i = 0; i < this.state.questions.length; i++) {
+        console.log(this.state.questions[i].getTags(), cless);
+        if (this.state.questions[i].getTags() === cless) {
+          filtered.push(this.state.questions[i]);
         }
       }
-      this.setState({filteredQuestions: filtered})
+      this.setState({ filteredQuestions: filtered })
     } else {
-      this.setState({filteredQuestions: this.state.questions})
+      this.setState({ filteredQuestions: this.state.questions })
     }
   }
-
-  // getFooterColor = () => {
-  //   this.setState({
-  //     styles: this.state.theme === 1 ? { ...dark } : { ...light }
-  //   });
-  //   console.log(theme1.footer.backgroundColor);
-  //   return theme1.footer.backgroundColor;
-  // }
 }
 export default withRouter(Home)

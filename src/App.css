@@ -4,6 +4,10 @@ html,body {
   background-color: #333;
 }
 
+body {
+  background-color: #333;
+}
+
 #fullQuestion {
   min-height: 100vh;
 }
