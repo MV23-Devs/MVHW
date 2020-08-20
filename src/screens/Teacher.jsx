@@ -262,15 +262,12 @@ export default class Profile extends Component {
                     <div id="checkBoxSelect">
 
                         <Link to="/">Home</Link>
-                        <br/>
-                        <Link to="/teacher-sign-in">Teacher?</Link>
                         
-                        
-                        
-                        <h1 id="pfp-title">Profile</h1>
+
+                        <h1 id="pfp-title">Teacher Profile</h1>
 
                         <center>
-                            <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
+                            <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" width="100" className="pfp" />
                         </center>
                         <div>
                             {
@@ -288,7 +285,7 @@ export default class Profile extends Component {
                         {
                             this.state.userClasses ?
                                 <div id="checkBoxTitle">
-                                    <h1 className="pf-title">Select Classes: <span className="badge"> {this.state.selected.length + 0}</span></h1>
+                                    <h1 className="pf-title">Select Classes that you Teach: <span className="badge"> {this.state.selected.length + 0}</span></h1>
                                     <br />
                                 </div>
                                 :
