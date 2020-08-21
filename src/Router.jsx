@@ -7,6 +7,7 @@ import {
 import Profile from './screens/Profile.jsx'
 import Home from './screens/Home.jsx'
 import Teacher from './screens/Teacher.jsx'
+import Tutor from './screens/Tutor.jsx'
 
 
 const AppRouter = () => {
@@ -22,7 +23,9 @@ const AppRouter = () => {
                 <Route path='/teacher-sign-in'>
                     <Teacher />
                 </Route>
-
+                <Route path='/tutoring'>
+                    <Tutor />
+                </Route>
             </Switch>
         </Router>
 

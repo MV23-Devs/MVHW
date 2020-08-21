@@ -439,7 +439,59 @@ class Home extends Component {
       downvotes: 0,
       timestamp: q.getTime(),
     });
- 
+ const deleteAccount = (toggle) => {
+    let posts = [];
+    firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("posts").get().then(querySnapshot => {
+        querySnapshot.docs.forEach(post => {
+            posts.push(post.data().original);
+            firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("posts").doc(post.id).delete();
+        })
+        return posts
+    }).then(posts => {
+        posts.forEach(post => {
+            firebase.firestore().collection("questions").doc(post).collection("replies").get().then(querySnapshot => {
+                querySnapshot.docs.forEach(reply => {
+                    firebase.firestore().collection("questions").doc(post).collection("replies").doc(reply.id).delete();
+                })
+            }).then(() => {
+                firebase.firestore().collection("questions").doc(post).delete();
+            })
+        })
+    })
+    firebase.auth().currentUser.delete().then(() => {
+        toggle()
+    }).catch(err => {
+        console.error("Error: ", err)
+    })
+}
+
+
+const DeleteModal = (props) => {
+    const {
+        className,
+    } = props;
+
+    const [modal, setModal] = useState(false);
+
+    const toggle = () => setModal(!modal);
+
+    return (
+        <div>
+            <Button color="danger" outline onClick={toggle}>Delete Account?</Button>
+            <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
+                <ModalHeader toggle={toggle}>Delete Your Account?</ModalHeader>
+                <ModalBody>
+                    <p>Warning! You cannot undo this action</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                    <Button color="danger" onClick={() => deleteAccount(toggle)}>Confirm</Button>
+                </ModalFooter>
+            </Modal>
+        </div>
+    );
+}
+
   */
 
       this.setState({ update: 0 });
@@ -471,6 +523,7 @@ class Home extends Component {
         <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
+          <Button id="tutorButton" href="/tutoring">Tutoring</Button>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
