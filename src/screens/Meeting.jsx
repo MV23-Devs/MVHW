@@ -4,7 +4,6 @@ export default class Meeting {
         this.uidOfRequest = uidOfRequest
         this.username = username;
         this.time = time;
-        this.uid = uid;
         this.tutorChosen = tutorChosen;
         this.subject = subject
         this.day = day

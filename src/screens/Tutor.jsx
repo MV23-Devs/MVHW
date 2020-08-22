@@ -232,7 +232,7 @@ export default class Tutor extends Component {
         //adding to database
         db.collection('meetings').add({
             uidOfRequest: null, //user who requested it
-            time: 'yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeet', //time of day of meeting
+            time: 8, //time of day of meeting
             day: null, //day chosen
             tutorChosen: null, //wthich tutor they chose null if none ye
             subject: null //the subject they chose
@@ -242,6 +242,20 @@ export default class Tutor extends Component {
         })
         //test
 
+        
+
+
+        // [0].doc('time').data
+
+
+        //                      |
+        //for updating the page v
+        this.setState({ update: 0 });
+        // event.target["text"].value = "";
+        console.log("tried to submit")
+    }
+
+    addMeetings() {
         //working ish v
         // let tempErrTest = db.collection('meetings').doc('JnnvTgp4CNohTT5sI3uD').get().then(doc =>{
         //     console.log(doc.data().time)
@@ -255,19 +269,10 @@ export default class Tutor extends Component {
             doc.forEach((snap) => {
                 console.log(snap.data())
                 let d = snap.data(
-                meetingsListReal.push()
+                meetingsListReal.push(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
+                )
             })
         })
-
-
-        // [0].doc('time').data
-
-
-        //                      |
-        //for updating the page v
-        this.setState({ update: 0 });
-        // event.target["text"].value = "";
-        console.log("tried to submit")
     }
 
 
