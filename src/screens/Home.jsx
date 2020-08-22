@@ -540,7 +540,7 @@ const DeleteModal = (props) => {
         <section className="sidePanel">
           <div className="sbox">
             <Button color="light" block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
-            <br />
+            <br />Form Form Form 
             <Label for="text">Filter by Class:</Label>
             <Input type="select" name="select" id="tags" onChange={this.filterClass}>
               {this.createClassItems()}

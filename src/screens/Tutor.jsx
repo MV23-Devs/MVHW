@@ -67,9 +67,11 @@ export default class Tutor extends Component {
         super(props)
         this.state = {
             requesting: false,
-            timesS: ["12:00", "02:30"],
-            timesE: ["01:00", "03:30"],
+            timesS: ["12:00", "02:30", "03:30", "04:30", "05:30", "06:30"],
+            timesE: ["01:00", "03:30", "04:30", "05:30", "06:30", "07:30"],
         }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
 
 
     }
@@ -120,23 +122,30 @@ export default class Tutor extends Component {
             return (
 
                 <React.Fragment>
-                    <div id="meetingForm">
+                    <div className="meetingForm">
                         <Label style={{ color: "white" }} for="select">Select the subject of the meeting</Label>
 
-                        <Input type="select" name="select" id="tags" onChange={this.filterClass}>
-                            {this.createClassItems()}
-                        </Input>
 
-                        <br/>
-                        <p> Please select availability</p>
-                        <Form>
+
+                        <br />
+                        
+                        <Form onSubmit={this.handleSubmit}>
+                            <Input type="select" name="select" style={{outline:"none"}} id="tags" value={this.state.value} onChange={this.handleChange}>
+                                {this.createClassItems()}
+                            </Input>
+                            <br/>
+                            <br/>
+                            <p> Please select availability</p>
                             {this.giveTimes()}
 
                         </Form>
 
-                        <Button className="newBtn" >Submit</Button>
+                        <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} />
 
 
+                    </div>
+                    <div className="meetingForm">
+                        <h1>Meetings</h1>
                     </div>
                 </React.Fragment>
 
@@ -144,6 +153,16 @@ export default class Tutor extends Component {
         }
 
 
+    }
+
+
+    handleChange(event) {
+        this.setState({ value: event.target.value });
+    }
+
+    handleSubmit(event) {
+        alert('An essay was submitted: ' + this.state.value);
+        event.preventDefault();
     }
 
     giveTimes() {

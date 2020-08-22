@@ -7,7 +7,7 @@ html,body {
 body {
   background-color: #333;
 }
-#meetingForm {
+.meetingForm {
   margin: 25%;
   margin-top: 10px;
   margin-bottom: 10px;
