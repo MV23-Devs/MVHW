@@ -4,15 +4,14 @@ import React, {
 } from 'react';
 import '../App.css';
 import {
-    Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+   Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
   } from 'reactstrap';
 import {
     Link
 } from 'react-router-dom'
-import { get as _get, times } from "lodash";
+import { get as _get } from "lodash";
 
 import firebase from '../firebase.js';
-import { storage } from '../firebase.js';
 
 
 const theme1 = {
