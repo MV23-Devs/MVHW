@@ -5,14 +5,14 @@ import React, {
 import '../App.css';
 import {
     Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
-  } from 'reactstrap';
+} from 'reactstrap';
 import {
     Link
 } from 'react-router-dom'
 import { get as _get, times } from "lodash";
-
 import firebase from '../firebase.js';
-import { storage } from '../firebase.js';
+import Meeting from './Meeting.jsx'
+import { MdAddAlert } from 'react-icons/md';
 
 
 const theme1 = {
@@ -35,26 +35,6 @@ const theme1 = {
     }
 };
 
-const ProfilePictureDropdown = (props) => {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggle = () => setDropdownOpen(prevState => !prevState);
-  
-    return (
-      <Dropdown isOpen={dropdownOpen} toggle={toggle} id="socialDrop">
-        <DropdownToggle
-          tag="span"
-          data-toggle="dropdown"
-          aria-expanded={dropdownOpen}
-        >
-          {props.children}
-        </DropdownToggle>
-        <DropdownMenu id="ProfileMenu">
-          <Link to="/profile"><DropdownItem >Profile</DropdownItem></Link>
-          <DropdownItem onClick={props.signout}>Sign Out</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    );
-  }
 
 
 const dark = {
@@ -66,7 +46,7 @@ const dark = {
 };
 const classes = ["None", "English", "Biology"];
 
-
+const db = firebase.firestore();
 
 export default class Tutor extends Component {
     constructor(props) {
@@ -85,13 +65,15 @@ export default class Tutor extends Component {
             user: {
                 auth: null,
                 name: 'Anonymous',
-              },
+            },
 
 
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
+
+
 
         let checkedStart = []
         for (let i = 0; i < this.state.timesE.length; i++) {
@@ -116,12 +98,12 @@ export default class Tutor extends Component {
 
                     <Link to="/" >Home</Link>
 
-                    {
+                    {/* {
                         this.state.user.auth !== null ?
                             <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
                             :
                             <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
-                    }
+                    } */}
                 </div>
                 <div id="general">
                     {
@@ -168,13 +150,16 @@ export default class Tutor extends Component {
 
                         </Form>
 
-                        <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} />
+                        <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} onClick={this.submitHandler} />
 
 
                     </div>
                     <div className="meetingForm">
                         <h1 className="specialTitle">Meetings</h1>
                         <hr className="whiteBar" />
+
+
+
                     </div>
                 </React.Fragment>
 
@@ -226,97 +211,88 @@ export default class Tutor extends Component {
         }
         return items;
     }
-
+    //stolen from Home.jsx
     submitHandler = (event) => {
         event.preventDefault();
-        let val = event.target["text"].value;
-        let t = event.target["select"].value;
-        let anonymous = this.state.anonymousPost
-        if (val === "") {
-            let err = <FormText color="danger">You cannot post nothing!</FormText>;
-            this.setState({ errormessage: err });
-        } else if (this.state.user.auth === null) {
-            let err = <FormText color="danger">You have to sign in to request something</FormText>;
-            this.setState({ errormessage: err });
-        } else {
-            this.setState({ errormessage: '' });
+        // let val = event.target["text"].value;
+        // let t = event.target["select"].value;
+        // DO NOT DELETE BELOW -----------------------------
+        // if (val === "") {
+        //     let err = <FormText color="danger">You must fill in all fields</FormText>;
+        //     this.setState({ errormessage: err });
+        // } 
 
-            let date = (new Date()).toString();
-            let name = "";
-            if (anonymous === true) {
-                name = "Anonymous";
-            } else {
-                name = this.state.user.name;
-            }
-            if (this.handleImageUpload() !== null) {
-                this.handleImageUpload()
-                    .then(url => {
-                        this.fileinputref.current.value = null
-                        this.forceUpdate()
-                        this.setState({ url });
-                        //console.log(this.fileinputref)
-                        firebase.firestore()
-                            .collection('questions')
-                            .add({
-                                title: val,
-                                img_url: this.state.url,
-                                username: name,
-                                auth: JSON.stringify(this.state.user.auth),
-                                usersUpvoted: [],
-                                usersDownvoted: [],
-                                timestamp: date,
-                                tags: t,
-                            }).then((docRef) => {
-                                firebase.firestore()
-                                    .collection('users').doc(this.state.user.auth.uid).collection("posts")
-                                    .add({
-                                        title: val,
-                                        img_url: this.state.url,
-                                        timestamp: date,
-                                        tags: t,
-                                        original: docRef.id,
-                                    }).then((docRef) => {
-                                        firebase.database().ref('audit log').push(date + ": created a new post");
-                                        this.setState({ image: null });
-                                    });
-                                firebase.database().ref('audit log').push(date + ": created a new post");
-                                this.setState({ image: null });
-                            });
-                    });
-            } else {
-                firebase.firestore()
-                    .collection('questions')
-                    .add({
-                        title: val,
-                        img_url: this.state.url,
-                        username: name,
-                        auth: JSON.stringify(this.state.user.auth),
-                        usersUpvoted: [],
-                        usersDownvoted: [],
-                        timestamp: date,
-                        tags: t,
-                    }).then((docRef) => {
-                        firebase.firestore()
-                            .collection('users').doc(this.state.user.auth.uid).collection("posts")
-                            .add({
-                                title: val,
-                                img_url: this.state.url,
-                                timestamp: date,
-                                tags: t,
-                                original: docRef.id,
-                            }).then((docRef) => {
-                                firebase.database().ref('audit log').push(date + ": created a new post");
-                                this.setState({ image: null });
-                            });
-                        firebase.database().ref('audit log').push(date + ": created a new post");
-                    });
-            }
+        //     let date = (new Date()).toString();
+        //     let name = "";
+        //     if (anonymous === true) {
+        //         name = "Anonymous";
+        //     } else {
+        //         name = this.state.user.name;
+        //     }
+
+        // }
+        //--------------------------------------
+
+        //adding to database
+        db.collection('meetings').add({
+            uidOfRequest: null, //user who requested it
+            time: 8, //time of day of meeting
+            day: null, //day chosen
+            tutorChosen: null, //wthich tutor they chose null if none ye
+            subject: null //the subject they chose
+
+
+
+        })
+        //test
+
+
+
+
+        // [0].doc('time').data
+
+
+        //                      |
+        //for updating the page v
+        this.setState({ update: 0 });
+        // event.target["text"].value = "";
+        console.log("tried to submit")
+    }
+
+    addMeetings() {
+        //working ish v
+        // let tempErrTest = db.collection('meetings').doc('JnnvTgp4CNohTT5sI3uD').get().then(doc =>{
+        //     console.log(doc.data().time)
+        // })
+
+        //temporary local meeting list
+        let meetingsListReal = [];
+        //the meeting list of th edaabase
+        let meetingsList = db.collection('meetings').get().then(doc => {
+            //copying over code 
+            doc.forEach((snap) => {
+                console.log(snap.data())
+                let d = snap.data(
+                    meetingsListReal.push(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
+                )
+            })
+        })
+        return meetingsListReal
+    }
+    renderMeetings() {
+        let mLR = this.addMeetings()
+
+        for(let i = 0; i < mLR.length; i++) {
+
         }
 
-        this.setState({ update: 0 });
-        event.target["text"].value = "";
+        return (
+            <React.Fragment>
+                <p>unfinished</p>
+            </React.Fragment>
+        )
     }
 
 
-    
+
 }
