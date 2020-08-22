@@ -8,7 +8,7 @@ import {
     Link
 } from 'react-router-dom'
 import firebase from '../firebase.js';
-import { get as _get } from "lodash";
+import { get as _get, times } from "lodash";
 import Question from '../Question';
 
 // the start of cleaning up the firestore pull from database
@@ -67,7 +67,8 @@ export default class Tutor extends Component {
         super(props)
         this.state = {
             requesting: false,
-            times: [["12:00", "1:00"]["2:30", "3:30"]]
+            timesS: ["12:00", "02:30"],
+            timesE: ["01:00", "03:30"],
         }
 
 
@@ -85,7 +86,7 @@ export default class Tutor extends Component {
 
                     <h1 id="title">MVHW</h1>
 
-                    <Link to="/" style={{ display: "inline-block" }}>Home</Link>
+                    <Link to="/" >Home</Link>
 
                     {/* {
                         this.state.user.auth !== null ?
@@ -126,10 +127,16 @@ export default class Tutor extends Component {
                             {this.createClassItems()}
                         </Input>
 
-
+                        <br/>
+                        <p> Please select availability</p>
                         <Form>
+                            {this.giveTimes()}
 
                         </Form>
+
+                        <Button className="newBtn" >Submit</Button>
+
+
                     </div>
                 </React.Fragment>
 
@@ -138,6 +145,26 @@ export default class Tutor extends Component {
 
 
     }
+
+    giveTimes() {
+        let list;
+
+        let listList = [];
+        for (let i = 0; i < this.state.timesS.length; i++) {
+            let tempStr = this.state.timesS[i] + " - " + this.state.timesE[i];
+            list = <React.Fragment>
+                <div className="fixDiv">
+
+                    <Input type='checkbox' name='check' />
+
+                    <Label for='check'>{tempStr.toString()}</Label>
+                </div>
+            </React.Fragment>;
+            listList.push(list)
+
+        }
+        return listList;
+    }
     createClassItems() {
         let items = [];
         for (let i = 0; i < (classes.length); i++) {
@@ -145,5 +172,4 @@ export default class Tutor extends Component {
         }
         return items;
     }
-
 }

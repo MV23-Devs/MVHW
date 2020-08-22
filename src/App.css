@@ -8,9 +8,19 @@ body {
   background-color: #333;
 }
 #meetingForm {
-  
+  margin: 25%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 50%;
+  background-color: #222;
+  color: #fff;
+  border: #fff 1px solid;
+  border-radius: 5px;
+  padding: 10px;
 }
-
+.fixDiv {
+  padding-left: 20px;
+}
 #fullQuestion {
   min-height: 100vh;
 }
@@ -32,6 +42,34 @@ body {
   margin-bottom: none !important;
 }
 
+.newBtn {
+  width: 100px;
+  background-color: white;
+  color:black;
+  border: #fff 1px solid;
+  border-radius: 5px;
+}
+.newBtn:hover {
+  width: 100px;
+  background-color: white;
+  color:black;
+  border: #000 1px solid;
+  border-radius: 5px;
+}
+.newBtn:focus {
+  width: 100px;
+  background-color:white;
+  color:black;
+  border: #fff 1px solid;
+  border-radius: 5px;
+}
+.newBtn:active {
+  width: 100px;
+  background-color:white;
+  color:black;
+  border: #fff 1px solid;
+  border-radius: 5px;
+}
 .footertext {
   margin: 0;
 }

@@ -523,7 +523,7 @@ const DeleteModal = (props) => {
         <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
-          <Button id="tutorButton" href="/tutoring">Tutoring</Button>
+          <Button id="tutorButton" className="newBtn" href="/tutoring" >Tutoring</Button>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
