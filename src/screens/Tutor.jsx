@@ -7,26 +7,7 @@ import { Row, Col, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, Po
 import {
     Link
 } from 'react-router-dom'
-import firebase from '../firebase.js';
 import { get as _get, times } from "lodash";
-import Question from '../Question';
-
-// the start of cleaning up the firestore pull from database
-// const db = firebase.firestore()
-
-const Votes = (props) => {
-    let id = "vote-num-" + props.listvalue;
-    return (
-        <div>
-            <h5 id={id} className="upvotes-num">{props.num}</h5>
-            <UncontrolledPopover trigger="legacy" placement="bottom" target={id}>
-                <PopoverBody>
-                    {props.actualNumber}
-                </PopoverBody>
-            </UncontrolledPopover>
-        </div>
-    );
-}
 
 
 
@@ -67,11 +48,26 @@ export default class Tutor extends Component {
         super(props)
         this.state = {
             requesting: false,
+            subject: null,
+            timesChecked: [],
+
+
+
+
             timesS: ["12:00", "02:30", "03:30", "04:30", "05:30", "06:30"],
             timesE: ["01:00", "03:30", "04:30", "05:30", "06:30", "07:30"],
+
+        
         }
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        let checkedStart =[] 
+        for (let i = 0; i < this.state.timesE.length; i++) {
+            checkedStart.push(false)
+        }
+        this.setState({timesChecked:checkedStart});
 
 
     }
@@ -156,12 +152,15 @@ export default class Tutor extends Component {
     }
 
 
-    handleChange(event) {
-        this.setState({ value: event.target.value });
+    handleChange(event, itemToChange) {
+        this.setState({ itemToChange: event.target.value });
+    }
+
+    handleCheckChange(event, itemToChange) {
+        this.setState({ itemToChange: event.target.value });
     }
 
     handleSubmit(event) {
-        alert('An essay was submitted: ' + this.state.value);
         event.preventDefault();
     }
 
@@ -174,7 +173,7 @@ export default class Tutor extends Component {
             list = <React.Fragment>
                 <div className="fixDiv">
 
-                    <Input type='checkbox' name='check' />
+                    <Input type='checkbox' name='check' onChange={}/>
 
                     <Label for='check'>{tempStr.toString()}</Label>
                 </div>
