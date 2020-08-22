@@ -27,6 +27,7 @@ export default class AppRouter extends Component {
                     <Route path='/profile' component={Profile}/>
                     <Route path="/question/:id" component={QuestionPage}/>
                     <Route path="/teacher-sign-in" component={Teacher}/>
+                    <Route path="/tutoring" component={Tutor}/>
                 </Switch>
             </Router>
         )
