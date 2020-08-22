@@ -18,6 +18,13 @@ body {
   border-radius: 5px;
   padding: 10px;
 }
+
+.specialTitle {
+  text-align: center;
+}
+.whiteBar {
+  background-color: #fff;
+}
 .fixDiv {
   padding-left: 20px;
 }
