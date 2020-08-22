@@ -488,9 +488,8 @@ export default class Feed extends Component {
         } else {
           console.log("You already upvoted!")
         }
+        this.setState({ update: 0 })
       })
-
-      this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -523,9 +522,8 @@ export default class Feed extends Component {
         } else {
           console.log("You already downvoted!")
         }
+        this.setState({ update: 0 })
       })
-
-      this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
 
