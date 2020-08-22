@@ -11,6 +11,7 @@ import {
 } from 'react-router-dom'
 import { get as _get, times } from "lodash";
 import firebase from '../firebase.js';
+import Meeting from './Meeting.jsx'
 
 
 const theme1 = {
@@ -246,12 +247,15 @@ export default class Tutor extends Component {
         //     console.log(doc.data().time)
         // })
 
-
-
+        //temporary local meeting list
+        let meetingsListReal = [];
+        //the meeting list of th edaabase
         let meetingsList = db.collection('meetings').get().then(doc => {
-
+            //copying over code 
             doc.forEach((snap) => {
                 console.log(snap.data())
+                let d = snap.data(
+                meetingsListReal.push()
             })
         })
 

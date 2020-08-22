@@ -1,11 +1,13 @@
 export default class Meeting {
-    constructor(questionText, user, username, time, id, uid) {
-        this.answerText = questionText
-        this.user = user;
+    constructor(uidOfRequest, username, time, day, tutorChosen, subject) {
+        
+        this.uidOfRequest = uidOfRequest
         this.username = username;
         this.time = time;
-        this.id = id;
         this.uid = uid;
+        this.tutorChosen = tutorChosen;
+        this.subject = subject
+        this.day = day
     }
     getUpvotes() {
         return this.upvotes
