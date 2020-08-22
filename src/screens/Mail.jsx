@@ -10,7 +10,9 @@ import {
     Link
 } from 'react-router-dom'
 import { get as _get, times } from "lodash";
+
 import firebase from '../firebase.js';
+import { storage } from '../firebase.js';
 
 
 const theme1 = {
@@ -130,100 +132,13 @@ export default class Tutor extends Component {
         )
     }
 
-    requestMeeting() {
-        if (!this.state.requesting) {
-            console.log("requesting help")
-            return (
-                <React.Fragment>
-
-                    <Button id="requestHelp" onClick={this.setState({ requesting: true })}>Request meeting</Button >
-                </React.Fragment>
-
-            )
-
-        }
-        else {
-            return (
-
-                <React.Fragment>
-                    <div className="meetingForm">
-                        <h1 className="specialTitle">Request Meeting</h1>
-                        <hr className="whiteBar" />
-                        <Label style={{ color: "white" }} for="select">Select the subject of the meeting</Label>
-
-
-
-                        <br />
-
-                        <Form onSubmit={this.handleSubmit}>
-                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
-                                {this.createClassItems()}
-                            </Input>
-                            <br />
-                            <br />
-                            <p> Please select availability</p>
-                            {this.giveTimes()}
-
-                        </Form>
-
-                        <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} />
-
-
-                    </div>
-                    <div className="meetingForm">
-                        <h1 className="specialTitle">Meetings</h1>
-                        <hr className="whiteBar" />
-                    </div>
-                </React.Fragment>
-
-            )
-        }
-
-
-    }
+   
 
 
     handleChange(event, itemToChange) {
         this.setState({ itemToChange: event.target.value });
     }
 
-    handleCheckChange(event, itemToChange, val) {
-        // let currentState = this.state.itemToChange
-        // let newArr = [];
-        // for (let i = 0; i < currentState.length; i++) {
-
-        // }
-
-        // this.setState({ itemToChange: event.target.value });
-    }
-
-
-    giveTimes() {
-        let list;
-
-        let listList = [];
-        for (let i = 0; i < this.state.timesS.length; i++) {
-            let tempStr = this.state.timesS[i] + " - " + this.state.timesE[i];
-            list = <React.Fragment>
-                <div className="fixDiv">
-
-                    <Input type='checkbox' name='check' value={this.state.timesChecked} onChange={this.handleCheckChange("timesChecked", i)} />
-
-                    <Label for='check'>{tempStr.toString()}</Label>
-                </div>
-            </React.Fragment>;
-            listList.push(list)
-
-        }
-        return listList;
-    }
-    createClassItems() {
-        let items = [];
-        for (let i = 0; i < (classes.length); i++) {
-            items.push(<option key={i}>{classes[i]}</option>);
-        }
-        return items;
-    }
     //stolen from Home.jsx
     submitHandler = (event) => {
         event.preventDefault();
@@ -246,7 +161,69 @@ export default class Tutor extends Component {
             } else {
                 name = this.state.user.name;
             }
-           
+            if (this.handleImageUpload() !== null) {
+                this.handleImageUpload()
+                    .then(url => {
+                        this.fileinputref.current.value = null
+                        this.forceUpdate()
+                        this.setState({ url });
+                        //console.log(this.fileinputref)
+                        firebase.firestore()
+                            .collection('questions')
+                            .add({
+                                title: val,
+                                img_url: this.state.url,
+                                username: name,
+                                auth: JSON.stringify(this.state.user.auth),
+                                usersUpvoted: [],
+                                usersDownvoted: [],
+                                timestamp: date,
+                                tags: t,
+                            }).then((docRef) => {
+                                firebase.firestore()
+                                    .collection('users').doc(this.state.user.auth.uid).collection("posts")
+                                    .add({
+                                        title: val,
+                                        img_url: this.state.url,
+                                        timestamp: date,
+                                        tags: t,
+                                        original: docRef.id,
+                                    }).then((docRef) => {
+                                        firebase.database().ref('audit log').push(date + ": created a new post");
+                                        this.setState({ image: null });
+                                    });
+                                firebase.database().ref('audit log').push(date + ": created a new post");
+                                this.setState({ image: null });
+                            });
+                    });
+            } else {
+                firebase.firestore()
+                    .collection('questions')
+                    .add({
+                        title: val,
+                        img_url: this.state.url,
+                        username: name,
+                        auth: JSON.stringify(this.state.user.auth),
+                        usersUpvoted: [],
+                        usersDownvoted: [],
+                        timestamp: date,
+                        tags: t,
+                    }).then((docRef) => {
+                        firebase.firestore()
+                            .collection('users').doc(this.state.user.auth.uid).collection("posts")
+                            .add({
+                                title: val,
+                                img_url: this.state.url,
+                                timestamp: date,
+                                tags: t,
+                                original: docRef.id,
+                            }).then((docRef) => {
+                                firebase.database().ref('audit log').push(date + ": created a new post");
+                                this.setState({ image: null });
+                            });
+                        firebase.database().ref('audit log').push(date + ": created a new post");
+                    });
+            }
         }
 
         this.setState({ update: 0 });
