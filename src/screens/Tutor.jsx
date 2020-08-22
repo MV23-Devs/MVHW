@@ -156,7 +156,9 @@ export default class Tutor extends Component {
         this.setState({ itemToChange: event.target.value });
     }
 
-    handleCheckChange(event, itemToChange) {
+    handleCheckChange(event, itemToChange, val) {
+        let currentState = this.state.itemToChange
+        
         this.setState({ itemToChange: event.target.value });
     }
 
