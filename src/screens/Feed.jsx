@@ -18,7 +18,7 @@ const dark = {
  * 
  * @param {*} props 
  */
-const Votes = (props) => {
+export const Votes = (props) => {
   let id = "vote-num-" + props.listvalue;
   return (
     <div>
@@ -31,8 +31,56 @@ const Votes = (props) => {
     </div>
   );
 }
+
+export const deleteA = (item, answer) => {
+  db.collection("questions").doc(item.getId()).collection("replies").doc(answer.getId()).delete().then(() => {
+    console.log("deleted reply with id: " + answer.getId())
+    item.removeAnswer(item.getId());
+  }).catch((error) => {
+    console.error("Error removing document: ", error);
+  });
+}
+
+export const deleteQ = (item) => {
+  let replies = [];
+
+  //deletes all replies too???!!!
+
+  db.collection("questions").doc(item.getId()).collection("replies").get().then(querySnapshot => {
+    querySnapshot.docs.forEach(doc => {
+      replies.push(doc.id);
+    })
+    return replies;
+  }).then(replies => {
+    replies.forEach(id => {
+      db.collection("questions").doc(item.getId()).collection("replies").doc(id).delete().then(doc => {
+        console.log("Successfully deleted reply with id: ", id);
+      })
+    })
+  }).then(() => {
+    db.collection("questions").doc(item.getId()).delete().then(() => {
+      firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").get().then(querySnapshot => {
+        querySnapshot.docs.forEach(doc => {
+          replies.push(doc.id);
+        })
+        return replies;
+      }).then(replies => {
+        replies.forEach(id => {
+          firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
+            console.log("Successfully deleted post in user section with id: ", id);
+          })
+        })
+      }).catch((error) => {
+        console.error("Error removing document: ", error);
+      })
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    })
+  });
+}
+
 // Function that Renders User Info
-class RenderUser extends Component {
+export class RenderUser extends Component {
   state = {
     isTutor: false,
     username: "",
@@ -323,7 +371,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
-                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, i)} >See full Thread</Button>
+                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, i)} >See Full Thread</Button>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
@@ -471,51 +519,13 @@ export default class Feed extends Component {
   }
 
   deleteQ = (item) => {
-
     this.setState({ focus: -1 });
-    let replies = [];
-
-    db.collection("questions").doc(item.getId()).collection("replies").get().then(querySnapshot => {
-      querySnapshot.docs.forEach(doc => {
-        replies.push(doc.id);
-      })
-      return replies;
-    }).then(replies => {
-      replies.forEach(id => {
-        db.collection("questions").doc(item.getId()).collection("replies").doc(id).delete().then(doc => {
-          console.log("Successfully deleted reply with id: ", id);
-        })
-      })
-    }).then(() => {
-      db.collection("questions").doc(item.getId()).delete().then(() => {
-        firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").get().then(querySnapshot => {
-          querySnapshot.docs.forEach(doc => {
-            replies.push(doc.id);
-          })
-          return replies;
-        }).then(replies => {
-          replies.forEach(id => {
-            firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
-              console.log("Successfully deleted post in user section with id: ", id);
-            })
-          })
-        }).catch((error) => {
-          console.error("Error removing document: ", error);
-        })
-      }).catch((error) => {
-        console.error("Error removing document: ", error);
-      })
-    });
+    deleteQ(item);
   }
 
   deleteA = (item, answer) => {
-    db.collection("questions").doc(item.getId()).collection("replies").doc(answer.getId()).delete().then(() => {
-      console.log("deleted reply with id: " + answer.getId())
-      item.removeAnswer(item.getId());
-      this.setState({ update: 0 })
-    }).catch((error) => {
-      console.error("Error removing document: ", error);
-    });
+    deleteA(item, answer);
+    this.setState({update: 0});
   }
 
 
@@ -553,7 +563,6 @@ export default class Feed extends Component {
             <Button color="light" block>Post Reply</Button>
           </Form>
         </React.Fragment>
-
       )
     }
   }
