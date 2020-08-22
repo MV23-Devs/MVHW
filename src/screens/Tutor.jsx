@@ -12,6 +12,7 @@ import {
 import { get as _get, times } from "lodash";
 import firebase from '../firebase.js';
 import Meeting from './Meeting.jsx'
+import { MdAddAlert } from 'react-icons/md';
 
 
 const theme1 = {
@@ -156,6 +157,9 @@ export default class Tutor extends Component {
                     <div className="meetingForm">
                         <h1 className="specialTitle">Meetings</h1>
                         <hr className="whiteBar" />
+
+
+
                     </div>
                 </React.Fragment>
 
@@ -242,7 +246,7 @@ export default class Tutor extends Component {
         })
         //test
 
-        
+
 
 
         // [0].doc('time').data
@@ -269,10 +273,24 @@ export default class Tutor extends Component {
             doc.forEach((snap) => {
                 console.log(snap.data())
                 let d = snap.data(
-                meetingsListReal.push(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
+                    meetingsListReal.push(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
                 )
             })
         })
+        return meetingsListReal
+    }
+    renderMeetings() {
+        let mLR = this.addMeetings()
+
+        for(let i = 0; i < mLR.length; i++) {
+
+        }
+
+        return (
+            <React.Fragment>
+                <p>unfinished</p>
+            </React.Fragment>
+        )
     }
 
 
