@@ -158,6 +158,8 @@ export default class Tutor extends Component {
                         <h1 className="specialTitle">Meetings</h1>
                         <hr className="whiteBar" />
 
+                        <div></div>
+
 
 
                     </div>
@@ -282,10 +284,17 @@ export default class Tutor extends Component {
     renderMeetings() {
         let mLR = this.addMeetings()
 
-        for(let i = 0; i < mLR.length; i++) {
+        let listList = [];
+        for (let i = 0; i < mLR; i++) {
+            list = <React.Fragment>
+                <div className="questionBox">
+                    <h4>Meeting at </h4>
+
+                </div>
+            </React.Fragment>;
+            listList.push(list)
 
         }
-
         return (
             <React.Fragment>
                 <p>unfinished</p>
