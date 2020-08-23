@@ -3,6 +3,9 @@ import '../App.css';
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { Container, Row, Col, Button, Form, FormGroup, Label, FormText, Input, Badge, UncontrolledPopover, PopoverBody } from 'reactstrap';
 import firebase from '../firebase.js';
+import {
+  Link,
+} from 'react-router-dom'
 
 const db = firebase.firestore();
 
@@ -13,6 +16,27 @@ const dark = {
     backgroundColor: '#fff',
   }
 };
+
+export const Reply = (props) => {
+  const {questionItem, errorMessage, submitHandler} = props;
+  if (questionItem.getReplying() === true) {
+    return (
+      <React.Fragment>
+        <br />
+        <br />
+        <Form onSubmit={(e) => {submitHandler(e, questionItem) }}>
+          <FormGroup>
+            <Input type="textarea" name="text" id="text"/>
+            {errorMessage}
+          </FormGroup>
+          <Button color="light" block>Post Reply</Button>
+        </Form>
+      </React.Fragment>
+    )
+  }else{
+    return null;
+  }
+}
 
 /**
  * 
@@ -92,7 +116,7 @@ export class RenderUser extends Component {
           this.setState({ isTutor: true })
         }
         this.setState({ username: doc.data().name })
-        if (this.props.currentUser.auth) {
+        if (this.props.currentUser) {
           if (this.props.currentUser.auth.uid === this.props.uid) {
             this.setState({ username: <Badge color='secondary'>you</Badge> })
           }
@@ -260,7 +284,7 @@ export default class Feed extends Component {
 
                     }>reply</span>
                     {deletedata}
-                    {this.renderReply(item)}
+                    <Reply questionItem={item} submitHandler={this.submitHandler} errorMessage={this.state.errormessage}/>
                   </Col>
                 </Row>
                 <ul className="feed-list">
@@ -371,7 +395,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
-                            <Button color="light" className="seeFull" onClick={this.changeFocus.bind(this, i)} >See Full Thread</Button>
+                            <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">See Full Thread</Button></Link>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
@@ -388,7 +412,9 @@ export default class Feed extends Component {
 
                           }>reply</span>
                           {deletedata}
-                          {this.renderReply(item)}
+
+
+                          <Reply questionItem={item} submitHandler={this.submitHandler} errorMessage={this.state.errormessage}/>
                         </Col>
                       </Row>
                     </li>
@@ -462,9 +488,8 @@ export default class Feed extends Component {
         } else {
           console.log("You already upvoted!")
         }
+        this.setState({ update: 0 })
       })
-
-      this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -497,9 +522,8 @@ export default class Feed extends Component {
         } else {
           console.log("You already downvoted!")
         }
+        this.setState({ update: 0 })
       })
-
-      this.setState({ update: 0 })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -549,23 +573,6 @@ export default class Feed extends Component {
     this.setState({ update: 1 })
   }
 
-  renderReply(item1) {
-    if (item1.getReplying() === true) {
-      return (
-        <React.Fragment>
-          <br />
-          <br />
-          <Form onSubmit={(e) => { this.submitHandler(e, item1) }}>
-            <FormGroup>
-              <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
-              {this.state.errormessage}
-            </FormGroup>
-            <Button color="light" block>Post Reply</Button>
-          </Form>
-        </React.Fragment>
-      )
-    }
-  }
   renderInnerReply(item1) {
     if (item1.getReplyingInner() === true) {
       return (
@@ -573,7 +580,7 @@ export default class Feed extends Component {
           <Form onSubmit={this.submitHandler}>
             <FormGroup>
               <Label for="text">Text:</Label>
-              <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
+              <Input type="textarea" name="text" id="text"/>
               {this.state.errormessage}
               <br />
               <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
@@ -636,7 +643,7 @@ export default class Feed extends Component {
     //   <Form onSubmit={this.submitHandler}>
     //     <FormGroup>
     //       <Label for="text">Text:</Label>
-    //       <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
+    //       <Input type="textarea" name="text" id="text"/>
     //       {this.state.errormessage}
     //     </FormGroup>
     //     <Button color={this.props.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
