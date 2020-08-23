@@ -20,7 +20,7 @@ import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";
 import atli from "../img/atli-sucks.jpg";
 
-const classes = ["None", "English", "Biology"]
+const classes = require("../classes.json").classes;
 
 const db = firebase.firestore();
 
