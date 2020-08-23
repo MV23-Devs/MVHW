@@ -201,7 +201,6 @@ class Home extends Component {
           if (change.type === 'added') {
             let doc = change.doc;
 
-            
             let ups = doc.data().usersUpvoted.length
             let downs = doc.data().usersDownvoted.length
             let votes = ups - downs;
@@ -532,7 +531,7 @@ const DeleteModal = (props) => {
         <section className="sidePanel">
           <div className="sbox">
             <Button color="light" block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
-            <br />Form Form Form 
+            <br /> 
             <Label for="text">Filter by Class:</Label>
             <Input type="select" name="select" id="tags" onChange={this.filterClass}>
               {this.createClassItems()}
