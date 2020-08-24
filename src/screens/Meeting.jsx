@@ -11,8 +11,11 @@ export default class Meeting {
     getUpvotes() {
         return this.upvotes
     }
-    getText() {
-        return this.answerText
+    getTime() {
+        return this.time
+    }
+    getSubject() {
+        return this.subject
     }
     getUsername() {
         return this.username;
