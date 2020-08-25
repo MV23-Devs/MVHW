@@ -80,8 +80,19 @@ export default class Tutor extends Component {
             checkedStart.push(false)
         }
         this.setState({ timesChecked: checkedStart });
+        
+    
 
-
+    }
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+          if (user) {
+            this.setState({ user: { auth: user, name: user.displayName } })
+            //console.log(this.state.user.auth)
+          } else {
+            this.setState({ user: { auth: user, name: 'Anonymous' } })
+          }
+        });
     }
 
 
@@ -235,6 +246,14 @@ export default class Tutor extends Component {
         // }
         //--------------------------------------
 
+        //sending an email
+        //this.sendEmail('template_Zxp8BP9K', {
+            //from_name: this.state.user.name, 
+            //to_name: "AVID Tutors", 
+            //message_html: `Hello, I'm struggling with ${this.state.value}, and am available to have a tutoring session from ${this.state.}`
+        //})
+        console.log(this.state.timesChecked)
+
         //adding to database
         db.collection('meetings').add({
             uidOfRequest: null, //user who requested it
@@ -259,6 +278,17 @@ export default class Tutor extends Component {
         this.setState({ update: 0 });
         // event.target["text"].value = "";
         console.log("tried to submit")
+    }
+
+    sendEmail (templateID, variables) {
+        window.emailjs.send(
+            'gmail', templateID,
+            variables
+            ).then(res => {
+              console.log('Email successfully sent!')
+            })
+            // Handle errors here however you like, or use a React error boundary
+            .catch(err => console.error('Oh well, you failed. Here some thoughts on the error that occured:', err))
     }
 
     addMeetings() {
@@ -286,7 +316,7 @@ export default class Tutor extends Component {
 
         let listList = [];
         for (let i = 0; i < mLR; i++) {
-            list = <React.Fragment>
+            let list = <React.Fragment>
                 <div className="questionBox">
                     <h4>Meeting at </h4>
 
