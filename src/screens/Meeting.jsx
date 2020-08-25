@@ -1,3 +1,5 @@
+
+
 export default class Meeting {
     constructor(uidOfRequest, username, time, day, tutorChosen, subject) {
         
@@ -11,8 +13,11 @@ export default class Meeting {
     getUpvotes() {
         return this.upvotes
     }
-    getText() {
-        return this.answerText
+    getTime() {
+        return this.time
+    }
+    getSubject() {
+        return this.subject
     }
     getUsername() {
         return this.username;
