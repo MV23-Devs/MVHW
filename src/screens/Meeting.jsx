@@ -1,3 +1,5 @@
+
+
 export default class Meeting {
     constructor(uidOfRequest, username, time, day, tutorChosen, subject) {
         
