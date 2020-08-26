@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import '../App.css';
 import {
-    Button, Form, FormGroup, Label, Input, FormText, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+    Button, Form, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 import {
     Link
@@ -13,6 +13,7 @@ import { get as _get, times } from "lodash";
 import firebase from '../firebase.js';
 import Meeting from './Meeting.jsx'
 import { MdAddAlert } from 'react-icons/md';
+import { preProcessFile } from 'typescript';
 
 
 const theme1 = {
@@ -48,6 +49,32 @@ const classes = ["None", "English", "Biology"];
 
 const db = firebase.firestore();
 
+const SuccessDialog = (props) => {
+    
+    const {
+        onChange,
+        show
+    } = props
+
+    const toggle = () => {
+        onChange(!show);
+    }
+
+    return (
+        <div>
+            <Modal isOpen={show} toggle={toggle}>
+                <ModalHeader toggle={toggle}>Success!</ModalHeader>
+                <ModalBody>
+                    Your email has successfully been sent to the AVID tutors! Be sure to frequently check your emails, because they will be responding soon!
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={toggle}>OK! I will check my email!</Button>
+                </ModalFooter>
+            </Modal>
+        </div>
+    );
+}
+
 export default class Tutor extends Component {
     constructor(props) {
         super(props)
@@ -55,7 +82,9 @@ export default class Tutor extends Component {
             requesting: false,
             subject: null,
             timesChecked: [],
+            dialogShow: false,
             meetingsListSaved: [],
+            classChosen: "",
 
 
 
@@ -71,16 +100,12 @@ export default class Tutor extends Component {
 
         }
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleClassChange = this.handleClassChange.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
 
 
 
-        let checkedStart = []
-        for (let i = 0; i < this.state.timesE.length; i++) {
-            checkedStart.push(false)
-        }
-        this.setState({ timesChecked: checkedStart });
+        
         
     
 
@@ -94,9 +119,6 @@ export default class Tutor extends Component {
             this.setState({ user: { auth: user, name: 'Anonymous' } })
           }
         });
-    }
-
-    componentDidMount() {
         console.log('adding meetings')
         //working ish v
         // let tempErrTest = db.collection('meetings').doc('JnnvTgp4CNohTT5sI3uD').get().then(doc =>{
@@ -124,13 +146,24 @@ export default class Tutor extends Component {
             console.log("meeting list real ========= " + meetingsListReal)
             this.setState({ meetingsListSaved: meetingsListReal })
         })
+
+        let checkedStart = []
+        for (let i = 0; i < this.state.timesE.length; i++) {
+            checkedStart.push(false)
+        }
+        this.setState({ timesChecked: checkedStart });
+
     }
+
+
+        
 
 
 
     render() {
         return (
             <React.Fragment>
+                <SuccessDialog show={this.state.dialogShow} onChange={(show) => this.state.dialogShow = show} ></SuccessDialog>
                 {/* //title */}
                 <div id="titleArea2">
 
@@ -158,7 +191,7 @@ export default class Tutor extends Component {
                         <br />
 
                         <Form onSubmit={this.handleSubmit}>
-                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
+                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.classChosen} onChange={this.handleClassChange}>
                                 {this.createClassItems()}
                             </Input>
                             <br />
@@ -187,10 +220,10 @@ export default class Tutor extends Component {
 
 
                         {
-                            this.state.meetingsListSaved.map(meeting => {
+                            this.state.meetingsListSaved.map((meeting, i) => {
 
                                 return (
-                                    <React.Fragment>
+                                    <React.Fragment key={i}>
                                         <div className="questionBox">
                                             <h4>"Meeting at  + {meeting.getTime()}</h4>
                                             <h6>for +  {meeting.getSubject()}</h6>
@@ -234,7 +267,7 @@ export default class Tutor extends Component {
                         <br />
 
                         <Form onSubmit={this.handleSubmit}>
-                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
+                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.classChosen} onChange={this.handleChange}>
                                 {this.createClassItems()}
                             </Input>
                             <br />
@@ -266,8 +299,9 @@ export default class Tutor extends Component {
     }
 
 
-    handleChange(event, itemToChange) {
-        this.setState({ itemToChange: event.target.value });
+    handleClassChange(event) {
+        this.setState({ classChosen: event.target.value });
+
     }
 
     handleCheckChange(event, itemToChange, val) {
@@ -287,7 +321,7 @@ export default class Tutor extends Component {
         let listList = [];
         for (let i = 0; i < this.state.timesS.length; i++) {
             let tempStr = this.state.timesS[i] + " - " + this.state.timesE[i];
-            list = <React.Fragment>
+            list = <React.Fragment key={i}>
                 <div className="fixDiv">
 
                     <Input type='checkbox' name='check' value={this.state.timesChecked} onChange={this.handleCheckChange("timesChecked", i)} />
@@ -329,12 +363,14 @@ export default class Tutor extends Component {
         // }
         //--------------------------------------
 
+        this.setState({dialogShow:true})
         //sending an email
-        //this.sendEmail('template_Zxp8BP9K', {
-            //from_name: this.state.user.name, 
-            //to_name: "AVID Tutors", 
-            //message_html: `Hello, I'm struggling with ${this.state.value}, and am available to have a tutoring session from ${this.state.}`
-        //})
+        this.sendEmail('template_Zxp8BP9K', {
+            from_name: this.state.user.name, 
+            to_name: "AVID Tutors", 
+            from_email: this.state.user.auth.email,
+            message_html: `I'm struggling with ${this.state.classChosen}, and am available to have a tutoring session from blank to blank.`
+        })
         console.log(this.state.timesChecked)
 
         //adding to database
