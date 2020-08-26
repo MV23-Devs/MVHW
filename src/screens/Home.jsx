@@ -64,7 +64,7 @@ const SocialDropdown = (props) => {
   );
 }
 
-const ProfilePictureDropdown = (props) => {
+export const ProfilePictureDropdown = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
 

@@ -6,6 +6,9 @@ import '../App.css';
 import {
     Button, Form, FormGroup, Label, Input, FormText, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
+import { ProfilePictureDropdown } from "./Home.jsx"
+
+
 import {
     Link
 } from 'react-router-dom'
@@ -13,6 +16,7 @@ import { get as _get, times } from "lodash";
 import firebase from '../firebase.js';
 import Meeting from './Meeting.jsx'
 import { MdAddAlert } from 'react-icons/md';
+import Home from './Home';
 
 
 const theme1 = {
@@ -81,22 +85,28 @@ export default class Tutor extends Component {
             checkedStart.push(false)
         }
         this.setState({ timesChecked: checkedStart });
-        
-    
+
+
 
     }
-    componentDidMount() {
-        firebase.auth().onAuthStateChanged(user => {
-          if (user) {
-            this.setState({ user: { auth: user, name: user.displayName } })
-            //console.log(this.state.user.auth)
-          } else {
-            this.setState({ user: { auth: user, name: 'Anonymous' } })
-          }
-        });
-    }
+
 
     componentDidMount() {
+
+
+        this.setState({ user: this.props.user });
+
+
+
+
+        console.log("this.props.user " + this.props.user.auth)
+
+
+
+
+
+
+
         console.log('adding meetings')
         //working ish v
         // let tempErrTest = db.collection('meetings').doc('JnnvTgp4CNohTT5sI3uD').get().then(doc =>{
@@ -107,71 +117,133 @@ export default class Tutor extends Component {
         let meetingsListReal = [];
         let meetingsList = [];
         //the meeting list of th edaabase
+        if (this.state.user.auth) {
+            firebase.firestore().collection('users').doc(this.state.user.auth.uid).collection('meetings').onSnapshot((querySnapshot) => {
+                querySnapshot.docs.forEach((snap) => {
 
-        firebase.firestore().collection('users').doc('lfF9GotiqsgSrqdESwxkKM6xRSF2').collection('meetings').onSnapshot((querySnapshot) => {
-            querySnapshot.docs.forEach((snap) => {
+                    // console.log(snap.data())
+                    let d = snap.data()
+                    console.log('data from meetingslist')
+                    console.log(d.time);
+                    let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
+                    meetingsListReal.push(m)
+                    //console.log(meetingsListReal)
 
-                // console.log(snap.data())
-                let d = snap.data()
-                console.log('data from meetingslist')
-                console.log(d.time);
-                let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
-                meetingsListReal.push(m)
-                //console.log(meetingsListReal)
 
+                })
+                console.log("meeting list real ========= " + meetingsListReal)
+                this.setState({ meetingsListSaved: meetingsListReal })
+                console.log("meetingListSaved = " + this.state.meetingsListSaved)
 
             })
-            console.log("meeting list real ========= " + meetingsListReal)
-            this.setState({ meetingsListSaved: meetingsListReal })
-        })
+            console.log("this.state.user.auth is not null")
+        }
+
+
+
+
+
+    }
+
+    componentDidUpdate() {
+        // this.setState({ user: this.props.user });
+
+
+
+        //temporary local meeting list
+        let meetingsListReal = [];
+        if (this.state.user.auth) {
+            this.state.user = this.props.user;
+            firebase.firestore().collection('users').doc(this.state.user.auth.uid).collection('meetings').onSnapshot((querySnapshot) => {
+                querySnapshot.docs.forEach((snap) => {
+
+                    // console.log(snap.data())
+                    let d = snap.data()
+                    console.log('data from meetingslist')
+                    console.log(d.time);
+                    let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
+                    meetingsListReal.push(m)
+                    //console.log(meetingsListReal)
+
+
+                })
+                console.log("meeting list real ========= " + meetingsListReal)
+                this.setState({ meetingsListSaved: meetingsListReal })
+                console.log("meetingListSaved = " + this.state.meetingsListSaved)
+
+            })
+            console.log("this.state.user.auth is not null")
+        }
+        else {
+            this.setState()
+            console.log("update didnt auth user")
+        }
     }
 
 
 
     render() {
-        return (
-            <React.Fragment>
-                {/* //title */}
-                <div id="titleArea2">
+        if (!this.state.requesting) {
+            return (
+                <React.Fragment>
+
+
+                    <Button id="requestHelp" onClick={this.updateRequesting}>Request meeting</Button >
+                </React.Fragment>
+
+            )
+
+        }
+        else {
+            return (
+                <React.Fragment>
+                    {/* //title */}
+                    <div id="titleArea2">
 
 
 
-                    <h1 id="title">MVHW</h1>
+                        <h1 id="title">MVHW</h1>
 
-                    <Link to="/" >Home</Link>
+                        <Link to="/" >Home</Link>
+                        {
+                            this.state.user.auth !== null ?
+                                <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
+                                :
+                                <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+                        }
 
-                    {/* {
+                        {/* {
                         this.state.user.auth !== null ?
                             <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
                             :
                             <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
                     } */}
-                </div>
-                <div id="general">
-                    <div className="meetingForm">
-                        <h1 className="specialTitle">Request Meeting</h1>
-                        <hr className="whiteBar" />
-                        <Label style={{ color: "white" }} for="select">Select the subject of the meeting</Label>
-
-
-
-                        <br />
-
-                        <Form onSubmit={this.handleSubmit}>
-                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
-                                {this.createClassItems()}
-                            </Input>
-                            <br />
-                            <br />
-                            <p> Please select availability</p>
-                            {this.giveTimes()}
-
-                        </Form>
-
-                        <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} onClick={this.submitHandler} />
-
-
                     </div>
+                    <div id="general">
+                        <div className="meetingForm">
+                            <h1 className="specialTitle">Request Meeting</h1>
+                            <hr className="whiteBar" />
+                            <Label style={{ color: "white" }} for="select">Select the subject of the meeting</Label>
+
+
+
+                            <br />
+
+                            <Form onSubmit={this.handleSubmit}>
+                                <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
+                                    {this.createClassItems()}
+                                </Input>
+                                <br />
+                                <br />
+                                <p> Please select availability</p>
+                                {this.giveTimes()}
+
+                            </Form>
+
+                            <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} onClick={this.submitHandler} />
+
+
+                        </div>
 
 
 
@@ -181,31 +253,36 @@ export default class Tutor extends Component {
 
 
 
-                    <div className="meetingForm">
-                        <h1 className="specialTitle">Meetings</h1>
-                        <hr className="whiteBar" />
+                        <div className="meetingForm">
+                            <h1 className="specialTitle">Meetings</h1>
+                            <hr className="whiteBar" />
 
+                            {
+                            }
+                            {
+                                this.state.meetingsListSaved.map(meeting => {
 
-                        {
-                            this.state.meetingsListSaved.map(meeting => {
+                                    return (
+                                        <React.Fragment>
+                                            <div className="questionBox">
+                                                <h4>{"Meeting at " + meeting.getTime()}</h4>
+                                                <h6>{"for " + meeting.getSubject()}</h6>
+                                            </div>
 
-                                return (
-                                    <React.Fragment>
-                                        <div className="questionBox">
-                                            <h4>"Meeting at  + {meeting.getTime()}</h4>
-                                            <h6>for +  {meeting.getSubject()}</h6>
-                                        </div>
-
-                                    </React.Fragment>
-                                )
-                            })
-                        }
+                                        </React.Fragment>
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
-                </div>
-            </React.Fragment>
-        )
+                </React.Fragment>
+            )
+        }
     }
 
+    updateRequesting = () => {
+        this.setState({ requesting: !this.state.requesting })
+    }
 
 
     requestMeeting() {
@@ -219,47 +296,6 @@ export default class Tutor extends Component {
 
             )
 
-        }
-        else {
-            return (
-
-                <React.Fragment>
-                    <div className="meetingForm">
-                        <h1 className="specialTitle">Request Meeting</h1>
-                        <hr className="whiteBar" />
-                        <Label style={{ color: "white" }} for="select">Select the subject of the meeting</Label>
-
-
-
-                        <br />
-
-                        <Form onSubmit={this.handleSubmit}>
-                            <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
-                                {this.createClassItems()}
-                            </Input>
-                            <br />
-                            <br />
-                            <p> Please select availability</p>
-                            {this.giveTimes()}
-
-                        </Form>
-
-                        <Input type="submit" value="Submit" className="newBtn" style={{ margin: "auto" }} onClick={this.submitHandler} />
-
-
-                    </div>
-                    <div className="meetingForm">
-                        <h1 className="specialTitle">Meetings</h1>
-                        <hr className="whiteBar" />
-                        {console.log('test')}
-                        {this.renderMeetings()}
-
-
-
-                    </div>
-                </React.Fragment>
-
-            )
         }
 
 
@@ -331,16 +367,16 @@ export default class Tutor extends Component {
 
         //sending an email
         //this.sendEmail('template_Zxp8BP9K', {
-            //from_name: this.state.user.name, 
-            //to_name: "AVID Tutors", 
-            //message_html: `Hello, I'm struggling with ${this.state.value}, and am available to have a tutoring session from ${this.state.}`
+        //from_name: this.state.user.name, 
+        //to_name: "AVID Tutors", 
+        //message_html: `Hello, I'm struggling with ${this.state.value}, and am available to have a tutoring session from ${this.state.}`
         //})
         console.log(this.state.timesChecked)
 
         //adding to database
         //temporary code befor ethe user stuff gets fixed dont delete
         //replace specific id with user id later
-        db.collection('users').doc('lfF9GotiqsgSrqdESwxkKM6xRSF2').collection('meetings').add({
+        db.collection('users').doc(this.state.user.uid).collection('meetings').add({
             uidOfRequest: null, //user who requested it
             time: 8, //time of day of meeting
             day: null, //day chosen
@@ -365,18 +401,18 @@ export default class Tutor extends Component {
         console.log("tried to submit")
     }
 
-    sendEmail (templateID, variables) {
+    sendEmail(templateID, variables) {
         window.emailjs.send(
             'gmail', templateID,
             variables
-            ).then(res => {
-              console.log('Email successfully sent!')
-            })
+        ).then(res => {
+            console.log('Email successfully sent!')
+        })
             // Handle errors here however you like, or use a React error boundary
             .catch(err => console.error('Oh well, you failed. Here some thoughts on the error that occured:', err))
     }
 
-    
+
     getMeetings = async () => {
         console.log('adding meetings')
         //working ish v
@@ -389,7 +425,7 @@ export default class Tutor extends Component {
         let meetingsList = [];
         //the meeting list of th edaabase
 
-        await firebase.firestore().collection('users').doc('lfF9GotiqsgSrqdESwxkKM6xRSF2').collection('meetings').onSnapshot((querySnapshot) => {
+        await firebase.firestore().collection('users').doc(this.state.user.uid).collection('meetings').onSnapshot((querySnapshot) => {
             querySnapshot.docs.forEach((snap) => {
 
                 // console.log(snap.data())
