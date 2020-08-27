@@ -186,9 +186,46 @@ export default class Tutor extends Component {
         if (!this.state.requesting) {
             return (
                 <React.Fragment>
+                    <div id="titleArea2">
 
 
-                    <Button id="requestHelp" onClick={this.updateRequesting}>Request meeting</Button >
+
+                        <h1 id="title">MVHW</h1>
+
+                        <Link to="/" >Home</Link>
+                        {
+                            this.state.user.auth !== null ?
+                                <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
+                                :
+                                <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+                        }
+                    </div>
+                    <div id="general">
+
+
+                        <Button id="requestHelp" onClick={this.updateRequesting}>Request meeting</Button >
+                        <div className="meetingForm">
+                            <h1 className="specialTitle">Meetings</h1>
+                            <hr className="whiteBar" />
+
+                            {
+                            }
+                            {
+                                this.state.meetingsListSaved.map(meeting => {
+
+                                    return (
+                                        <React.Fragment>
+                                            <div className="questionBox">
+                                                <h4>{"Meeting at " + meeting.getTime()}</h4>
+                                                <h6>{"for " + meeting.getSubject()}</h6>
+                                            </div>
+
+                                        </React.Fragment>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
                 </React.Fragment>
 
             )
