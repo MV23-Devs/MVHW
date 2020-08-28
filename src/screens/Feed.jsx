@@ -117,8 +117,10 @@ export class RenderUser extends Component {
         }
         this.setState({ username: doc.data().name })
         if (this.props.currentUser) {
-          if (this.props.currentUser.auth.uid === this.props.uid) {
-            this.setState({ username: <Badge color='secondary'>you</Badge> })
+          if(this.props.currentUser.auth) {
+            if (this.props.currentUser.auth.uid === this.props.uid) {
+              this.setState({ username: <Badge color='secondary'>you</Badge> })
+            }
           }
         }
       })
