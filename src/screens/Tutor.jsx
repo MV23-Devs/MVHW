@@ -85,16 +85,16 @@ export default class Tutor extends Component {
         this.state = {
             requesting: false,
             subject: null,
-            timesChecked: [],
             dialogShow: false,
             meetingsListSaved: [],
             classChosen: "",
+            checkboxesSelected: [],
 
 
 
 
-            timesS: ["12:00", "02:30", "03:30", "04:30", "05:30", "06:30"],
-            timesE: ["01:00", "03:30", "04:30", "05:30", "06:30", "07:30"],
+            times: ["12:00 - 1:00", "02:30 - 3:30", "03:30 - 4:30", "04:30 - 5:30", "05:30 - 6:30", "06:30 - 7:30"],
+
             errormessage: '',
             user: {
                 auth: null,
@@ -110,10 +110,10 @@ export default class Tutor extends Component {
 
 
         let checkedStart = []
-        for (let i = 0; i < this.state.timesE.length; i++) {
+        for (let i = 0; i < this.state.times.length; i++) {
             checkedStart.push(false)
         }
-        this.setState({ timesChecked: checkedStart });
+        this.state.checkboxesSelected = checkedStart;
 
 
 
@@ -174,9 +174,9 @@ export default class Tutor extends Component {
 
         //temporary local meeting list
         let meetingsListReal = [];
-        if (this.state.user.auth) {
-            this.state.user = this.props.user;
-            firebase.firestore().collection('users').doc(this.state.user.auth.uid).collection('meetings').onSnapshot((querySnapshot) => {
+        if (!this.state.user.auth && this.props.user.auth) {
+            this.setState({user: this.props.user});
+            firebase.firestore().collection('users').doc(this.props.user.auth.uid).collection('meetings').onSnapshot((querySnapshot) => {
                 querySnapshot.docs.forEach((snap) => {
 
                     // console.log(snap.data())
@@ -196,7 +196,7 @@ export default class Tutor extends Component {
             console.log("this.state.user.auth is not null")
         }
         else {
-            this.setState()
+            // this.setState()
             console.log("update didnt auth user")
         }
     }
@@ -255,6 +255,7 @@ export default class Tutor extends Component {
         else {
             return (
                 <React.Fragment>
+                    <SuccessDialog show={this.state.dialogShow} onChange = { (show) => {this.setState({dialogShow: show})}}></SuccessDialog>
                     {/* //title */}
                     <div id="titleArea2">
 
@@ -288,7 +289,7 @@ export default class Tutor extends Component {
                             <br />
 
                             <Form onSubmit={this.handleSubmit}>
-                                <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.value} onChange={this.handleChange}>
+                                <Input type="select" name="select" style={{ outline: "none" }} id="tags" value={this.state.classChosen} onChange={this.handleClassChange}>
                                     {this.createClassItems()}
                                 </Input>
                                 <br />
@@ -360,14 +361,11 @@ export default class Tutor extends Component {
 
     }
 
-    handleCheckChange(event, itemToChange, val) {
-        // let currentState = this.state.itemToChange
-        // let newArr = [];
-        // for (let i = 0; i < currentState.length; i++) {
-
-        // }
-
-        // this.setState({ itemToChange: event.target.value });
+    handleCheckChange(event, val) {
+        let currentState = this.state.checkboxesSelected
+        currentState[val] = event.target.checked 
+        console.log(val);
+        this.setState({ checkboxesSelected: currentState })
     }
 
 
@@ -375,12 +373,12 @@ export default class Tutor extends Component {
         let list;
 
         let listList = [];
-        for (let i = 0; i < this.state.timesS.length; i++) {
-            let tempStr = this.state.timesS[i] + " - " + this.state.timesE[i];
+        for (let i = 0; i < this.state.times.length; i++) {
+            let tempStr = this.state.times[i];
             list = <React.Fragment key={i}>
                 <div className="fixDiv">
 
-                    <Input type='checkbox' name='check' value={this.state.timesChecked} onChange={this.handleCheckChange("timesChecked", i)} />
+                    <Input type='checkbox' name='check' value={this.state.checkboxesSelected[i]} onChange={(e) => {this.handleCheckChange(e, i)}} />
 
                     <Label for='check'>{tempStr.toString()}</Label>
                 </div>
@@ -420,19 +418,27 @@ export default class Tutor extends Component {
         //--------------------------------------
 
         this.setState({dialogShow:true})
+        let timesArr = []
+        for (let i = 0; i < this.state.checkboxesSelected.length; i++) {
+            if (this.state.checkboxesSelected[i]) {
+                timesArr.push(this.state.times[i])
+            }
+
+        }
+        console.log("ur mom", this.state.checkboxesSelected)
         //sending an email
         this.sendEmail('template_Zxp8BP9K', {
             from_name: this.state.user.name, 
             to_name: "AVID Tutors", 
             from_email: this.state.user.auth.email,
-            message_html: `I'm struggling with ${this.state.classChosen}, and am available to have a tutoring session from blank to blank.`
+            message_html: `I'm struggling with ${this.state.classChosen}, and am available to have a tutoring session during the times of ${timesArr}`
         })
         console.log(this.state.timesChecked)
 
         //adding to database
         //temporary code befor ethe user stuff gets fixed dont delete
         //replace specific id with user id later
-        db.collection('users').doc(this.state.user.uid).collection('meetings').add({
+        db.collection('users').doc(this.state.user.auth.uid).collection('meetings').add({
             uidOfRequest: null, //user who requested it
             time: 8, //time of day of meeting
             day: null, //day chosen
