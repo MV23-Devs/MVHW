@@ -128,7 +128,7 @@ export default class Tutor extends Component {
 
 
 
-        console.log("this.props.user " + this.props.user.auth)
+        // console.log("this.props.user " + this.props.user.auth)
 
 
 
@@ -152,17 +152,17 @@ export default class Tutor extends Component {
 
                     // console.log(snap.data())
                     let d = snap.data()
-                    console.log('data from meetingslist')
-                    console.log(d.time);
+                    // console.log('data from meetingslist')
+                    // console.log(d.time);
                     let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
                     meetingsListReal.push(m)
                     //console.log(meetingsListReal)
 
 
                 })
-                console.log("meeting list real ========= " + meetingsListReal)
+                // console.log("meeting list real ========= " + meetingsListReal)
                 this.setState({ meetingsListSaved: meetingsListReal })
-                console.log("meetingListSaved = " + this.state.meetingsListSaved)
+                // console.log("meetingListSaved = " + this.state.meetingsListSaved)
 
             })
             console.log("this.state.user.auth is not null")
@@ -179,21 +179,18 @@ export default class Tutor extends Component {
             firebase.firestore().collection('users').doc(this.props.user.auth.uid).collection('meetings').onSnapshot((querySnapshot) => {
                 querySnapshot.docs.forEach((snap) => {
 
-                    // console.log(snap.data())
                     let d = snap.data()
-                    console.log('data from meetingslist')
-                    console.log(d.time);
+                    // console.log(d.time);
                     let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
                     meetingsListReal.push(m)
                     //console.log(meetingsListReal)
     
                 })
-                console.log("meeting list real ========= " + meetingsListReal)
                 this.setState({ meetingsListSaved: meetingsListReal })
                 console.log("meetingListSaved = " + this.state.meetingsListSaved)
 
             })
-            console.log("this.state.user.auth is not null")
+            // console.log("this.state.user.auth is not null")
         }
         else {
             // this.setState()
@@ -341,7 +338,7 @@ export default class Tutor extends Component {
 
     requestMeeting() {
         if (!this.state.requesting) {
-            console.log("requesting help")
+            // console.log("requesting help")
             return (
                 <React.Fragment>
 
@@ -425,7 +422,7 @@ export default class Tutor extends Component {
             }
 
         }
-        console.log("ur mom", this.state.checkboxesSelected)
+        console.log("checkboxes selected currently", this.state.checkboxesSelected)
         //sending an email
         this.sendEmail('template_Zxp8BP9K', {
             from_name: this.state.user.name, 
@@ -439,11 +436,11 @@ export default class Tutor extends Component {
         //temporary code befor ethe user stuff gets fixed dont delete
         //replace specific id with user id later
         db.collection('users').doc(this.state.user.auth.uid).collection('meetings').add({
-            uidOfRequest: null, //user who requested it
-            time: 8, //time of day of meeting
+            uidOfRequest: this.state.user.auth.uid, //user who requested it
+            time: timesArr, //time of day of meeting
             day: null, //day chosen
-            tutorChosen: null, //wthich tutor they chose null if none ye
-            subject: null //the subject they chose
+            tutorChosen: false, //wthich tutor they chose null if none ye
+            subject: this.state.classChosen //the subject they chose
 
 
 
@@ -460,7 +457,7 @@ export default class Tutor extends Component {
         //for updating the page v
         this.setState({ update: 0 });
         // event.target["text"].value = "";
-        console.log("tried to submit")
+        // console.log("tried to submit")
     }
 
     sendEmail(templateID, variables) {
@@ -468,94 +465,15 @@ export default class Tutor extends Component {
             'gmail', templateID,
             variables
         ).then(res => {
-            console.log('Email successfully sent!')
+            // console.log('Email successfully sent!')
         })
             // Handle errors here however you like, or use a React error boundary
             .catch(err => console.error('Oh well, you failed. Here some thoughts on the error that occured:', err))
     }
 
 
-    getMeetings = async () => {
-        console.log('adding meetings')
-        //working ish v
-        // let tempErrTest = db.collection('meetings').doc('JnnvTgp4CNohTT5sI3uD').get().then(doc =>{
-        //     console.log(doc.data().time)
-        // })
-
-        //temporary local meeting list
-        let meetingsListReal = [];
-        let meetingsList = [];
-        //the meeting list of th edaabase
-
-        await firebase.firestore().collection('users').doc(this.state.user.uid).collection('meetings').onSnapshot((querySnapshot) => {
-            querySnapshot.docs.forEach((snap) => {
-
-                // console.log(snap.data())
-                let d = snap.data()
-                console.log('data from meetingslist')
-                console.log(d.time);
-                let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
-                meetingsListReal.push(m)
-                //console.log(meetingsListReal)
-
-
-            })
-            console.log("meeting list real ========= " + meetingsListReal)
-            return meetingsListReal
-        })
-
-
-        // //copying over code 
-        // meetingsList.forEach((snap) => {
-
-        //     // console.log(snap.data())
-        //     let d = snap.data()
-        //     console.log('data from meetingslist')
-        //     console.log(d.time);
-        //     let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
-        //     meetingsListReal.push(m)
-        //     //console.log(meetingsListReal)
-
-
-        // })
-    }
-    async renderMeetings() {
-
-        let mLR = await this.getMeetings();
-        console.log('length0 = ' + mLR.length);
-        console.log();
-
-        let t = this.renderMeetings2(mLR);
-
-        return t;
-    }
-    renderMeetings2(meetingsListReal) {
-        let mLR = meetingsListReal
-        let list;
-        let listList = [];
-        console.log('length = ' + mLR.length)
-        console.log(mLR)
-        for (let i = 0; i < mLR.length; i++) {
-            list = (
-                <React.Fragment>
-                    <div className="questionBox">
-                        <h4>Meeting at  + {mLR[i].getTime()}</h4>
-                        <h2>for +  {mLR[i].getSubject()}</h2>
-                    </div>
-
-                </React.Fragment>
-            );
-
-
-            listList.push(list)
-        }
-
-        console.log('listlist' + listList)
-
-
-        return listList
-
-    }
+    
+    
 
 
 
