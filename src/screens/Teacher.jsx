@@ -11,8 +11,10 @@ import firebase from '../firebase.js';
 import { get as _get } from "lodash";
 import Question from '../Question';
 
+const classes = require("../classes.json").classes;
+
 // the start of cleaning up the firestore pull from database
-// const db = firebase.firestore()
+const db = firebase.firestore()
 
 const Votes = (props) => {
     let id = "vote-num-" + props.listvalue;
@@ -94,8 +96,9 @@ const dark = {
 export default class Profile extends Component {
     constructor(props) {
         super(props)
-        this.classes = ["Math", "Geometry", "Algebra", "Trigonometry", "Calculus", "Science", "Biology", "Chemistry", "Physics", "English", "Survey", "AP Comp", "History", "World Studies", "AP Euro", "WHAP", "USHAP", "Spanish", "Anime", "Chinese", "Computer Science", "Art", "Music"];
+        this.classes = classes;
         this.state = {
+            questions: [],
             selected: [],
             user: {
                 auth: null,
@@ -140,6 +143,36 @@ export default class Profile extends Component {
                     // console.log(userdata[0].data())
                     // console.log(doc.data().classes)
                 })
+
+                firebase.firestore().collection("questions")
+                    .onSnapshot((querySnapshot) => {
+                        let docs = this.state.questions;
+                        querySnapshot.docChanges().forEach(change => {
+                            if (change.type === 'added') {
+                                let doc = change.doc;
+
+                                let ups = doc.data().usersUpvoted.length
+                                let downs = doc.data().usersDownvoted.length
+                                let votes = ups - downs;
+
+                                let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
+                                docs.push(q);
+                                db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
+                                    querySnapshot.docs.forEach(doc => {
+                                        q.addAnswer(doc.data().title, JSON.parse(doc.data().author), JSON.parse(doc.data().author).displayName, doc.data().timestamp, doc.id, doc.data().author.uid)
+                                    })
+                                })
+                            } else if (change.type === 'removed') {
+                                let doc = change.doc;
+                                for (var i = 0; i < docs.length; i++) {
+                                    if (docs[i].getId() === doc.id) {
+                                        docs.splice(i, 1);
+                                    }
+                                }
+                            }
+                        })
+                        this.setState({ questions: docs, loading_data: false })
+                    })
 
 
                 firebase.firestore().collection("users").doc(this.state.user.auth.uid).collection("posts")
@@ -325,77 +358,76 @@ export default class Profile extends Component {
                             <h1 className="pf-title">Top Posts of your Classes:</h1>
                             <ul className="list-posts">
                                 {
-                                    this.state.posts.map((item, i) => {
-                                        console.log(this.state.userClasses)
-                                        // if(item.getTags().)
-                                        let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
+                                    this.state.questions.map((item, i) => {
+                                        if (this.state.selected.includes(item.getTags())) {
+                                            let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
+                                            let color = '';
+                                            switch (item.getTags()) {
+                                                case 'Math':
+                                                    color = 'info';
+                                                    break;
+                                                case 'Science':
+                                                    color = 'warning';
+                                                    break;
+                                                case 'English':
+                                                    color = 'danger';
+                                                    break;
+                                                case 'History':
+                                                    color = 'success';
+                                                    break;
+                                                case 'Computer Science':
+                                                    color = 'primary';
+                                                    break;
 
-                                        let color = '';
-                                        switch (item.getTags()) {
-                                            case 'Math':
-                                                color = 'info';
-                                                break;
-                                            case 'Science':
-                                                color = 'warning';
-                                                break;
-                                            case 'English':
-                                                color = 'danger';
-                                                break;
-                                            case 'History':
-                                                color = 'success';
-                                                break;
-                                            case 'Computer Science':
-                                                color = 'primary';
-                                                break;
-
-                                            default:
-                                                color = 'secondary';
-                                                break;
-                                        }
-                                        let tag = <Badge color={color}>{item.getTags()}</Badge>;
-                                        if (item.getTags() === "None") {
-                                            tag = null;
-                                        }
-
-                                        let upvotes = item.getUpvotes() + "";
-
-                                        if (item.getUpvotes() >= 1000) {
-                                            upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
-                                        }
-
-                                        let deletedata = null;
-                                        if (this.state.user.auth) {
-                                            if (this.state.user.auth.uid === item.getUser().uid) {
-                                                deletedata = (
-                                                    <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
-                                                );
+                                                default:
+                                                    color = 'secondary';
+                                                    break;
                                             }
+                                            let tag = <Badge color={color}>{item.getTags()}</Badge>;
+                                            if (item.getTags() === "None") {
+                                                tag = null;
+                                            }
+
+                                            let upvotes = item.getUpvotes() + "";
+
+                                            if (item.getUpvotes() >= 1000) {
+                                                upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
+                                            }
+
+                                            let deletedata = null;
+                                            if (this.state.user.auth) {
+                                                if (this.state.user.auth.uid === item.getUser().uid) {
+                                                    deletedata = (
+                                                        <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                                                    );
+                                                }
+                                            }
+
+                                            return (
+                                                <li key={i} style={dark} className="pf-questionBox">
+                                                    <Row>
+                                                        <Col xs="1" className="updown">
+                                                            <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                                                        </Col>
+                                                        <Col xs="11">
+                                                            <div style={dark}>
+                                                                {user}
+                                                                <h4>Question: {item.getText()}  {tag}</h4>
+                                                                {
+                                                                    item.getImgUrl() !== "" ?
+                                                                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                                                                        :
+                                                                        null
+                                                                }
+                                                            </div>
+                                                            <hr style={dark.line} />
+                                                            {deletedata}
+                                                        </Col>
+                                                    </Row>
+                                                </li>
+
+                                            );
                                         }
-
-                                        return (
-                                            <li key={i} style={dark} className="pf-questionBox">
-                                                <Row>
-                                                    <Col xs="1" className="updown">
-                                                        <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                                                    </Col>
-                                                    <Col xs="11">
-                                                        <div style={dark}>
-                                                            {user}
-                                                            <h4>Question: {item.getText()}  {tag}</h4>
-                                                            {
-                                                                item.getImgUrl() !== "" ?
-                                                                    <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                                                                    :
-                                                                    null
-                                                            }
-                                                        </div>
-                                                        <hr style={dark.line} />
-                                                        {deletedata}
-                                                    </Col>
-                                                </Row>
-                                            </li>
-
-                                        );
                                     })
                                 }
                             </ul>
