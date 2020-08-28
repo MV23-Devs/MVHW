@@ -144,7 +144,6 @@ export default class Tutor extends Component {
 
         //temporary local meeting list
         let meetingsListReal = [];
-        let meetingsList = [];
         //the meeting list of th edaabase
         if (this.state.user.auth) {
             firebase.firestore().collection('users').doc(this.state.user.auth.uid).collection('meetings').onSnapshot((querySnapshot) => {
@@ -160,9 +159,7 @@ export default class Tutor extends Component {
 
 
                 })
-                // console.log("meeting list real ========= " + meetingsListReal)
                 this.setState({ meetingsListSaved: meetingsListReal })
-                // console.log("meetingListSaved = " + this.state.meetingsListSaved)
 
             })
             console.log("this.state.user.auth is not null")
