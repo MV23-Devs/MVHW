@@ -262,7 +262,7 @@ export default class Profile extends Component {
                     <div id="checkBoxSelect">
 
                         <Link to="/">Home</Link>
-                        
+
 
                         <h1 id="pfp-title">Teacher Profile</h1>
 
@@ -272,12 +272,12 @@ export default class Profile extends Component {
                         <div>
                             {
                                 this.state.isTutor !== true ?
-                                <div></div>
-                                :
-                                <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
+                                    null
+                                    :
+                                    <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
 
                             }
-                            
+
                         </div>
 
                         <hr style={dark.line} />
@@ -296,9 +296,6 @@ export default class Profile extends Component {
 
                         <Form onSubmit={this.submitHandler} >
                             <FormGroup check>
-                                {
-                                    //console.log(this.state.userClasses)
-                                }
                                 {
                                     this.classes.map((cless, key) => {
                                         return (
@@ -325,11 +322,92 @@ export default class Profile extends Component {
                         <hr style={dark.line} />
 
                         <div className="posts">
+                            <h1 className="pf-title">Top Posts of your Classes:</h1>
+                            <ul className="list-posts">
+                                {
+                                    this.state.posts.map((item, i) => {
+                                        console.log(this.state.userClasses)
+                                        // if(item.getTags().)
+                                        let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
+
+                                        let color = '';
+                                        switch (item.getTags()) {
+                                            case 'Math':
+                                                color = 'info';
+                                                break;
+                                            case 'Science':
+                                                color = 'warning';
+                                                break;
+                                            case 'English':
+                                                color = 'danger';
+                                                break;
+                                            case 'History':
+                                                color = 'success';
+                                                break;
+                                            case 'Computer Science':
+                                                color = 'primary';
+                                                break;
+
+                                            default:
+                                                color = 'secondary';
+                                                break;
+                                        }
+                                        let tag = <Badge color={color}>{item.getTags()}</Badge>;
+                                        if (item.getTags() === "None") {
+                                            tag = null;
+                                        }
+
+                                        let upvotes = item.getUpvotes() + "";
+
+                                        if (item.getUpvotes() >= 1000) {
+                                            upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
+                                        }
+
+                                        let deletedata = null;
+                                        if (this.state.user.auth) {
+                                            if (this.state.user.auth.uid === item.getUser().uid) {
+                                                deletedata = (
+                                                    <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                                                );
+                                            }
+                                        }
+
+                                        return (
+                                            <li key={i} style={dark} className="pf-questionBox">
+                                                <Row>
+                                                    <Col xs="1" className="updown">
+                                                        <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                                                    </Col>
+                                                    <Col xs="11">
+                                                        <div style={dark}>
+                                                            {user}
+                                                            <h4>Question: {item.getText()}  {tag}</h4>
+                                                            {
+                                                                item.getImgUrl() !== "" ?
+                                                                    <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                                                                    :
+                                                                    null
+                                                            }
+                                                        </div>
+                                                        <hr style={dark.line} />
+                                                        {deletedata}
+                                                    </Col>
+                                                </Row>
+                                            </li>
+
+                                        );
+                                    })
+                                }
+                            </ul>
+                        </div>
+
+                        <hr style={dark.line} />
+
+                        <div className="posts">
                             <h1 className="pf-title">Your Posts:</h1>
                             <ul className="list-posts">
 
                                 {
-
                                     this.state.posts.map((item, i) => {
                                         let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
 
