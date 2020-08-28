@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import '../App.css';
 import {
-    Button, Form, FormGroup, Label, Input, FormText, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+    Button, Form, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 import { ProfilePictureDropdown } from "./Home.jsx"
 
@@ -17,6 +17,7 @@ import firebase from '../firebase.js';
 import Meeting from './Meeting.jsx'
 import { MdAddAlert } from 'react-icons/md';
 import Home from './Home';
+import { preProcessFile } from 'typescript';
 
 
 const theme1 = {
@@ -52,6 +53,32 @@ const classes = ["None", "English", "Biology"];
 
 const db = firebase.firestore();
 
+const SuccessDialog = (props) => {
+    
+    const {
+        onChange,
+        show
+    } = props
+
+    const toggle = () => {
+        onChange(!show);
+    }
+
+    return (
+        <div>
+            <Modal isOpen={show} toggle={toggle}>
+                <ModalHeader toggle={toggle}>Success!</ModalHeader>
+                <ModalBody>
+                    Your email has successfully been sent to the AVID tutors! Be sure to frequently check your emails, because they will be responding soon!
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={toggle}>OK! I will check my email!</Button>
+                </ModalFooter>
+            </Modal>
+        </div>
+    );
+}
+
 export default class Tutor extends Component {
     constructor(props) {
         super(props)
@@ -59,7 +86,9 @@ export default class Tutor extends Component {
             requesting: false,
             subject: null,
             timesChecked: [],
+            dialogShow: false,
             meetingsListSaved: [],
+            classChosen: "",
 
 
 
@@ -75,7 +104,7 @@ export default class Tutor extends Component {
 
         }
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleClassChange = this.handleClassChange.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
 
 
@@ -138,16 +167,9 @@ export default class Tutor extends Component {
             })
             console.log("this.state.user.auth is not null")
         }
-
-
-
-
-
     }
-
     componentDidUpdate() {
         // this.setState({ user: this.props.user });
-
 
 
         //temporary local meeting list
@@ -164,8 +186,7 @@ export default class Tutor extends Component {
                     let m = new Meeting(d.uidOfRequest, d.time, d.day, d.tutorChosen, d.subject)
                     meetingsListReal.push(m)
                     //console.log(meetingsListReal)
-
-
+    
                 })
                 console.log("meeting list real ========= " + meetingsListReal)
                 this.setState({ meetingsListSaved: meetingsListReal })
@@ -285,11 +306,6 @@ export default class Tutor extends Component {
 
 
 
-
-
-
-
-
                         <div className="meetingForm">
                             <h1 className="specialTitle">Meetings</h1>
                             <hr className="whiteBar" />
@@ -339,8 +355,9 @@ export default class Tutor extends Component {
     }
 
 
-    handleChange(event, itemToChange) {
-        this.setState({ itemToChange: event.target.value });
+    handleClassChange(event) {
+        this.setState({ classChosen: event.target.value });
+
     }
 
     handleCheckChange(event, itemToChange, val) {
@@ -360,7 +377,7 @@ export default class Tutor extends Component {
         let listList = [];
         for (let i = 0; i < this.state.timesS.length; i++) {
             let tempStr = this.state.timesS[i] + " - " + this.state.timesE[i];
-            list = <React.Fragment>
+            list = <React.Fragment key={i}>
                 <div className="fixDiv">
 
                     <Input type='checkbox' name='check' value={this.state.timesChecked} onChange={this.handleCheckChange("timesChecked", i)} />
@@ -402,12 +419,14 @@ export default class Tutor extends Component {
         // }
         //--------------------------------------
 
+        this.setState({dialogShow:true})
         //sending an email
-        //this.sendEmail('template_Zxp8BP9K', {
-        //from_name: this.state.user.name, 
-        //to_name: "AVID Tutors", 
-        //message_html: `Hello, I'm struggling with ${this.state.value}, and am available to have a tutoring session from ${this.state.}`
-        //})
+        this.sendEmail('template_Zxp8BP9K', {
+            from_name: this.state.user.name, 
+            to_name: "AVID Tutors", 
+            from_email: this.state.user.auth.email,
+            message_html: `I'm struggling with ${this.state.classChosen}, and am available to have a tutoring session from blank to blank.`
+        })
         console.log(this.state.timesChecked)
 
         //adding to database
