@@ -1,13 +1,13 @@
 {
     "currentFilter": {
         "en": "Current Filter:",
-        "es": "Filtro actual"
+        "es": "Filtro actual:"
     },
     "none": {
         "en": "None",
         "es": "Nada"
     },
-    "popular": {
+    "popularity": {
         "en": "Popularity",
         "es": "Popularidad"
     },
@@ -27,25 +27,25 @@
         "en": "Text:",
         "es": "Texto:"
     },
-    "choosePost": {
+    "chooseFile": {
         "en": "Choose File",
         "es": "Choosar un Archivo"
     },
     "tag": {
-        "en": "Tag",
-        "es": "Categoría"
+        "en": "Tag:",
+        "es": "Categoría:"
     },
     "anonymous": {
         "en": "Anonymous:",
         "es": "Anónimo:"
     },
     "submitButton": {
-        "en": "Submit:",
-        "es": "Entregar:"
+        "en": "Submit",
+        "es": "Entregar"
     },
     "seeFullThread": {
         "en": "See Full Thread",
-        "es": "Mirar Todos Comentarios"
+        "es": "Mirar Todos los Comentarios"
     },
     "reply": {
         "en": "reply",

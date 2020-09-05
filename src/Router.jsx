@@ -22,11 +22,9 @@ export default class AppRouter extends Component {
                 auth: null,
                 name: 'Anonymous',
             },
+            language: "en",
         }
     }
-
-
-
 
     componentWillMount() {
         firebase.auth().onAuthStateChanged(user => {
@@ -46,7 +44,7 @@ export default class AppRouter extends Component {
             return (
                 <Router>
                     <Switch>
-                        <Route exact path='/' component={Home} />
+                        <Route exact path='/'><Home language={this.state.language}/></Route>
                         <Route path='/profile' component={Profile} />
                         <Route path="/question/:id" component={QuestionPage} />
                         <Route path="/teacher-sign-in" component={Teacher} />

@@ -6,6 +6,7 @@ import firebase from '../firebase.js';
 import {
   Link,
 } from 'react-router-dom'
+import {translate} from "../util.js"
 
 const db = firebase.firestore();
 
@@ -208,7 +209,7 @@ export default class Feed extends Component {
                     deletedata = (
                       <span>
                         <span> | </span>
-                        <span className="links" onClick={() => this.deleteA(item, answer)}>delete</span>
+                        <span className="links" onClick={() => this.deleteA(item, answer)}>{translate(this.props.language, "delete")}</span>
                       </span>
                     );
                   }
@@ -228,7 +229,7 @@ export default class Feed extends Component {
                         {auser}
                         <h5>Answer: {answer.getText()}</h5>
                         {/* {respondable} */}
-                        <span className="links">reply</span>
+                        <span className="links">{translate(this.props.language, "reply")}</span>
                         {deletedata}
                       </Col>
                     </Row>
@@ -247,7 +248,7 @@ export default class Feed extends Component {
           deletedata = (
             <span>
               <span> | </span>
-              <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+              <span className="links" onClick={() => this.deleteQ(item)}>{translate(this.props.language, "delete")}</span>
             </span>
           );
         }
@@ -284,7 +285,7 @@ export default class Feed extends Component {
 
                       this.openReply.bind(this, item)
 
-                    }>reply</span>
+                    }>{translate(this.props.language, "reply")}</span>
                     {deletedata}
                     <Reply questionItem={item} submitHandler={this.submitHandler} errorMessage={this.state.errormessage}/>
                   </Col>
@@ -377,7 +378,7 @@ export default class Feed extends Component {
                       deletedata = (
                         <span>
                           <span> | </span>
-                          <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                          <span className="links" onClick={() => this.deleteQ(item)}>{translate(this.props.language, "delete")}</span>
                         </span>
                       );
                     }
@@ -397,7 +398,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
-                            <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">See Full Thread</Button></Link>
+                            <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">{translate(this.props.language, "seeFullThread")}</Button></Link>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
                               item.getImgUrl() !== "" ?
@@ -412,7 +413,7 @@ export default class Feed extends Component {
 
                             this.openReply.bind(this, item)
 
-                          }>reply</span>
+                          }>{translate(this.props.language, "reply")}</span>
                           {deletedata}
 
 

@@ -6,6 +6,7 @@ import {
   Link,
   withRouter
 } from 'react-router-dom'
+import {translate} from "../util.js"
 import '../App.css';
 import Feed from "./Feed.jsx";
 import Question from '../Question';
@@ -20,7 +21,7 @@ import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";
 import atli from "../img/atli-sucks.jpg";
 
-const classes = require("../classes.json").classes;
+//const classes = require("../classes.json").classes;
 
 const db = firebase.firestore();
 
@@ -89,6 +90,7 @@ export const ProfilePictureDropdown = (props) => {
 const AboutModal = (props) => {
   const {
     className,
+    language
   } = props;
 
   const [modal, setModal] = useState(false);
@@ -97,7 +99,7 @@ const AboutModal = (props) => {
 
   return (
     <div>
-      <Button color="light" block onClick={toggle}>Who?</Button>
+      <Button color="light" block onClick={toggle}>{translate(language, "who")}</Button>
       <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Us</ModalHeader>
         <ModalBody>
@@ -152,7 +154,6 @@ class Home extends Component {
       width: 0,
       height: 0,
       errormessage: '',
-      seeingFull: false,
       loading_data: true,
       loaded: 0,
       update: 0,
@@ -163,7 +164,7 @@ class Home extends Component {
         auth: null,
         name: 'Anonymous',
       },
-      filterBy: "Popularity",
+      filterBy: "popularity",
       anonymousPost: false,
     };
 
@@ -222,7 +223,7 @@ class Home extends Component {
           }
         })
         this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
-        if (this.state.filterBy === "Popularity") {
+        if (this.state.filterBy === "popularity") {
           this.orderByPopularity()
         }
       })
@@ -299,6 +300,7 @@ class Home extends Component {
 
   createClassItems() {
     let items = [];
+    let classes = translate(this.props.language, "classes");
     for (let i = 0; i < (classes.length); i++) {
       items.push(<option key={i}>{classes[i]}</option>);
     }
@@ -514,7 +516,7 @@ const DeleteModal = (props) => {
         <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
-          <Button id="tutorButton" className="newBtn" href="/tutoring" >Tutoring</Button>
+          <Button id="tutorButton" className="newBtn" href="/tutoring" >{translate(this.props.language, "tutoring")}</Button>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
@@ -530,19 +532,19 @@ const DeleteModal = (props) => {
 
         <section className="sidePanel">
           <div className="sbox">
-            <Button color="light" block onClick={this.filterQuestionsBy}>Current Filter: {this.state.filterBy}</Button>
+            <Button color="light" block onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
             <br /> 
-            <Label for="text">Filter by Class:</Label>
+            <Label for="text">{translate(this.props.language, "classFilter")}:</Label>
             <Input type="select" name="select" id="tags" onChange={this.filterClass}>
               {this.createClassItems()}
             </Input>
           </div>
           <div className="sbox">
-            <p>Create a Post:</p>
+            <p>{translate(this.props.language, "createPost")}</p>
             <hr style={theme1.line} />
             <Form onSubmit={this.submitHandler}>
               <FormGroup>
-                <Label for="text">Text:</Label>
+                <Label for="text">{translate(this.props.language, "text")}</Label>
                 <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
                 {this.state.errormessage}
                 <br />
@@ -556,16 +558,16 @@ const DeleteModal = (props) => {
                     null
                 }
                 <br />
-                <Label for="tags"><Badge color="danger">Mandatory</Badge> Tag:</Label>
+                <Label for="tags"><Badge color="danger">{translate(this.props.language, "tag")}</Badge></Label>
                 <Input type="select" name="select" id="tags">
                   {this.createClassItems()}
                 </Input>
                 <br />
-                <Label id="anonymousBoxLabel" for="anonymousBox">Anonymous</Label>
+                <Label id="anonymousBoxLabel" for="anonymousBox">{translate(this.props.language, "anonymous")}</Label>
                 <span id="spacer1"></span>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput} />
               </FormGroup>
-              <Button color="light" block>Submit</Button>
+              <Button color="light" block>{translate(this.props.language, "submitButton")}</Button>
             </Form>
           </div>
 
@@ -575,7 +577,7 @@ const DeleteModal = (props) => {
             <a href="https://www.instagram.com/mvhs.2023/?hl=en" className='link-dark'>Instagram</a>
             <br />
             <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
-            <AboutModal></AboutModal>
+            <AboutModal language={this.props.language}/>
           </div>
         </section>
 
@@ -585,7 +587,7 @@ const DeleteModal = (props) => {
             this.state.loading_data ?
               <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
               :
-              <Feed theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
+              <Feed language={this.props.language} theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
           }
         </div>
 
@@ -595,13 +597,13 @@ const DeleteModal = (props) => {
 
   filterQuestionsBy = () => {
     //console.log("filterBy");
-    let temp = ((this.state.filterBy === "Popularity") ? "None" : "Popularity");
+    let temp = (this.state.filterBy === "popularity") ? "none" : "popularity"
     // this.state.filterBy = temp;
     //console.log(this.state.filterBy === "popularity");
-    if (temp === "Popularity") {
+    if(temp === "popularity") {
       //console.log("popular")
       this.orderByPopularity();
-    } else if (temp === "None") {
+    } else if (temp === "none") {
       //console.log("none")
     }
     this.setState({ filterBy: temp });
