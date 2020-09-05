@@ -1,0 +1,69 @@
+{
+    "currentFilter": {
+        "en": "Current Filter:",
+        "es": "Filtro actual"
+    },
+    "none": {
+        "en": "None",
+        "es": "Nada"
+    },
+    "popular": {
+        "en": "Popularity",
+        "es": "Popularidad"
+    },
+    "classFilter": {
+        "en": "Filter by Class",
+        "es": "Filtrar por Clase"
+    },
+    "classes": {
+        "en": ["None", "Biology", "English"],
+        "es": ["Nada", "Biología", "Inglés"]
+    },
+    "createPost": {
+        "en": "Create a Post",
+        "es": "Crear una Publicación"
+    },
+    "text": {
+        "en": "Text:",
+        "es": "Texto:"
+    },
+    "choosePost": {
+        "en": "Choose File",
+        "es": "Choosar un Archivo"
+    },
+    "tag": {
+        "en": "Tag",
+        "es": "Categoría"
+    },
+    "anonymous": {
+        "en": "Anonymous:",
+        "es": "Anónimo:"
+    },
+    "submitButton": {
+        "en": "Submit:",
+        "es": "Entregar:"
+    },
+    "seeFullThread": {
+        "en": "See Full Thread",
+        "es": "Mirar Todos Comentarios"
+    },
+    "reply": {
+        "en": "reply",
+        "es": "responder"
+    },
+    "delete": {
+        "en": "delete",
+        "es": "eliminar"
+    },
+    "who": {
+        "en": "Who?",
+        "es": "¿Quién?"
+    },
+    "tutoring": {
+        "en": "Tutoring:",
+        "es": "Tutoría"
+    }
+
+
+
+}
