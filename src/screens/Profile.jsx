@@ -262,11 +262,11 @@ export default class Profile extends Component {
                     <div id="checkBoxSelect">
 
                         <Link to="/">Home</Link>
-                        <br/>
+                        <br />
                         <Link to="/teacher-sign-in">Teacher?</Link>
-                        
-                        
-                        
+
+
+
                         <h1 id="pfp-title">Profile</h1>
 
                         <center>
@@ -275,12 +275,12 @@ export default class Profile extends Component {
                         <div>
                             {
                                 this.state.isTutor !== true ?
-                                <div></div>
-                                :
-                                <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
+                                    <div></div>
+                                    :
+                                    <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
 
                             }
-                            
+
                         </div>
 
                         <hr style={dark.line} />
@@ -405,6 +405,22 @@ export default class Profile extends Component {
                                     })
                                 }
                             </ul>
+                            <hr style={dark.line} />
+                            <center>
+                                <h1>Terms & Conditions</h1>
+                            </center>
+                            <p>Welcome to Mountain View Homework hub or MVHW as it is commonly known. There are rules that must all be followed in order to participate in this environment. These rules must be followed:</p>
+                            <ol>
+                                <li>No cheating and sharing answers</li>
+                                <ol>
+                                    <li>We can track who posted what even if you post “anonymously”</li>
+                                    <li>Replies need to be more than just the answer. If you respond with the answer itself, you are sharing answers</li>
+                                </ol>
+                                <li>No profanity of any kind</li>
+                                <li>No bullying or harassment of any kind</li>
+                                <li>No NSFW content will be tolerated.</li>
+                            </ol>
+                            <p>Breaking any of the following rules will result in deletion of the post deletion, possible account deletion/ban, and even the possibility of getting in trouble with the school administration.</p>
                             <hr style={dark.line} />
                             <center>
                                 <h1>Danger Zone</h1>
