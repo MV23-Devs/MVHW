@@ -151,12 +151,26 @@ export default class Profile extends Component {
                             if (change.type === 'added') {
                                 let doc = change.doc;
 
+                                let previousVotes = 0;
+                                let empty = true;
+
+                                if (docs.length > 0) {
+                                    previousVotes = docs[0].votes;
+                                    // empty = false;
+                                }
+
                                 let ups = doc.data().usersUpvoted.length
                                 let downs = doc.data().usersDownvoted.length
                                 let votes = ups - downs;
 
                                 let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
-                                docs.push(q);
+                                if (empty) {
+                                    docs.push(q);
+                                } else {
+                                    if (votes > previousVotes) {
+                                        doc.unshift(q)
+                                    }
+                                }
                                 db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
                                     querySnapshot.docs.forEach(doc => {
                                         q.addAnswer(doc.data().title, JSON.parse(doc.data().author), JSON.parse(doc.data().author).displayName, doc.data().timestamp, doc.id, doc.data().author.uid)
@@ -289,6 +303,7 @@ export default class Profile extends Component {
     }
 
     render() {
+        let allow = 5;
         return (
             <React.Fragment>
                 <div >
@@ -360,73 +375,76 @@ export default class Profile extends Component {
                                 {
                                     this.state.questions.map((item, i) => {
                                         if (this.state.selected.includes(item.getTags())) {
-                                            let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
-                                            let color = '';
-                                            switch (item.getTags()) {
-                                                case 'Math':
-                                                    color = 'info';
-                                                    break;
-                                                case 'Science':
-                                                    color = 'warning';
-                                                    break;
-                                                case 'English':
-                                                    color = 'danger';
-                                                    break;
-                                                case 'History':
-                                                    color = 'success';
-                                                    break;
-                                                case 'Computer Science':
-                                                    color = 'primary';
-                                                    break;
+                                            if (allow > 0) {
+                                                allow--;
+                                                let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
+                                                let color = '';
+                                                switch (item.getTags()) {
+                                                    case 'Math':
+                                                        color = 'info';
+                                                        break;
+                                                    case 'Science':
+                                                        color = 'warning';
+                                                        break;
+                                                    case 'English':
+                                                        color = 'danger';
+                                                        break;
+                                                    case 'History':
+                                                        color = 'success';
+                                                        break;
+                                                    case 'Computer Science':
+                                                        color = 'primary';
+                                                        break;
 
-                                                default:
-                                                    color = 'secondary';
-                                                    break;
-                                            }
-                                            let tag = <Badge color={color}>{item.getTags()}</Badge>;
-                                            if (item.getTags() === "None") {
-                                                tag = null;
-                                            }
-
-                                            let upvotes = item.getUpvotes() + "";
-
-                                            if (item.getUpvotes() >= 1000) {
-                                                upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
-                                            }
-
-                                            let deletedata = null;
-                                            if (this.state.user.auth) {
-                                                if (this.state.user.auth.uid === item.getUser().uid) {
-                                                    deletedata = (
-                                                        <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
-                                                    );
+                                                    default:
+                                                        color = 'secondary';
+                                                        break;
                                                 }
+                                                let tag = <Badge color={color}>{item.getTags()}</Badge>;
+                                                if (item.getTags() === "None") {
+                                                    tag = null;
+                                                }
+
+                                                let upvotes = item.getUpvotes() + "";
+
+                                                if (item.getUpvotes() >= 1000) {
+                                                    upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
+                                                }
+
+                                                let deletedata = null;
+                                                if (this.state.user.auth) {
+                                                    if (this.state.user.auth.uid === item.getUser().uid) {
+                                                        deletedata = (
+                                                            <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                                                        );
+                                                    }
+                                                }
+
+                                                return (
+                                                    <li key={i} style={dark} className="pf-questionBox">
+                                                        <Row>
+                                                            <Col xs="1" className="updown">
+                                                                <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                                                            </Col>
+                                                            <Col xs="11">
+                                                                <div style={dark}>
+                                                                    {user}
+                                                                    <h4>Question: {item.getText()}  {tag}</h4>
+                                                                    {
+                                                                        item.getImgUrl() !== "" ?
+                                                                            <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                                                                            :
+                                                                            null
+                                                                    }
+                                                                </div>
+                                                                <hr style={dark.line} />
+                                                                {deletedata}
+                                                            </Col>
+                                                        </Row>
+                                                    </li>
+
+                                                );
                                             }
-
-                                            return (
-                                                <li key={i} style={dark} className="pf-questionBox">
-                                                    <Row>
-                                                        <Col xs="1" className="updown">
-                                                            <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                                                        </Col>
-                                                        <Col xs="11">
-                                                            <div style={dark}>
-                                                                {user}
-                                                                <h4>Question: {item.getText()}  {tag}</h4>
-                                                                {
-                                                                    item.getImgUrl() !== "" ?
-                                                                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                                                                        :
-                                                                        null
-                                                                }
-                                                            </div>
-                                                            <hr style={dark.line} />
-                                                            {deletedata}
-                                                        </Col>
-                                                    </Row>
-                                                </li>
-
-                                            );
                                         }
                                     })
                                 }
