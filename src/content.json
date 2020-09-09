@@ -29,7 +29,7 @@
     },
     "chooseFile": {
         "en": "Choose File",
-        "es": "Choosar un Archivo"
+        "es": "Seleccionar un Archivo"
     },
     "tag": {
         "en": "Tag:",
@@ -62,8 +62,42 @@
     "tutoring": {
         "en": "Tutoring:",
         "es": "Tutoría"
+    },
+    "home": {
+        "en": "Home",
+        "es": "Casa"
+    },
+    "teacher": {
+        "en": "Teacher?",
+        "es": "¿Profesor?"
+    },
+    "profile": {
+        "en": "Profile",
+        "es": "Perfil"
+    },
+    "yourPosts": {
+        "en": "Your Posts:",
+        "es": "Tus Publicaciones:"
+    },
+    "dangerZone": {
+        "en": "Danger Zone",
+        "es": "Zona Peligrosa"
+    },
+    "deleteAccount": {
+        "en": "Delete Account?",
+        "es": "¿Borrar Cuenta?"
+    },
+    "deleteWarning": {
+        "en": "Warning! You cannot undo this action.",
+        "es": "¡Advertencia! No puede deshacer esta acción."
+    },
+    "cancel": {
+        "en": "Cancel",
+        "es": "Cancelar"
+    },
+    "confirm": {
+        "en": "Confirm",
+        "es": "Confirmar"
     }
-
-
 
 }

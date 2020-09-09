@@ -10,6 +10,7 @@ import {
 import firebase from '../firebase.js';
 import { get as _get } from "lodash";
 import Question from '../Question';
+import {translate} from "../util.js"
 
 // the start of cleaning up the firestore pull from database
 // const db = firebase.firestore()
@@ -59,6 +60,7 @@ const deleteAccount = (toggle) => {
 const DeleteModal = (props) => {
     const {
         className,
+        language
     } = props;
 
     const [modal, setModal] = useState(false);
@@ -67,15 +69,15 @@ const DeleteModal = (props) => {
 
     return (
         <div>
-            <Button color="danger" outline onClick={toggle}>Delete Account?</Button>
+            <Button color="danger" outline onClick={toggle}>{translate(language, "deleteAccount")}</Button>
             <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
-                <ModalHeader toggle={toggle}>Delete Your Account?</ModalHeader>
+                <ModalHeader toggle={toggle}>{translate(language, "deleteAccount")}</ModalHeader>
                 <ModalBody>
-                    <p>Warning! You cannot undo this action</p>
+                    <p>{translate(language, "deleteWarning")}</p>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="secondary" onClick={toggle}>Cancel</Button>
-                    <Button color="danger" onClick={() => deleteAccount(toggle)}>Confirm</Button>
+                    <Button color="secondary" onClick={toggle}>{translate(language, "cancel")}</Button>
+                    <Button color="danger" onClick={() => deleteAccount(toggle)}>{translate(language, "confirm")}</Button>
                 </ModalFooter>
             </Modal>
         </div>
@@ -261,13 +263,13 @@ export default class Profile extends Component {
                 <div >
                     <div id="checkBoxSelect">
 
-                        <Link to="/">Home</Link>
+                        <Link to="/">{translate(this.props.language, "home")}</Link>
                         <br/>
-                        <Link to="/teacher-sign-in">Teacher?</Link>
+                        <Link to="/teacher-sign-in">{translate(this.props.language, "teacher")}</Link>
                         
                         
                         
-                        <h1 id="pfp-title">Profile</h1>
+                        <h1 id="pfp-title">{translate(this.props.language, "profile")}</h1>
 
                         <center>
                             <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
@@ -328,7 +330,7 @@ export default class Profile extends Component {
                         <hr style={dark.line} />
 
                         <div className="posts">
-                            <h1 className="pf-title">Your Posts:</h1>
+                            <h1 className="pf-title">{translate(this.props.language, "yourPosts")}</h1>
                             <ul className="list-posts">
 
                                 {
@@ -407,8 +409,8 @@ export default class Profile extends Component {
                             </ul>
                             <hr style={dark.line} />
                             <center>
-                                <h1>Danger Zone</h1>
-                                <DeleteModal></DeleteModal>
+                                <h1>{translate(this.props.language, "dangerZone")}</h1>
+                                <DeleteModal language={this.props.language}/>
                             </center>
                         </div>
                     </div>
