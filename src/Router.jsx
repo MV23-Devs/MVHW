@@ -26,9 +26,8 @@ export default class AppRouter extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
-            console.log("this.state.user.auth in router didmount " + this.state.user.auth)
 
             if (user) {
                 this.setState({ user: { auth: user, name: user.displayName } })
@@ -63,13 +62,9 @@ export default class AppRouter extends Component {
 
     getAllPosts() {
         firebase.firestore().collection('questions').get().then((querySnapshot) => {
-            // console.log(querySnapshot.docs);
             querySnapshot.docs.forEach(post => {
                 this.allPosts.push(post.id)
             });
         })
-
-        console.log(this.allPosts[0]);
-
     }
 }

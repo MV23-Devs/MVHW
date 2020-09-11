@@ -1,6 +1,5 @@
 import React, {
     Component,
-    useState
 } from 'react';
 import '../App.css';
 import {
@@ -8,47 +7,12 @@ import {
 } from 'reactstrap';
 import { ProfilePictureDropdown } from "./Home.jsx"
 
-
 import {
     Link
 } from 'react-router-dom'
-import { get as _get, times } from "lodash";
 import firebase from '../firebase.js';
 import Meeting from './Meeting.jsx'
-import { MdAddAlert } from 'react-icons/md';
-import Home from './Home';
-import { preProcessFile } from 'typescript';
 
-
-const theme1 = {
-    header: {
-        backgroundColor: '#222',
-        color: '#fff',
-    },
-    body: {
-        backgroundColor: '#333',
-    },
-    footer: {
-        backgroundColor: '#222',
-        color: '#ccc',
-    },
-    line: {
-        backgroundColor: '#fff',
-    },
-    link: {
-        color: '#fff',
-    }
-};
-
-
-
-const dark = {
-    backgroundColor: '#222',
-    color: '#fff',
-    line: {
-        backgroundColor: '#fff',
-    }
-};
 const classes = ["None", "English", "Biology"];
 
 const db = firebase.firestore();

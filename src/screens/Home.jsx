@@ -178,7 +178,6 @@ class Home extends Component {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ user: { auth: user, name: user.displayName } })
-        //console.log(this.state.user.auth)
       } else {
         this.setState({ user: { auth: user, name: 'Anonymous' } })
       }
@@ -187,13 +186,6 @@ class Home extends Component {
 
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
-
-    // db.collection("questions")
-    //   .get()
-    //   .then(querySnapshot => {
-    //     return querySnapshot.docs.map(doc => new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, doc.data().upvotes, doc.data().tags));
-    //   })
-    //   });
 
     db.collection("questions")
       .onSnapshot((querySnapshot) => {
@@ -265,12 +257,6 @@ class Home extends Component {
             this.props.history.push('/profile');
           });
       }
-      //console.log(this.props, history)
-
-      //console.log(`the goog token is: ${token}`);
-      //console.log(`auth user is: ${JSON.stringify(user.stsTokenManager, null, 4)}`);
-      // return response.json(); // parses JSON response into native JavaScript objects
-
     }).catch((error) => {
       console.error('Error Code: ' + error.code + ': ' + error.message)
     });
@@ -289,7 +275,6 @@ class Home extends Component {
     e.preventDefault();
     if (e.target.files[0] !== null) {
       const image = e.target.files[0];
-      //console.log(image);
       this.setState(() => ({ image }));
       this.readURL(e.target);
     }
@@ -364,7 +349,6 @@ class Home extends Component {
             this.fileinputref.current.value = null
             this.forceUpdate()
             this.setState({ url });
-            //console.log(this.fileinputref)
             firebase.firestore()
               .collection('questions')
               .add({
@@ -421,71 +405,6 @@ class Home extends Component {
             firebase.database().ref('audit log').push(date + ": created a new post");
           });
       }
-
-      // Unused Reply Database code
-      /* 
-      
-  firebase.firestore().collection('questions').doc(q.getText()).collection('replies').add({
-      title: this.state.text,
-      author: 'devs',
-      upvotes: 0,
-      downvotes: 0,
-      timestamp: q.getTime(),
-    });
- const deleteAccount = (toggle) => {
-    let posts = [];
-    firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("posts").get().then(querySnapshot => {
-        querySnapshot.docs.forEach(post => {
-            posts.push(post.data().original);
-            firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("posts").doc(post.id).delete();
-        })
-        return posts
-    }).then(posts => {
-        posts.forEach(post => {
-            firebase.firestore().collection("questions").doc(post).collection("replies").get().then(querySnapshot => {
-                querySnapshot.docs.forEach(reply => {
-                    firebase.firestore().collection("questions").doc(post).collection("replies").doc(reply.id).delete();
-                })
-            }).then(() => {
-                firebase.firestore().collection("questions").doc(post).delete();
-            })
-        })
-    })
-    firebase.auth().currentUser.delete().then(() => {
-        toggle()
-    }).catch(err => {
-        console.error("Error: ", err)
-    })
-}
-
-
-const DeleteModal = (props) => {
-    const {
-        className,
-    } = props;
-
-    const [modal, setModal] = useState(false);
-
-    const toggle = () => setModal(!modal);
-
-    return (
-        <div>
-            <Button color="danger" outline onClick={toggle}>Delete Account?</Button>
-            <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
-                <ModalHeader toggle={toggle}>Delete Your Account?</ModalHeader>
-                <ModalBody>
-                    <p>Warning! You cannot undo this action</p>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="secondary" onClick={toggle}>Cancel</Button>
-                    <Button color="danger" onClick={() => deleteAccount(toggle)}>Confirm</Button>
-                </ModalFooter>
-            </Modal>
-        </div>
-    );
-}
-
-  */
 
       this.setState({ update: 0 });
       event.target["text"].value = "";
@@ -601,24 +520,16 @@ const DeleteModal = (props) => {
   }
 
   filterQuestionsBy = () => {
-    //console.log("filterBy");
     let temp = (this.state.filterBy === "popularity") ? "none" : "popularity"
-    // this.state.filterBy = temp;
-    //console.log(this.state.filterBy === "popularity");
     if(temp === "popularity") {
-      //console.log("popular")
       this.orderByPopularity();
     } else if (temp === "none") {
-      //console.log("none")
     }
     this.setState({ filterBy: temp });
-    //console.log(this.state.filteredQuestions);
     this.setState({ update: 0 });
   }
 
   orderByPopularity = () => {
-    //console.log("orderBy");
-    //console.log(this.state.filteredQuestions);
     let tempArray = this.state.filteredQuestions;
     for (let i = 0; i < tempArray.length; i++) {
       for (let j = 0; j < tempArray.length - i - 1; j++) {
@@ -630,7 +541,6 @@ const DeleteModal = (props) => {
       }
     }
     this.setState({ filteredQuestions: tempArray });
-    //console.log(this.state.filteredQuestions);
   }
 
   sortQs() {
@@ -638,7 +548,6 @@ const DeleteModal = (props) => {
   }
 
   updateFilter = (filteredQuestions) => {
-    //console.log(filteredQuestions);
     this.setState(
       { filteredQuestions }
     )
@@ -650,7 +559,6 @@ const DeleteModal = (props) => {
     let filtered = [];
     if (cless !== "None") {
       for (let i = 0; i < this.state.questions.length; i++) {
-        console.log(this.state.questions[i].getTags(), cless);
         if (this.state.questions[i].getTags() === cless) {
           filtered.push(this.state.questions[i]);
         }

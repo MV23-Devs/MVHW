@@ -374,77 +374,76 @@ export default class Profile extends Component {
                             <ul className="list-posts">
                                 {
                                     this.state.questions.map((item, i) => {
-                                        if (this.state.selected.includes(item.getTags())) {
-                                            if (allow > 0) {
-                                                allow--;
-                                                let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
-                                                let color = '';
-                                                switch (item.getTags()) {
-                                                    case 'Math':
-                                                        color = 'info';
-                                                        break;
-                                                    case 'Science':
-                                                        color = 'warning';
-                                                        break;
-                                                    case 'English':
-                                                        color = 'danger';
-                                                        break;
-                                                    case 'History':
-                                                        color = 'success';
-                                                        break;
-                                                    case 'Computer Science':
-                                                        color = 'primary';
-                                                        break;
+                                        if (this.state.selected.includes(item.getTags()) && allow > 0) {
+                                            allow--;
+                                            let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
+                                            let color = '';
+                                            switch (item.getTags()) {
+                                                case 'Math':
+                                                    color = 'info';
+                                                    break;
+                                                case 'Science':
+                                                    color = 'warning';
+                                                    break;
+                                                case 'English':
+                                                    color = 'danger';
+                                                    break;
+                                                case 'History':
+                                                    color = 'success';
+                                                    break;
+                                                case 'Computer Science':
+                                                    color = 'primary';
+                                                    break;
 
-                                                    default:
-                                                        color = 'secondary';
-                                                        break;
-                                                }
-                                                let tag = <Badge color={color}>{item.getTags()}</Badge>;
-                                                if (item.getTags() === "None") {
-                                                    tag = null;
-                                                }
-
-                                                let upvotes = item.getUpvotes() + "";
-
-                                                if (item.getUpvotes() >= 1000) {
-                                                    upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
-                                                }
-
-                                                let deletedata = null;
-                                                if (this.state.user.auth) {
-                                                    if (this.state.user.auth.uid === item.getUser().uid) {
-                                                        deletedata = (
-                                                            <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
-                                                        );
-                                                    }
-                                                }
-
-                                                return (
-                                                    <li key={i} style={dark} className="pf-questionBox">
-                                                        <Row>
-                                                            <Col xs="1" className="updown">
-                                                                <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                                                            </Col>
-                                                            <Col xs="11">
-                                                                <div style={dark}>
-                                                                    {user}
-                                                                    <h4>Question: {item.getText()}  {tag}</h4>
-                                                                    {
-                                                                        item.getImgUrl() !== "" ?
-                                                                            <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                                                                            :
-                                                                            null
-                                                                    }
-                                                                </div>
-                                                                <hr style={dark.line} />
-                                                                {deletedata}
-                                                            </Col>
-                                                        </Row>
-                                                    </li>
-
-                                                );
+                                                default:
+                                                    color = 'secondary';
+                                                    break;
                                             }
+                                            let tag = <Badge color={color}>{item.getTags()}</Badge>;
+                                            if (item.getTags() === "None") {
+                                                tag = null;
+                                            }
+
+                                            let upvotes = item.getUpvotes() + "";
+
+                                            if (item.getUpvotes() >= 1000) {
+                                                upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
+                                            }
+
+                                            let deletedata = null;
+                                            if (this.state.user.auth) {
+                                                if (this.state.user.auth.uid === item.getUser().uid) {
+                                                    deletedata = (
+                                                        <span className="links" onClick={() => this.deleteQ(item)}>delete</span>
+                                                    );
+                                                }
+                                            }
+
+                                            return (
+                                                <li key={i} style={dark} className="pf-questionBox">
+                                                    <Row>
+                                                        <Col xs="1" className="updown">
+                                                            <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
+                                                        </Col>
+                                                        <Col xs="11">
+                                                            <div style={dark}>
+                                                                {user}
+                                                                <h4>Question: {item.getText()}  {tag}</h4>
+                                                                {
+                                                                    item.getImgUrl() !== "" ?
+                                                                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                                                                        :
+                                                                        null
+                                                                }
+                                                            </div>
+                                                            <hr style={dark.line} />
+                                                            {deletedata}
+                                                        </Col>
+                                                    </Row>
+                                                </li>
+                                            );
+                                        }else{
+                                            return null;
                                         }
                                     })
                                 }

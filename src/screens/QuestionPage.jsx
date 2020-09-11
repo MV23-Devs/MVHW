@@ -57,7 +57,6 @@ export default class QuestionPage extends Component{
         if(!item){
             return null;
         }
-        let {user} = this.state;
         let color = '';
         switch (item.getTags()) {
             case 'Math':

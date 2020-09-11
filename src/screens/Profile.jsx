@@ -3,12 +3,12 @@ import React, {
     useState
 } from 'react';
 import '../App.css';
-import { Row, Col, Form, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import { Row, Col, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import {
     Link
 } from 'react-router-dom'
 import firebase from '../firebase.js';
-import { get as _get } from "lodash";
+
 import Question from '../Question';
 import {translate} from "../util.js"
 
@@ -98,13 +98,12 @@ export default class Profile extends Component {
         super(props)
         this.classes = ["Math", "Geometry", "Algebra", "Trigonometry", "Calculus", "Science", "Biology", "Chemistry", "Physics", "English", "Survey", "AP Comp", "History", "World Studies", "AP Euro", "WHAP", "USHAP", "Spanish", "Anime", "Chinese", "Computer Science", "Art", "Music"];
         this.state = {
-            selected: [],
+            userClasses: [],
             user: {
                 auth: null,
                 name: "Anonymous",
             },
             isTutor: false,
-            userClasses: [],
             posts: [],
         }
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -124,23 +123,17 @@ export default class Profile extends Component {
                     }
 
                 })
-                //console.log(this.state.user.auth)
                 firebase.firestore().collection("users").get().then(querySnapshot => {
                     let raw = querySnapshot.docs;
                     let userdata = null;
                     raw.forEach(doc => {
                         if (doc.id === this.state.user.auth.uid) {
                             userdata = doc.data().classes;
-                            // userdata.forEach(item => {
-                            //     this.state.selected.push(item)
-                            // })
                             if (userdata !== undefined) {
-                                this.setState({ selected: userdata });
+                                this.setState({ userClasses: userdata });
                             }
                         }
                     })
-                    // console.log(userdata[0].data())
-                    // console.log(doc.data().classes)
                 })
 
 
@@ -182,45 +175,29 @@ export default class Profile extends Component {
                             }
                         })
                     })
-
             } else {
                 this.setState({ user: { auth: user, name: 'Anonymous' } })
             }
         });
     }
 
-    componentWillUnmount() {
-
-    }
-
     handleInputChange(event) {
         const target = event.target;
-
-        if (target.checked && !(this.state.selected.includes(target.name))) {
-            this.state.selected.push(target.name);
+        
+        if (target.checked && !(this.state.userClasses.includes(target.name))) {
+            this.state.userClasses.push(target.name);
             target.value = true;
         } else {
-            const index = this.state.selected.indexOf(target.name);
+            const index = this.state.userClasses.indexOf(target.name);
             if (index > -1) {
-                this.state.selected.splice(index, 1);
+                this.state.userClasses.splice(index, 1);
             }
             target.value = false;
         }
-
-        this.setState({ update: 1 });
-        this.submitHandler(event);
-    }
-
-    submitHandler = (event) => {
-        event.preventDefault();
-
         firebase.firestore().collection("users").doc(this.state.user.auth.uid).update({
-            classes: this.state.selected,
+            classes: this.state.userClasses,
         });
-        firebase.firestore().collection("users").doc(this.state.user.auth.uid).get().then(doc => {
-            this.setState({ userClasses: doc.data().classes });
-        })
-        this.setState({ update: 0 });
+        this.setState({ update: 1 });
     }
 
     deleteQ = (item) => {
@@ -272,7 +249,10 @@ export default class Profile extends Component {
                         <h1 id="pfp-title">{translate(this.props.language, "profile")}</h1>
 
                         <center>
-                            <img src={_get(this.state.user.auth, "photoURL", "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")} alt="pfp" className="pfp" />
+                            {
+                                this.state.user.auth !== null && <img src={this.state.user.auth.photoURL} alt="pfp" className="pf"/>
+                            }
+                            
                         </center>
                         <div>
                             {
@@ -290,7 +270,7 @@ export default class Profile extends Component {
                         {
                             this.state.userClasses ?
                                 <div id="checkBoxTitle">
-                                    <h1 className="pf-title">Select Classes: <span className="badge"> {this.state.selected.length + 0}</span></h1>
+                                    <h1 className="pf-title">Select Classes: <span className="badge"> {this.state.userClasses.length + 0}</span></h1>
                                     <br />
                                 </div>
                                 :
@@ -298,34 +278,26 @@ export default class Profile extends Component {
 
                         }
 
-
-                        <Form onSubmit={this.submitHandler} >
-                            <FormGroup check>
-                                {
-                                    //console.log(this.state.userClasses)
-                                }
-                                {
-                                    this.classes.map((cless, key) => {
-                                        return (
-                                            <div key={key} className="tickBoxSurround">
-                                                <Label for={cless} >
-                                                    {
-                                                        this.state.userClasses ?
-                                                            <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
-                                                            :
-                                                            <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" />
-                                                    }
-                                                    {cless}
-                                                </Label>
-                                                <br />
-                                            </div>
-                                        );
-                                    })
-                                }
-                            </FormGroup>
-
-                            {/* <Button color="info" id="submitClasses">Save Classes</Button> */}
-                        </Form>
+                        <FormGroup check>
+                            {
+                                this.classes.map((cless, key) => {
+                                    return (
+                                        <div key={key} className="tickBoxSurround">
+                                            <Label for={cless} >
+                                                {
+                                                    this.state.userClasses ?
+                                                        <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
+                                                        :
+                                                        <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" />
+                                                }
+                                                {cless}
+                                            </Label>
+                                            <br />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </FormGroup>
 
                         <hr style={dark.line} />
 
@@ -426,10 +398,6 @@ export default class Profile extends Component {
                             </ol>
                             <p>Breaking any of the following rules will result in deletion of the post deletion, possible account deletion/ban, and even the possibility of getting in trouble with the school administration.</p>
                             <hr style={dark.line} />
-                            <center>
-                                <h1>Danger Zone</h1>
-                                <DeleteModal></DeleteModal>
-                            </center>
                         </div>
                     </div>
                 </div>

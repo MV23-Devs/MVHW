@@ -336,8 +336,6 @@ export default class Feed extends Component {
               this.props.filteredQuestions.map(
                 (item, i) => {
                   let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
-                  //console.log("item", item)
-                  //console.log("user", user)
 
                   let color = '';
                   switch (item.getTags()) {

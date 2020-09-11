@@ -1,4 +1,3 @@
-import { MdBluetoothAudio } from "react-icons/md";
 import content from "./content.json"
 
 export const translate = (language, value) => {
