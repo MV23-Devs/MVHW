@@ -98,6 +98,10 @@
     "confirm": {
         "en": "Confirm",
         "es": "Confirmar"
+    },
+    "language": {
+        "en": "Español",
+        "es": "English"
     }
 
 }

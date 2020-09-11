@@ -38,13 +38,17 @@ export default class AppRouter extends Component {
         })
     }
     
+    languageChangeHandler = () => {
+        this.setState({language: this.state.language === "en" ? "es" : "en"});
+    }
+
     render() {
 
             this.getAllPosts();
             return (
                 <Router>
                     <Switch>
-                        <Route exact path='/'><Home language={this.state.language}/></Route>
+                        <Route exact path='/'><Home language={this.state.language} languageChangeHandler={this.languageChangeHandler}/></Route>
                         <Route path='/profile'><Profile language={this.state.language}/></Route>
                         <Route path="/question/:id" component={QuestionPage} />
                         <Route path="/teacher-sign-in" component={Teacher} />
