@@ -58,6 +58,12 @@ const SocialDropdown = (props) => {
       </DropdownToggle>
       <DropdownMenu>
         <DropdownItem><a href={props.github}>Github</a></DropdownItem>
+        {
+          props.linkedin !== null ?
+          <DropdownItem><a href={props.linkedin}>Linkedin</a></DropdownItem>
+          :
+          null
+        }
         <DropdownItem><a href={props.instagram}>Instagram</a></DropdownItem>
         <DropdownItem><a href={props.gmail}>Mail</a></DropdownItem>
       </DropdownMenu>
@@ -115,14 +121,14 @@ const AboutModal = (props) => {
               <CardImg top width="100%" src={jacob} alt="Jacob Ismael" />
               <CardBody>
                 <h3 className="aboutname">Jacob Ismael</h3>
-                <SocialDropdown github="https://github.com/jacobismael" instagram="https://www.instagram.com/jacobismael16/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jacob.ismael@gmail.com"></SocialDropdown>
+                <SocialDropdown github="https://github.com/jacobismael" linkedin="https://www.linkedin.com/in/jacob-ismael-9b2b431b0/" instagram="https://www.instagram.com/jacobismael16/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jacob.ismael@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
             <Card className="card">
               <CardImg top width="100%" src={saarang} alt="Saarang Bondalapati" />
               <CardBody>
                 <h3 className="aboutname">Saarang Bondalapati</h3>
-                <SocialDropdown github="https://github.com/saarangbond" instagram="https://www.instagram.com/saarang.bond.05/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=saarang.bondalapati@gmail.com"></SocialDropdown>
+                <SocialDropdown github="https://github.com/saarangbond" linkedin="https://www.linkedin.com/in/saarang-bondalapati-77b1371b6/" instagram="https://www.instagram.com/saarang.bond.05/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=saarang.bondalapati@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
             <Card className="card">
