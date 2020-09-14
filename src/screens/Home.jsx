@@ -114,7 +114,7 @@ const AboutModal = (props) => {
               <CardImg top width="100%" src={jason} alt="Jason Zhang" />
               <CardBody>
                 <h3 className="aboutname">Jason Zhang</h3>
-                <SocialDropdown github="https://github.com/minisounds" instagram="https://www.instagram.com/jason.zhang848/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jzscuba@gmail.com"></SocialDropdown>
+                <SocialDropdown github="https://github.com/minisounds" linkedin={null} instagram="https://www.instagram.com/jason.zhang848/?hl=en" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=jzscuba@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
             <Card className="card">
@@ -135,7 +135,7 @@ const AboutModal = (props) => {
               <CardImg top width="100%" src={atli} alt="Atli Arnarsson" />
               <CardBody>
                 <h3 className="aboutname">Atli Arnarsson</h3>
-                <SocialDropdown github="https://github.com/atli-a" instagram="" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
+                <SocialDropdown github="https://github.com/atli-a" linkedin={null} instagram="" gmail="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=atli.arnarsson@gmail.com"></SocialDropdown>
               </CardBody>
             </Card>
           </div>
