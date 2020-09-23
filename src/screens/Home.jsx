@@ -445,7 +445,7 @@ class Home extends Component {
         <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
-          <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button>
+          {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
           <Button id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
           {
             this.state.user.auth !== null ?
