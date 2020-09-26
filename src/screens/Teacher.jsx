@@ -150,7 +150,6 @@ export default class Profile extends Component {
                         querySnapshot.docChanges().forEach(change => {
                             if (change.type === 'added') {
                                 let doc = change.doc;
-
                                 let previousVotes = 0;
                                 let empty = true;
 
@@ -374,7 +373,7 @@ export default class Profile extends Component {
                             <ul className="list-posts">
                                 {
                                     this.state.questions.map((item, i) => {
-                                        if (this.state.selected.includes(item.getTags()) && allow > 0) {
+                                        if (this.state.selected.includes(item.getTags()) && allow > 0 && (new Date()).getMonth() === item.getTime().getMonth()) {
                                             allow--;
                                             let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
                                             let color = '';
