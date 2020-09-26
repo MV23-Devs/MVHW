@@ -104,6 +104,7 @@ export default class Profile extends Component {
                 name: "Anonymous",
             },
             isTutor: false,
+            isTeacher: false,
             posts: [],
         }
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -119,7 +120,9 @@ export default class Profile extends Component {
                     this.setState({ userClasses: doc.data().classes });
                     if (doc.data().isTutor === true) {
                         this.setState({ isTutor: true });
-
+                    }
+                    if (doc.data().isTeacher === true) {
+                        this.setState({ isTeacher: true})
                     }
 
                 })
@@ -242,9 +245,9 @@ export default class Profile extends Component {
 
                         <Link to="/">{translate(this.props.language, "home")}</Link>
                         <br/>
-                        <Link to="/teacher-sign-in">{translate(this.props.language, "teacher")}</Link>
-                        
-                        
+                        {
+                            this.state.isTeacher === true && <Link to="/teacher-dashboard">{translate(this.props.language, "teacher")}</Link>
+                        }
                         
                         <h1 id="pfp-title">{translate(this.props.language, "profile")}</h1>
 

@@ -156,7 +156,7 @@ export default class QuestionPage extends Component{
 
                           {//<Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
                           }
-                          <Link to="/"><Button color="light" className="seeFull">Exit</Button></Link>
+                          <Link to="/"><Button color="light" className="seeFull">Go Back</Button></Link>
                           <h4>Question: {item.getText()}  {tag}</h4>
                           {
                             item.getImgUrl() !== "" ?
