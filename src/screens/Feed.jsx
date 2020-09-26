@@ -183,7 +183,7 @@ export default class Feed extends Component {
           color = 'secondary';
           break;
       }
-      let tag = <Badge color={color}>{item.getTags()}</Badge>;
+      let tag = <Badge style={{marginLeft: "5px"}} color={color}>{item.getTags()}</Badge>;
       if (item.getTags() === "None") {
         tag = null;
       }

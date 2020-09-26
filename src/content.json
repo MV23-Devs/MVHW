@@ -16,8 +16,8 @@
         "es": "Filtrar por Clase"
     },
     "classes": {
-        "en": ["None", "Biology", "English"],
-        "es": ["Nada", "Biología", "Inglés"]
+        "en": ["None", "Trig H", "Statistics"],
+        "es": ["Nada", "Trig H", "Statísticas"]
     },
     "createPost": {
         "en": "Create a Post",

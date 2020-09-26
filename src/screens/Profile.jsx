@@ -96,7 +96,7 @@ const dark = {
 export default class Profile extends Component {
     constructor(props) {
         super(props)
-        this.classes = ["Math", "Geometry", "Algebra", "Trigonometry", "Calculus", "Science", "Biology", "Chemistry", "Physics", "English", "Survey", "AP Comp", "History", "World Studies", "AP Euro", "WHAP", "USHAP", "Spanish", "Anime", "Chinese", "Computer Science", "Art", "Music"];
+        this.classes = ["Trigonometry Honors", "Statistics"];
         this.state = {
             userClasses: [],
             user: {
