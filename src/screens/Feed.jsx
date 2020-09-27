@@ -163,22 +163,12 @@ export default class Feed extends Component {
 
       let color = '';
       switch (item.getTags()) {
-        case 'Math':
+        case 'Trig H':
           color = 'info';
           break;
-        case 'Science':
+        case 'Statistics':
           color = 'warning';
           break;
-        case 'English':
-          color = 'danger';
-          break;
-        case 'History':
-          color = 'success';
-          break;
-        case 'Computer Science':
-          color = 'primary';
-          break;
-
         default:
           color = 'secondary';
           break;
@@ -272,6 +262,7 @@ export default class Feed extends Component {
                     <div style={dark}>
                       {user}
                       <Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
+                      <Button color="light" className="timeStamp">{item.getTime()}</Button>
                       <h4>Question: {item.getText()}  {tag}</h4>
                       {
                         item.getImgUrl() !== "" ?

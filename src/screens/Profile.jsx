@@ -312,22 +312,12 @@ export default class Profile extends Component {
 
                                         let color = '';
                                         switch (item.getTags()) {
-                                            case 'Math':
+                                            case 'Trig H':
                                                 color = 'info';
                                                 break;
-                                            case 'Science':
+                                            case 'Statistics':
                                                 color = 'warning';
                                                 break;
-                                            case 'English':
-                                                color = 'danger';
-                                                break;
-                                            case 'History':
-                                                color = 'success';
-                                                break;
-                                            case 'Computer Science':
-                                                color = 'primary';
-                                                break;
-
                                             default:
                                                 color = 'secondary';
                                                 break;

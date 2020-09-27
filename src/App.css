@@ -401,6 +401,12 @@ a {
   margin-right: 10px;
 }
 
+.timeStamp {
+  display: inline-block;
+  float: right;
+  margin-right: 30px; 
+}
+
 .voteButton {
   text-align: none !important;
   outline: none !important; 
