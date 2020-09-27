@@ -57,6 +57,7 @@ export default class QuestionPage extends Component{
         if(!item){
             return null;
         }
+        let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
         let color = '';
         switch (item.getTags()) {
             case 'Math':
@@ -156,6 +157,8 @@ export default class QuestionPage extends Component{
 
                           {//<Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
                           }
+                          {user}
+                          <h6 className="date-time">{item.getTimeStamp()}</h6>
                           <Link to="/"><Button color="light" className="seeFull">Go Back</Button></Link>
                           <h4>Question: {item.getText()}  {tag}</h4>
                           {

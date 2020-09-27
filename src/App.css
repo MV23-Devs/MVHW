@@ -11,7 +11,7 @@ body {
 .date-time {
   font-size: 10px;
   display: inline-block;
-  float: right;
+  color: #ccc;
   margin-right: 100px;
 }
 
@@ -403,8 +403,7 @@ a {
 
 .timeStamp {
   display: inline-block;
-  float: right;
-  margin-right: 30px; 
+  float: left;
 }
 
 .voteButton {
