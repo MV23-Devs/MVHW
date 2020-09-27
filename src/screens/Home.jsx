@@ -444,9 +444,14 @@ class Home extends Component {
 
         <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
+          <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
-          <Button id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
+          <Button color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
+            <Label for="text" style={{marginLeft: "10px"}}>{translate(this.props.language, "classFilter")}:</Label>
+            <Input type="select" name="select" id="tags" style={{width: "unset", display: "unset", marginLeft: "10px"}}onChange={this.filterClass}>
+              {this.createClassItems()}
+            </Input>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
@@ -462,12 +467,7 @@ class Home extends Component {
 
         <section className="sidePanel">
           <div className="sbox">
-            <Button color="light" block onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
-            <br /> 
-            <Label for="text">{translate(this.props.language, "classFilter")}:</Label>
-            <Input type="select" name="select" id="tags" onChange={this.filterClass}>
-              {this.createClassItems()}
-            </Input>
+            <Button id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
           </div>
           <div className="sbox">
             <p>{translate(this.props.language, "createPost")}</p>

@@ -50,7 +50,7 @@ export default class AppRouter extends Component {
                         <Route exact path='/'><Home language={this.state.language} languageChangeHandler={this.languageChangeHandler}/></Route>
                         <Route path='/profile'><Profile language={this.state.language}/></Route>
                         <Route path="/question/:id" component={QuestionPage} />
-                        <Route path="/teacher-sign-in" component={Teacher} />
+                        <Route path="/teacher-dashboard" component={Teacher} />
                         <Route path="/tutoring"><Tutor user={this.state.user} /></Route>
                     </Switch>
                 </Router>

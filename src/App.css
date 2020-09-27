@@ -117,7 +117,7 @@ body {
 }
 
 #searchBar {
-  margin-left: 15%;
+  margin-left: 20px;
   display: inline-block;
   padding: 10px;
   width: 50%;
@@ -195,7 +195,7 @@ body {
 }
 
 .sbox {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 10px;
 }
 
@@ -359,13 +359,6 @@ button {
   margin-top: 0px;
 
 }
-
-#searchBar {
-  margin-left: 0;
-  height: 50px;
-  margin-left: 15%;
-}
-
 
 #logOut {
   /* margin: 0; */

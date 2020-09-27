@@ -15,7 +15,7 @@ export default class Question {
         this.answersRaw = 0;
         this.tags = tags;
         this.isClicked = false;
-        this.time = time
+        this.time = new Date(time);
     }
 
     hasUpvoted(uid) {
