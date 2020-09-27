@@ -386,6 +386,7 @@ export default class Feed extends Component {
 
                           }>
                             {user}
+                            <h6 className="date-time">Posted on {item.getTimeStamp()}</h6>
                             <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">{translate(this.props.language, "seeFullThread")}</Button></Link>
                             <h4>Question: {item.getText()}  {tag}</h4>
                             {
