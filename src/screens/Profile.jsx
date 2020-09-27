@@ -268,7 +268,7 @@ export default class Profile extends Component {
 
                         </div>
 
-                        <hr style={dark.line} />
+                        <hr className="line" />
 
                         {
                             this.state.userClasses ?
@@ -302,7 +302,7 @@ export default class Profile extends Component {
                             }
                         </FormGroup>
 
-                        <hr style={dark.line} />
+                        <hr className="line" />
 
                         <div className="posts">
                             <h1 className="pf-title">{translate(this.props.language, "yourPosts")}</h1>
@@ -346,13 +346,13 @@ export default class Profile extends Component {
                                         }
 
                                         return (
-                                            <li key={i} style={dark} className="pf-questionBox">
+                                            <li key={i} className="dark" className="pf-questionBox">
                                                 <Row>
                                                     <Col xs="1" className="updown">
                                                         <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
                                                     </Col>
                                                     <Col xs="11">
-                                                        <div style={dark}>
+                                                        <div className="dark">
                                                             {user}
                                                             <h4>Question: {item.getText()}  {tag}</h4>
                                                             {
@@ -362,7 +362,7 @@ export default class Profile extends Component {
                                                                     null
                                                             }
                                                         </div>
-                                                        <hr style={dark.line} />
+                                                        <hr className="line" />
                                                         {deletedata}
                                                     </Col>
                                                 </Row>
@@ -372,7 +372,7 @@ export default class Profile extends Component {
                                     })
                                 }
                             </ul>
-                            <hr style={dark.line} />
+                            <hr className="line" />
                             <center>
                                 <h1>{translate(this.props.language, "dangerZone")}</h1>
                                 <DeleteModal language={this.props.language}/>
@@ -390,7 +390,7 @@ export default class Profile extends Component {
                                 <li>No NSFW content will be tolerated.</li>
                             </ol>
                             <p>Breaking any of the following rules will result in deletion of the post deletion, possible account deletion/ban, and even the possibility of getting in trouble with the school administration.</p>
-                            <hr style={dark.line} />
+                            <hr className="line" />
                         </div>
                     </div>
                 </div>
