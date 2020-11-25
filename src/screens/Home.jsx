@@ -234,6 +234,7 @@ class Home extends Component {
           .doc(user.uid).set({
             name: user.displayName,
             email: user.email,
+            isTutor: false
           }).then((docRef) => {
             firebase.database().ref('audit log').push(new Date().toString() + ": new user joined: " + user);
             this.props.history.push('/profile');
