@@ -15,12 +15,36 @@ import {
 } from 'reactstrap';
 import firebase from '../firebase.js';
 import { storage } from '../firebase.js';
+// import { get as _get } from "lodash";
 import jacob from "../img/jacob.jpg";
 import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";
 import atli from "../img/atli-sucks.jpg";
 
+//const classes = require("../classes.json").classes;
+
 const db = firebase.firestore();
+
+// dark theme
+const theme1 = {
+  header: {
+    backgroundColor: '#222',
+    color: '#fff',
+  },
+  body: {
+    backgroundColor: '#333',
+  },
+  footer: {
+    backgroundColor: '#222',
+    color: '#ccc',
+  },
+  line: {
+    backgroundColor: '#fff',
+  },
+  link: {
+    color: '#fff',
+  }
+};
 
 const SocialDropdown = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -419,7 +443,7 @@ class Home extends Component {
 
         <div className="height"></div>
 
-        <div id="titleArea" className="header">
+        <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
           <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
@@ -448,7 +472,7 @@ class Home extends Component {
           </div>
           <div className="sbox">
             <p>{translate(this.props.language, "createPost")}</p>
-            <hr className="line" />
+            <hr style={theme1.line} />
             <Form onSubmit={this.submitHandler}>
               <FormGroup>
                 <Label for="text">{translate(this.props.language, "text")}</Label>
@@ -494,7 +518,7 @@ class Home extends Component {
             this.state.loading_data ?
               <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
               :
-              <Feed language={this.props.language} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
+              <Feed language={this.props.language} theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
           }
         </div>
 

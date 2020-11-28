@@ -327,7 +327,7 @@ export default class Profile extends Component {
 
                         </div>
 
-                        <hr className="line" />
+                        <hr style={dark.line} />
 
                         {
                             this.state.userClasses ?
@@ -366,7 +366,7 @@ export default class Profile extends Component {
                             {/* <Button color="info" id="submitClasses">Save Classes</Button> */}
                         </Form>
 
-                        <hr className="line" />
+                        <hr style={dark.line} />
 
                         <div className="posts">
                             <h1 className="pf-title">Top Posts of your Classes:</h1>
@@ -419,13 +419,13 @@ export default class Profile extends Component {
                                             }
 
                                             return (
-                                                <li key={i} className="dark" className="pf-questionBox">
+                                                <li key={i} style={dark} className="pf-questionBox">
                                                     <Row>
                                                         <Col xs="1" className="updown">
                                                             <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
                                                         </Col>
                                                         <Col xs="11">
-                                                            <div className="dark">
+                                                            <div style={dark}>
                                                                 {user}
                                                                 <h4>Question: {item.getText()}  {tag}</h4>
                                                                 {
@@ -435,7 +435,7 @@ export default class Profile extends Component {
                                                                         null
                                                                 }
                                                             </div>
-                                                            <hr className="line" />
+                                                            <hr style={dark.line} />
                                                             {deletedata}
                                                         </Col>
                                                     </Row>
@@ -449,7 +449,7 @@ export default class Profile extends Component {
                             </ul>
                         </div>
 
-                        <hr className="line" />
+                        <hr style={dark.line} />
 
                         <div className="posts">
                             <h1 className="pf-title">Your Posts:</h1>
@@ -502,13 +502,13 @@ export default class Profile extends Component {
                                         }
 
                                         return (
-                                            <li key={i} className="dark" className="pf-questionBox">
+                                            <li key={i} style={dark} className="pf-questionBox">
                                                 <Row>
                                                     <Col xs="1" className="updown">
                                                         <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
                                                     </Col>
                                                     <Col xs="11">
-                                                        <div className="dark">
+                                                        <div style={dark}>
                                                             {user}
                                                             <h4>Question: {item.getText()}  {tag}</h4>
                                                             {
@@ -518,7 +518,7 @@ export default class Profile extends Component {
                                                                     null
                                                             }
                                                         </div>
-                                                        <hr className="line" />
+                                                        <hr style={dark.line} />
                                                         {deletedata}
                                                     </Col>
                                                 </Row>
@@ -528,7 +528,7 @@ export default class Profile extends Component {
                                     })
                                 }
                             </ul>
-                            <hr className="line" />
+                            <hr style={dark.line} />
                             <center>
                                 <h1>Danger Zone</h1>
                                 <DeleteModal></DeleteModal>

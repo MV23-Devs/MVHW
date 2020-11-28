@@ -85,7 +85,7 @@ export default class Question {
         return this.time
     }
     getTimeStamp() {
-        return "" + (this.time.getMonth()+1) + "/" + this.time.getDate() + "/" + this.time.getFullYear();
+        return "" + this.time.getMonth() + "/" + this.time.getDate() + "/" + this.time.getFullYear();
     }
     getFirstAnswer() {
         let topAns = new Answer("There are no answers to this question yet", "bot", "bot", this.getTime(), 0, null)

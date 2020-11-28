@@ -10,6 +10,14 @@ import {translate} from "../util.js"
 
 const db = firebase.firestore();
 
+const dark = {
+  backgroundColor: '#222',
+  color: '#fff',
+  line: {
+    backgroundColor: '#fff',
+  }
+};
+
 export const Reply = (props) => {
   const {questionItem, errorMessage, submitHandler} = props;
   if (questionItem.getReplying() === true) {
@@ -199,13 +207,13 @@ export default class Feed extends Component {
                 }
 
                 return (
-                  <li key={"answer" + i} id="answerBox" className="dark">
+                  <li key={"answer" + i} id="answerBox" style={dark}>
 
                     <Row>
                       <Col xs="1" className="updown">
-                        <button className="dark" onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                        <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
                         <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                        <button className="dark" onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                        <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
                       </Col>
                       <Col>
                         {auser}
@@ -243,15 +251,15 @@ export default class Feed extends Component {
           <div className="containerthread">
 
             <Container>
-              <div className="dark" className="questionBox">
+              <div style={dark} className="questionBox">
                 <Row>
                   <Col xs="1" className="updown">
-                    <button className="dark" onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
+                    <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
                     <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                    <button className="dark" onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
+                    <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
                   </Col>
                   <Col xs="11">
-                    <div className="dark">
+                    <div style={dark}>
                       {user}
                       <Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
                       <Button color="light" className="timeStamp">{item.getTime()}</Button>
@@ -263,7 +271,7 @@ export default class Feed extends Component {
                           null
                       }
                     </div>
-                    <hr classname="line" />
+                    <hr style={dark.line} />
                     <span className="links" onClick={
 
                       this.openReply.bind(this, item)
@@ -280,13 +288,13 @@ export default class Feed extends Component {
                       return (
                         //--------------------------------------------------------------------------------
                         //ANSWERS
-                        <li key={"answer" + i} id="answerBox" className="dark">
+                        <li key={"answer" + i} id="answerBox" style={dark}>
 
                           <Row>
                             <Col xs="1" className="updown">
-                              <button className="dark" onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                              <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
                               <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                              <button className="dark" onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                              <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
                             </Col>
                             <Col>
                               {user}
@@ -365,15 +373,15 @@ export default class Feed extends Component {
                   }
 
                   return (
-                    <li key={i} className="dark" className="questionBox">
+                    <li key={i} style={dark} className="questionBox">
                       <Row>
                         <Col xs="1" className="updown">
-                          <button className="dark" onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
+                          <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
                           <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                          <button className="dark" onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
+                          <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
                         </Col>
                         <Col xs="11">
-                          <div className="dark" onClick={
+                          <div style={dark} onClick={
                             this.callBoth.bind(this, item)
 
                           }>
@@ -389,7 +397,7 @@ export default class Feed extends Component {
                             }
                             {this.renderAnswer(item)}
                           </div>
-                          <hr className="line" />
+                          <hr style={dark.line} />
                           <span className="links" onClick={
 
                             this.openReply.bind(this, item)
@@ -569,7 +577,7 @@ export default class Feed extends Component {
               <br />
               <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>
             </FormGroup>
-            <Button color="light" block>Submit</Button>
+            <Button color={this.state.theme === 1 ? 'light' : 'dark'} block>Submit</Button>
           </Form>
         </React.Fragment>
       )
@@ -641,7 +649,7 @@ export default class Feed extends Component {
     if (item1.getClicked() === true) {
       return (
         <React.Fragment>
-          <div id="answerBox" className="dark">
+          <div id="answerBox" style={dark}>
             {user}
             <h5>Answer: {item1.getFirstAnswer().getText()}</h5>
             {/* {respondable} */}

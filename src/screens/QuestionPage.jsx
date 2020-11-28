@@ -117,12 +117,12 @@ export default class QuestionPage extends Component{
                   }
                   
                   return (
-                  <li key={"answer" + i} id="answerBox" className="dark">
+                  <li key={"answer" + i} id="answerBox" style={dark}>
                       <Row>
                         <Col xs="1" className="updown">
-                            <button className="dark" onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                            <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
                             <Votes num={this.getUpvoteString(answer.getUpvotes())} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                            <button className="dark" onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                            <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
                         </Col>
                         <Col>
                             {auser}
@@ -145,15 +145,15 @@ export default class QuestionPage extends Component{
               <div className="containerthread">
 
                 <Container>
-                  <div className="dark" className="questionBox">
+                  <div style={dark} className="questionBox">
                     <Row>
                       <Col xs="1" className="updown">
-                        <button className="dark" onClick={() => this.upvote(true)} className="voteButton"><MdArrowUpward /></button>
+                        <button style={dark} onClick={() => this.upvote(true)} className="voteButton"><MdArrowUpward /></button>
                         <Votes num={this.getUpvoteString(item.getUpvotes())} actualNumber={item.getUpvotes()} />
-                        <button className="dark" onClick={() => this.upvote(false)} className="voteButton"><MdArrowDownward /></button>
+                        <button style={dark} onClick={() => this.upvote(false)} className="voteButton"><MdArrowDownward /></button>
                       </Col>
                       <Col xs="11">
-                        <div className="dark">
+                        <div style={dark}>
 
                           {//<Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
                           }
@@ -168,7 +168,7 @@ export default class QuestionPage extends Component{
                               null
                           }
                         </div>
-                        <hr className="line" />
+                        <hr style={dark.line} />
                         {
                             /*
                             <span className="links" onClick={
@@ -189,13 +189,13 @@ export default class QuestionPage extends Component{
                           return (
                             //--------------------------------------------------------------------------------
                             //ANSWERS
-                            <li key={"answer" + i} id="answerBox" className="dark">
+                            <li key={"answer" + i} id="answerBox" style={dark}>
     
                               <Row>
                                 <Col xs="1" className="updown">
-                                  <button className="dark" onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
+                                  <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
                                   <Votes num={this.getUpvoteString(answer.getUpvotes())} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                                  <button className="dark" onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
+                                  <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
                                 </Col>
                                 <Col>
                                   {user}
