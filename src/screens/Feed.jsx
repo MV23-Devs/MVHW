@@ -113,16 +113,20 @@ export class RenderUser extends Component {
   componentDidMount() {
     if (this.props.uid) {
       firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
-        if (doc.data().isTutor === true) {
-          this.setState({ isTutor: true })
-        }
-        this.setState({ username: doc.data().name })
-        if (this.props.currentUser) {
-          if(this.props.currentUser.auth) {
-            if (this.props.currentUser.auth.uid === this.props.uid) {
-              this.setState({ username: <Badge color='secondary'>you</Badge> })
+        if(doc.data()){
+          if (doc.data().isTutor === true) {
+            this.setState({ isTutor: true })
+          }
+          this.setState({ username: doc.data().name })
+          if (this.props.currentUser) {
+            if(this.props.currentUser.auth) {
+              if (this.props.currentUser.auth.uid === this.props.uid) {
+                this.setState({ username: <Badge color='secondary'>you</Badge> })
+              }
             }
           }
+        }else{
+          this.setState({ username: '[deleted-user]' })
         }
       })
     }
@@ -135,7 +139,7 @@ export class RenderUser extends Component {
         {
           this.state.isTutor === true ?
 
-            <Badge color="success">AVID TUTOR</Badge>
+            <Badge color="success">TUTOR</Badge>
             :
             null
         }

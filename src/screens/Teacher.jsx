@@ -350,7 +350,7 @@ export default class Profile extends Component {
                                                 <Label for={cless} >
                                                     {
                                                         this.state.userClasses ?
-                                                            <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.userClasses.indexOf(cless) > -1} />
+                                                            <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" checked={this.state.selected.indexOf(cless) > -1} />
                                                             :
                                                             <Input onChange={this.handleInputChange} className="tickboxes" id={cless} name={cless} type="checkbox" />
                                                     }

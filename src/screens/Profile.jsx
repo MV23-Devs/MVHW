@@ -190,7 +190,7 @@ export default class Profile extends Component {
         if (target.checked && !(this.state.userClasses.includes(target.name))) {
             this.state.userClasses.push(target.name);
             target.value = true;
-        } else {
+        } else if(!target.checked) {
             const index = this.state.userClasses.indexOf(target.name);
             if (index > -1) {
                 this.state.userClasses.splice(index, 1);
@@ -262,7 +262,7 @@ export default class Profile extends Component {
                                 this.state.isTutor !== true ?
                                     <div></div>
                                     :
-                                    <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
+                                    <center><h2><Badge color="success">You are verified as a Tutor!</Badge></h2></center>
 
                             }
 
