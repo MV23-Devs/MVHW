@@ -7,6 +7,7 @@ import {
   Link,
 } from 'react-router-dom'
 import {translate} from "../util.js"
+import { createImportSpecifier } from 'typescript';
 
 const db = firebase.firestore();
 
@@ -66,7 +67,7 @@ export const deleteA = (item, answer) => {
   });
 }
 
-export const deleteQ = (item) => {
+export const deleteQ = (item, userUid) => {
   let replies = [];
 
   //deletes all replies too???!!!
@@ -84,14 +85,14 @@ export const deleteQ = (item) => {
     })
   }).then(() => {
     db.collection("questions").doc(item.getId()).delete().then(() => {
-      firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").get().then(querySnapshot => {
+      firebase.firestore().collection("users").doc(userUid).collection("posts").get().then(querySnapshot => {
         querySnapshot.docs.forEach(doc => {
           replies.push(doc.id);
         })
         return replies;
       }).then(replies => {
         replies.forEach(id => {
-          firebase.firestore().collection("users").doc(this.props.user.auth.uid).collection("posts").doc(id).delete().then(doc => {
+          firebase.firestore().collection("users").doc(userUid).collection("posts").doc(id).delete().then(doc => {
             console.log("Successfully deleted post in user section with id: ", id);
           })
         })
@@ -109,7 +110,12 @@ export class RenderUser extends Component {
   state = {
     isTutor: false,
     username: "",
+    displayUser: true,
+    initialized: false,
+    isMounted: null,
+    firstUpdate: false,
   }
+  /*
   componentDidMount() {
     if (this.props.uid) {
       firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
@@ -126,203 +132,130 @@ export class RenderUser extends Component {
             }
           }
         }else{
-          this.setState({ username: '[deleted-user]' })
+          
         }
       })
     }
   }
-  render() {
-    return (
-      <React.Fragment>
-        <span>{this.state.username}</span>
-        <span> </span>
-        {
-          this.state.isTutor === true ?
-
-            <Badge color="success">TUTOR</Badge>
-            :
-            null
+  */
+  
+  componentDidMount(){
+    this.setState({isMounted: true})
+  }
+  
+  componentDidUpdate(prevProps){
+    //console.log("change: ", prevProps.uid !== this.props.uid)
+    if (this.props.uid && ( !this.state.firstUpdate ||  prevProps.uid !== this.props.uid)) {
+      this._asyncRequest = firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
+        let isTutor, username;
+        if(doc.data()){
+          username = doc.data().name;
+          if (doc.data().isTutor === true) {
+            isTutor = true;
+          }else{
+            isTutor = false;
+          }
+          //doc.id and this.props.uid switching or rotating somehow??
+          
+          
+          
+        }else{
+          username = "[deleted-user]";
+          isTutor = false;
         }
-      </React.Fragment>
+        if(this.state.isMounted){
+          this.setState({displayUser: {isTutor, username}})
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+      this.setState({firstUpdate: true})
+    }
+  }
+  
+  componentWillUnmount(){
+    if(this._asyncRequest){
+     this.setState({isMounted: false})
+    }
+  }
+  
+  render() {
+    let username = this.props.username;
+    if (this.props.currentUser) {
+      if(this.props.currentUser.auth) {
+        if (this.props.currentUser.auth.uid === this.props.uid) {
+          username = <Badge color='secondary'>you</Badge>
+        }
+      }
+    }
+    if(this.state.displayUser){
+      return (
+        <React.Fragment>
+          <span>{username}</span>
+          {
+            /*
+            this.state.displayUser.isTutor === true ?
+  
+              <Badge color="success">AVID TUTOR</Badge>
+              :
+              null
+            */
+          }
+        </React.Fragment>
+      )
+    }else{
+      return null;
+    }
+  }
+}
+
+class QuestionComponent extends Component{
+  state={}
+  render(){
+    const {i, item, deletedata, tag, upvotes, upvote, downvote, submitHandler} = this.props;
+    return (
+      <li style={dark} className="questionBox">
+        <Row>
+          <Col xs="1" className="updown">
+            <button style={dark} onClick={() => upvote(true, i)} className="voteButton"><MdArrowUpward /></button>
+            <Votes num={item.getUpvotes()} actualNumber={item.getUpvotes()} listvalue={i} />
+            <button style={dark} onClick={() => upvote(false, i)} className="voteButton"><MdArrowDownward /></button>
+          </Col>
+          <Col xs="11">
+            <div style={dark} onClick={(e) => this.props.callBoth(item)}>
+              <RenderUser uid={item.getUser().uid} currentUser={this.props.user} username={item.getUsername()}/>
+              <h6 className="date-time">{item.getTimeStamp()}</h6>
+              <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">{translate(this.props.language, "seeFullThread")}</Button></Link>
+              <h4>Question: {item.getText()}  {tag}</h4>
+              {
+                item.getImgUrl() !== "" ?
+                  <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+                  :
+                  null
+              }
+              {this.props.renderAnswer(item)}
+            </div>
+            <hr style={dark.line} />
+            <span className="links" onClick={(e) => this.props.openReply(item) }>{translate(this.props.language, "reply")}</span>
+            {deletedata}
+
+
+            <Reply questionItem={item} submitHandler={submitHandler} errorMessage={this.state.errormessage}/>
+          </Col>
+        </Row>
+      </li>
     )
   }
 }
 
 export default class Feed extends Component {
-
   state = {
     update: 0,
     d: new Date(),
-    focus: -1,
     notification: '',
   }
 
   render() {
-
-    if (this.state.focus !== -1) {
-      let i = this.state.focus;
-      let item = this.props.filteredQuestions[i];
-      let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
-
-
-      let color = '';
-      switch (item.getTags()) {
-        case 'Trig H':
-          color = 'info';
-          break;
-        case 'Statistics':
-          color = 'warning';
-          break;
-        default:
-          color = 'secondary';
-          break;
-      }
-      let tag = <Badge style={{marginLeft: "5px"}} color={color}>{item.getTags()}</Badge>;
-      if (item.getTags() === "None") {
-        tag = null;
-      }
-
-      let upvotes = item.getUpvotes() + "";
-
-      if (item.getUpvotes() >= 1000) {
-        upvotes = ((item.getUpvotes() / 1000)).toFixed(1) + "k";
-      }
-
-      let answers = null;
-      if (item.getAllAnswers().length > 0) {
-        answers = (
-          <ul className="feed-list">
-            {
-              item.getAllAnswers().map((answer, i) => {
-                let auser = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
-
-                let deletedata = null;
-                if (this.props.user.auth) {
-
-                  if (answer.getUser().uid === this.props.user.auth.uid) {
-                    deletedata = (
-                      <span>
-                        <span> | </span>
-                        <span className="links" onClick={() => this.deleteA(item, answer)}>{translate(this.props.language, "delete")}</span>
-                      </span>
-                    );
-                  }
-
-                }
-
-                return (
-                  <li key={"answer" + i} id="answerBox" style={dark}>
-
-                    <Row>
-                      <Col xs="1" className="updown">
-                        <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
-                        <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                        <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
-                      </Col>
-                      <Col>
-                        {auser}
-                        <h5>Answer: {answer.getText()}</h5>
-                        {/* {respondable} */}
-                        <span className="links">{translate(this.props.language, "reply")}</span>
-                        {deletedata}
-                      </Col>
-                    </Row>
-
-                  </li>
-                );
-              })
-            }
-          </ul>
-        )
-      }
-
-      let deletedata = null;
-      if (this.props.user.auth !== null) {
-        if (this.props.user.auth.uid === item.getUser().uid) {
-          deletedata = (
-            <span>
-              <span> | </span>
-              <span className="links" onClick={() => this.deleteQ(item)}>{translate(this.props.language, "delete")}</span>
-            </span>
-          );
-        }
-      }
-
-      return (
-
-        <React.Fragment>
-
-          <div className="containerthread">
-
-            <Container>
-              <div style={dark} className="questionBox">
-                <Row>
-                  <Col xs="1" className="updown">
-                    <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-                    <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                    <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
-                  </Col>
-                  <Col xs="11">
-                    <div style={dark}>
-                      {user}
-                      <Button color="light" className="seeFull" onClick={() => this.setState({ focus: -1 })} >Exit</Button>
-                      <Button color="light" className="timeStamp">{item.getTime()}</Button>
-                      <h4>Question: {item.getText()}  {tag}</h4>
-                      {
-                        item.getImgUrl() !== "" ?
-                          <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                          :
-                          null
-                      }
-                    </div>
-                    <hr style={dark.line} />
-                    <span className="links" onClick={
-
-                      this.openReply.bind(this, item)
-
-                    }>{translate(this.props.language, "reply")}</span>
-                    {deletedata}
-                    <Reply questionItem={item} submitHandler={this.submitHandler} errorMessage={this.state.errormessage}/>
-                  </Col>
-                </Row>
-                <ul className="feed-list">
-                  {
-                    item.getAllAnswers().map((answer, i) => {
-                      user = <RenderUser uid={answer.getUser().uid} currentUser={this.props.user}></RenderUser>
-                      return (
-                        //--------------------------------------------------------------------------------
-                        //ANSWERS
-                        <li key={"answer" + i} id="answerBox" style={dark}>
-
-                          <Row>
-                            <Col xs="1" className="updown">
-                              <button style={dark} onClick={() => answer.upvote()} className="voteButton"><MdArrowUpward /></button>
-                              <Votes num={upvotes} actualNumber={answer.getUpvotes()} listvalue={this.actualNumber} />
-                              <button style={dark} onClick={() => answer.downvote()} className="voteButton"><MdArrowDownward /></button>
-                            </Col>
-                            <Col>
-                              {user}
-                              <h5>Answer: {answer.getText()}</h5>
-                              {/* {respondable} */}
-                              <p className="links">reply</p>
-                            </Col>
-                          </Row>
-
-                        </li>
-                      );
-                    })
-                  }
-                </ul>
-                {answers}
-              </div>
-            </Container>
-
-
-          </div>
-
-        </React.Fragment >
-      )
-    }
     return (
       <React.Fragment>
         <ul className="feed-list">
@@ -330,7 +263,7 @@ export default class Feed extends Component {
             {
               this.props.filteredQuestions.map(
                 (item, i) => {
-                  let user = <RenderUser uid={item.getUser().uid} currentUser={this.props.user}></RenderUser>
+                  
                   let color = '';
                   switch (item.getTags()) {
                     case 'Math':
@@ -377,44 +310,22 @@ export default class Feed extends Component {
                   }
 
                   return (
-                    <li key={i} style={dark} className="questionBox">
-                      <Row>
-                        <Col xs="1" className="updown">
-                          <button style={dark} onClick={() => this.upvote(i)} className="voteButton"><MdArrowUpward /></button>
-                          <Votes num={upvotes} actualNumber={item.getUpvotes()} listvalue={i} />
-                          <button style={dark} onClick={() => this.downvote(i)} className="voteButton"><MdArrowDownward /></button>
-                        </Col>
-                        <Col xs="11">
-                          <div style={dark} onClick={
-                            this.callBoth.bind(this, item)
-
-                          }>
-                            {user}
-                            <h6 className="date-time">{item.getTimeStamp()}</h6>
-                            <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">{translate(this.props.language, "seeFullThread")}</Button></Link>
-                            <h4>Question: {item.getText()}  {tag}</h4>
-                            {
-                              item.getImgUrl() !== "" ?
-                                <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                                :
-                                null
-                            }
-                            {this.renderAnswer(item)}
-                          </div>
-                          <hr style={dark.line} />
-                          <span className="links" onClick={
-
-                            this.openReply.bind(this, item)
-
-                          }>{translate(this.props.language, "reply")}</span>
-                          {deletedata}
-
-
-                          <Reply questionItem={item} submitHandler={this.submitHandler} errorMessage={this.state.errormessage}/>
-                        </Col>
-                      </Row>
-                    </li>
-
+                    <QuestionComponent 
+                      key={i}
+                      i={i}
+                      item={item}
+                      user={this.props.user}
+                      tag={tag}
+                      deletedata={deletedata}
+                      upvotes={upvotes}
+                      renderAnswer={this.renderAnswer}
+                      openReply={this.openReply}
+                      language={this.props.language}
+                      callBoth={this.callBoth}
+                      upvote={this.upvote}
+                      downvote={this.downvote}
+                      submitHandler={this.submitHandler}
+                    />
                   );
                 }
               )
@@ -425,7 +336,7 @@ export default class Feed extends Component {
     )
   }
 
-  upvoteAnswer(i, a) {
+  upvoteAnswer = (i, a) => {
     if (this.props.user.auth !== null) {
       let tempUsersUpvoted = []
       let tempUsersDownvoted = []
@@ -436,7 +347,7 @@ export default class Feed extends Component {
           tempUsersUpvoted = doc.data().usersUpvoted;
           tempUsersDownvoted = doc.data().usersDownvoted;
           if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
-            this.props.filteredQuestions[i].upvote();
+            this.props.filteredQuestions[i].getAllAnswers[a].upvote();
             tempUsersUpvoted.push(this.props.user.auth.uid);
             if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
               tempUsersDownvoted = tempUsersDownvoted.filter(item => (item !== this.props.user.auth.uid ? true : false))
@@ -462,7 +373,37 @@ export default class Feed extends Component {
   }
 
 
-  upvote(i) {
+  upvote = (isUpvote, i)  => {
+    if (this.props.user.auth.uid) {
+      firebase.firestore().collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
+        let addTo = isUpvote ? doc.data().usersUpvoted : doc.data().usersDownvoted;
+        let removeFrom = isUpvote ? doc.data().usersDownvoted : doc.data().usersUpvoted;
+        if (addTo.indexOf(this.props.user.auth.uid) === -1) {
+          addTo.push(this.props.user.auth.uid);
+          if (removeFrom.indexOf(this.props.user.auth.uid) > -1) {
+            removeFrom = removeFrom.filter(item => (item !== this.props.user.auth.uid ? true : false))
+          }
+          console.log("addto: ", addTo);
+          console.log(" removefrom: ", removeFrom);
+          firebase.firestore().collection("questions").doc(this.props.filteredQuestions[i].getId()).update({
+            usersUpvoted: isUpvote ? addTo : removeFrom,
+            usersDownvoted: isUpvote ? removeFrom : addTo,
+          })
+        } else {
+          console.log("You already upvoted!")
+        }
+        this.setState({ update: 0 });
+      })
+    } else {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).catch((error) => {
+        console.error('Error Code ' + error.code + ': ' + error.message)
+      });
+    }
+  }
+
+  /*
+  upvote = (i) => {
     if (this.props.user.auth !== null) {
       let tempUsersUpvoted = []
       let tempUsersDownvoted = []
@@ -471,6 +412,9 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
         if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) === -1) {
+          if(tempUsersDownvoted.indexOf(this.props.user.auth.uid) !== -1){
+            this.props.filteredQuestions[i].upvote();
+          }
           this.props.filteredQuestions[i].upvote();
           tempUsersUpvoted.push(this.props.user.auth.uid);
           if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) > -1) {
@@ -484,7 +428,6 @@ export default class Feed extends Component {
         } else {
           console.log("You already upvoted!")
         }
-        this.setState({ update: 0 })
       })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -495,7 +438,7 @@ export default class Feed extends Component {
     }
   }
 
-  downvote(i) {
+  downvote = (i) => {
     if (this.props.user.auth !== null) {
       let tempUsersUpvoted = []
       let tempUsersDownvoted = []
@@ -505,6 +448,9 @@ export default class Feed extends Component {
         tempUsersUpvoted = doc.data().usersUpvoted;
         tempUsersDownvoted = doc.data().usersDownvoted;
         if (tempUsersDownvoted.indexOf(this.props.user.auth.uid) === -1) {
+          if(tempUsersUpvoted.indexOf(this.props.user.auth.uid) !== -1){
+            this.props.filteredQuestions[i].downvote();
+          }
           this.props.filteredQuestions[i].downvote();
           tempUsersDownvoted.push(this.props.user.auth.uid);
           if (tempUsersUpvoted.indexOf(this.props.user.auth.uid) > -1) {
@@ -518,7 +464,6 @@ export default class Feed extends Component {
         } else {
           console.log("You already downvoted!")
         }
-        this.setState({ update: 0 })
       })
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -528,6 +473,7 @@ export default class Feed extends Component {
       });
     }
   }
+  */
 
   isIn = (item, array) => {
     for (let elem in array) {
@@ -539,8 +485,10 @@ export default class Feed extends Component {
   }
 
   deleteQ = (item) => {
-    this.setState({ focus: -1 });
-    deleteQ(item);
+    console.log("before: ", this.props.filteredQuestions)
+    deleteQ(item, this.props.user.auth.uid);
+    console.log("after: ", this.props.filteredQuestions)
+    this.setState({ update: 1 });
   }
 
   deleteA = (item, answer) => {
@@ -548,28 +496,24 @@ export default class Feed extends Component {
     this.setState({update: 0});
   }
 
-
-  changeFocus(elem) {
-    this.setState({ focus: elem });
-
-  }
-  getFocus(elem) {
-    return this.state.focus;
+  callBoth = (item) => {
+    item.click();
+    this.setState({update:0})
   }
 
-
-  openReply(item1) {
-    item1.reply();
+  openReply = (item) => {
+    item.reply();
     this.setState({ update: 1 })
   }
-  openInnerReply(item1) {
+
+  openInnerReply = (item1) => {
     item1.replyInner();
     //item1.click();
 
     this.setState({ update: 1 })
   }
 
-  renderInnerReply(item1) {
+  renderInnerReply = (item1) => {
     if (item1.getReplyingInner() === true) {
       return (
         <React.Fragment>
@@ -588,12 +532,6 @@ export default class Feed extends Component {
     }
   }
 
-
-  callBoth(item1) {
-    item1.click();
-    //this.renderAnswer(item1);
-    this.setState({ update: 0 })
-  }
   submitHandler = (event, item) => {
     event.preventDefault();
     let val = event.target["text"].value;
@@ -630,7 +568,7 @@ export default class Feed extends Component {
     }
   }
 
-  renderAnswer(item1) {
+  renderAnswer = (item1) => {
     let user = <RenderUser uid={item1.getFirstAnswer().getUid()} currentUser={this.props.user}></RenderUser>;
 
     // Save this code for later use when implementing replying to replies
@@ -656,13 +594,6 @@ export default class Feed extends Component {
           <div id="answerBox" style={dark}>
             {user}
             <h5>Answer: {item1.getFirstAnswer().getText()}</h5>
-            {/* {respondable} */}
-            <p className="links" onClick={
-
-              this.openInnerReply.bind(this, item1)
-
-            }>reply</p>
-            {this.renderInnerReply(item1)}
           </div>
         </React.Fragment>
       )

@@ -30,7 +30,9 @@ export default class AppRouter extends Component {
         firebase.auth().onAuthStateChanged(user => {
 
             if (user) {
-                this.setState({ user: { auth: user, name: user.displayName } })
+                firebase.firestore().collection("users").doc(user.uid).get().then(doc => {
+                    this.setState({ user: { auth: user, name: user.displayName, data: doc.data() } })
+                })
             } else {
                 this.setState({ user: { auth: user, name: 'Anonymous' } })
             }

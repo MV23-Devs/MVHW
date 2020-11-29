@@ -156,7 +156,6 @@ class Home extends Component {
       d: new Date(),
       questions: [],
       filteredQuestions: [],
-      currentQuestion: [],
       width: 0,
       height: 0,
       errormessage: '',
@@ -216,6 +215,14 @@ class Home extends Component {
             for (var i = 0; i < docs.length; i++) {
               if (docs[i].getId() === doc.id) {
                 docs.splice(i, 1);
+              }
+            }
+          } else if (change.type === 'modified'){
+            let doc = change.doc;
+            let votes = doc.data().usersUpvoted.length - doc.data().usersDownvoted.length;
+            for (let i = 0; i < docs.length; i++){
+              if (docs[i].getId() === doc.id) {
+                docs.splice(i, 1, new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username));
               }
             }
           }
@@ -515,6 +522,9 @@ class Home extends Component {
 
         <div className="feed">
           {
+            console.log(this.state.user)
+          }
+          {
             this.state.loading_data ?
               <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
               :
@@ -531,33 +541,18 @@ class Home extends Component {
     if(temp === "popularity") {
       this.orderByPopularity();
     } else if (temp === "none") {
+      //nothing
     }
     this.setState({ filterBy: temp });
     this.setState({ update: 0 });
   }
 
   orderByPopularity = () => {
-    let tempArray = this.state.filteredQuestions;
-    for (let i = 0; i < tempArray.length; i++) {
-      for (let j = 0; j < tempArray.length - i - 1; j++) {
-        if (tempArray[j].getUpvotes() < tempArray[j + 1].getUpvotes()) {
-          let temp1 = tempArray[j];
-          tempArray[j] = tempArray[j + 1];
-          tempArray[j + 1] = temp1;
-        }
-      }
-    }
-    this.setState({ filteredQuestions: tempArray });
-  }
-
-  sortQs() {
-
+    this.setState({ filteredQuestions: this.state.filteredQuestions.sort((a,b) => b.getUpvotes() - a.getUpvotes())});
   }
 
   updateFilter = (filteredQuestions) => {
-    this.setState(
-      { filteredQuestions }
-    )
+    this.setState({ filteredQuestions })
   }
 
   filterClass = (e) => {
