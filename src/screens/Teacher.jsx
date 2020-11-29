@@ -184,6 +184,8 @@ export default class Profile extends Component {
                                 }
                             }
                         })
+                        console.log(docs)
+                        docs.sort((a, b) => b.getUpvotes() - a.getUpvotes())
                         this.setState({ questions: docs, loading_data: false })
                     })
 
@@ -321,7 +323,7 @@ export default class Profile extends Component {
                                 this.state.isTutor !== true ?
                                     null
                                     :
-                                    <center><h2><Badge color="success">You are verified as an AVID tutor!</Badge></h2></center>
+                                    <center><h2><Badge color="success">You are verified as a Tutor!</Badge></h2></center>
 
                             }
 

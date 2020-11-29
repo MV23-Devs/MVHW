@@ -452,7 +452,6 @@ class Home extends Component {
 
         <div id="titleArea" style={theme1.header}>
           <h1 id="title">MVHW</h1>
-          <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
           <Button color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
@@ -476,6 +475,7 @@ class Home extends Component {
         <section className="sidePanel">
           <div className="sbox">
             <Button id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
+            <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
           </div>
           <div className="sbox">
             <p>{translate(this.props.language, "createPost")}</p>
