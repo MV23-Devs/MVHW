@@ -2,7 +2,7 @@ import React, {
     Component,
     useState
 } from 'react';
-import '../App.css';
+import '../Profile.css';
 import { Row, Col, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter, ListGroup, ListGroupItem } from 'reactstrap';
 import {
     Link
@@ -388,8 +388,10 @@ export default class Profile extends Component {
                             </ul>
                             <hr style={dark.line} />
                             <center>
-                                {/* <h1>{translate(this.props.language, "dangerZone")}</h1>
-                                <DeleteModal language={this.props.language} /> */}
+                                <h1>{translate(this.props.language, "dangerZone")}</h1>
+                                <DeleteModal language={this.props.language} />
+                                <hr style={dark.line} />
+
                                 <h1>Terms & Conditions</h1>
                             </center>
                             <p>Welcome to Mountain View Homework hub or MVHW as it is commonly known. There are rules that must all be followed in order to participate in this environment. These rules must be followed:</p>

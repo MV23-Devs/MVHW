@@ -87,65 +87,9 @@ body {
   display: flex;
 }
 
-.feed {
-  padding: 20px;
-  position: absolute;
-  right: 0;
-  width: 75%;
-}
 
-.updown {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-#uploadFile {
-  border-radius: 5px;
-  border: 1px solid;
-  border-radius: 5px;
-  border: #222222;
-  color: white;
-  background-color: #111111;
-  max-width: 100px;
-  outline: none;
-}
 
-#searchBar {
-  margin: 0px;
-  margin-left: 20px;
-  margin-right: 20px;
 
-  display: inline-block;
-  padding: 7px;
-  width: 30%;
-  border: none;
-  border-radius: 5px;
-  outline: none;
-  border-top: 50px;
-  font-size: 15px;
-}
-
-#titleArea {
-  padding: center;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  position: fixed;
-  height: 12%;
-  margin: none;
-  width: 100%;
-  z-index: 9;
-}
-
-.sidePanel {
-  display: block;
-  color: white;
-  background-color: #222;
-  text-align: left;
-  width: 25%;
-  height: 100%;
-  position: fixed;
-}
 
 .alertcenter {
   width: 50%;
@@ -162,18 +106,6 @@ body {
   border-radius: 5px;
   color: #000;
   background-color: #f6c733;
-}
-
-.closed {
-  display: none;
-}
-
-.notification p {
-  margin: 0;
-}
-
-.open {
-  display: block;
 }
 
 .link-dark {
@@ -208,31 +140,7 @@ button {
   outline: none;
 }
 
-.questionBox {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  text-align: left;
-  padding-bottom: 2px;
-  display: block;
-  padding: 10px;
-  border-radius: 5px;
-  width: 100%;
-}
 
-#places {
-  text-align: center;
-  margin: 40%;
-  margin-top: 12px;
-  margin-bottom: 10px;
-  padding-bottom: 2px;
-  display: inline-block;
-  padding: 10px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  width: 20%;
-  outline: none;
-  color: white;
-}
 
 .tickBoxes {
   color: white;
@@ -286,99 +194,16 @@ button {
   margin: 0;
 }
 
-#answerBox {
-  border: solid;
-  padding: 10px;  
-  border-width: 1px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  outline: none !important;
-  
-}
-
-#replyBox {
-  border: solid;
-  padding: 10px;  
-  border-width: 1px;
-  border-radius: 5px;
-  height: 100px;
-  width: 100%;
-}
-
-.questionBox:hover {
-  cursor: pointer;
-  
-}
-
 .aboutname {
   font-size: 1em;
 }
 
-.feed-list {
-  list-style-type: none;
-  height: 100%;
-  padding: 0px;
-  margin-left: 5%;
-}
-
-@media(max-width: 400px) {
-  .questionBox {
-    margin: 0;
-    margin-top: 5px;
-    border-radius: 0;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    outline: none;
-    width: 100%;
-  }
-
-  .feed-list .container li:last-of-type {
-    border-bottom: none;
-  }
-
-  .sidePanel {
-    display: none;
-  }
-
-  #profileMenu {
-    float: right !important;
-  }
-
-  .cardcontainer {
-    flex-direction: column;
-  }
-
-  .container .card {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
-}
 
 #socialDrop {
   float: right !important;
   margin-top: 0px;
 
 }
-
-#logOut {
-  /* margin: 0; */
-  display: inline-block;
-  
-  float: right;
-  border-radius: 100%;
-  width: 50px;
-}
-
-
-#logIn {
-  margin-right: 5%;
-  /* margin: 0; */
-  /* display: inline-block; */
-  float: right;
-
-}
-
 
 a {
   font-weight: bold;
@@ -437,23 +262,6 @@ a {
 .loader {
   margin: 25%;
   margin-left: 30%;
-}
-
-.cardcontainer {
-  display: flex;
-  flex-direction: row;
-}
-
-#profileMenu {
-  float: right;
-  margin-top: 45px !important;
-}
-
-.post-img {
-  /* images that have been posted*/
-  max-height: 500px;
-  max-width: 30%;
-  margin: auto;
 }
 
 .pf-title {
