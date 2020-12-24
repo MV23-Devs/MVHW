@@ -105,7 +105,7 @@ const AboutModal = (props) => {
 
   return (
     <div>
-      <Button color="light" block onClick={toggle}>{translate(language, "who")}</Button>
+      <Button className= "newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</Button>
       <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Us</ModalHeader>
         <ModalBody>
@@ -141,7 +141,7 @@ const AboutModal = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={toggle}>Close</Button>
+          <Button className= "newBtn" color="secondary" onClick={toggle}>Close</Button>
         </ModalFooter>
       </Modal>
     </div>
@@ -451,19 +451,19 @@ class Home extends Component {
         <div className="height"></div>
 
         <div id="titleArea" style={theme1.header}>
-          <h1 id="title">MVHW</h1>
+          <p id="title">MVHW</p>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
-          <Button color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
+          <Button className= "newBtn" color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
             <Label for="text" style={{marginLeft: "10px"}}>{translate(this.props.language, "classFilter")}:</Label>
-            <Input type="select" name="select" id="tags" style={{width: "unset", display: "unset", marginLeft: "10px"}}onChange={this.filterClass}>
+            <Input type="select" name="select" classname= "newBtn" id="tags" style={{width: "unset", display: "unset", marginLeft: "10px"}}onChange={this.filterClass}>
               {this.createClassItems()}
             </Input>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
               :
-              <Button color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+              <Button className= "newBtn" color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
           }
         </div>
 
@@ -474,8 +474,8 @@ class Home extends Component {
 
         <section className="sidePanel">
           <div className="sbox">
-            <Button id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
-            <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
+            <Button className= "newBtn" id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
+            <Button className= "newBtn" color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
           </div>
           <div className="sbox">
             <p>{translate(this.props.language, "createPost")}</p>
@@ -505,7 +505,7 @@ class Home extends Component {
                 <span id="spacer1"></span>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput} />
               </FormGroup>
-              <Button color="light" block>{translate(this.props.language, "submitButton")}</Button>
+              <Button className= "newBtn" color="light" block>{translate(this.props.language, "submitButton")}</Button>
             </Form>
           </div>
 

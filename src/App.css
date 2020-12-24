@@ -42,49 +42,37 @@ body {
 #titleArea2 {
   /* margin-bottom: -30px; */
   padding: 10px;
-  height: 100px;
+  height: 80px;
   width: 100%;
   background-color: #222;
   color: #fff;
 }
 #title {
   text-align: center;
-  float: left;
+  /* float: left; */
+  display: inline-block;
+
   color: black;
   background: #f6c733;
   padding: 0px 10px;
   user-select: none;
   margin-bottom: none !important;
+  margin-left: 2%;
+  font-size: 25px;
 }
 
 .newBtn {
-  width: 100px;
+  /* width: 100px; */
   background-color: white;
   color:black;
-  border: #fff 1px solid;
+  border:none;
   border-radius: 5px;
+  font-size: 15px;
+  padding: 7px;
+  padding-left: 10px;
+  padding-right: 10px ;
 }
-.newBtn:hover {
-  width: 100px;
-  background-color: white;
-  color:black;
-  border: #000 1px solid;
-  border-radius: 5px;
-}
-.newBtn:focus {
-  width: 100px;
-  background-color:white;
-  color:black;
-  border: #fff 1px solid;
-  border-radius: 5px;
-}
-.newBtn:active {
-  width: 100px;
-  background-color:white;
-  color:black;
-  border: #fff 1px solid;
-  border-radius: 5px;
-}
+
 .footertext {
   margin: 0;
 }
@@ -124,24 +112,29 @@ body {
 }
 
 #searchBar {
+  margin: 0px;
   margin-left: 20px;
+  margin-right: 20px;
+
   display: inline-block;
-  padding: 10px;
-  width: 50%;
-  border: black;
-  border: 1px solid;
+  padding: 7px;
+  width: 30%;
+  border: none;
   border-radius: 5px;
   outline: none;
-  margin-right: 10px;
   border-top: 50px;
+  font-size: 15px;
 }
 
 #titleArea {
-  padding: 20px;
+  padding: center;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  position: fixed;
+  height: 12%;
   margin: none;
   width: 100%;
   z-index: 9;
-  position: fixed;
 }
 
 .sidePanel {
@@ -211,6 +204,7 @@ body {
 }
 
 button {
+
   outline: none;
 }
 
@@ -265,7 +259,7 @@ button {
 #checkBoxTitle{
   text-align: center;
   align-content: center;
-  font-size: 20px;
+  font-size: 15px;
 }
 
 /* SPACERS */
@@ -327,7 +321,7 @@ button {
   margin-left: 5%;
 }
 
-@media(max-width: 800px) {
+@media(max-width: 400px) {
   .questionBox {
     margin: 0;
     margin-top: 5px;
@@ -375,16 +369,14 @@ button {
   border-radius: 100%;
   width: 50px;
 }
-#logIn {
-  /* margin: 0; */
-  display: inline-block;
-  
-  /* width: 10% !important; */
-  /* margin-top: -46px; */
-  float: right;
-  height: 50px;
 
-  /* width: 50px; */
+
+#logIn {
+  margin-right: 5%;
+  /* margin: 0; */
+  /* display: inline-block; */
+  float: right;
+
 }
 
 
@@ -399,6 +391,7 @@ a {
   display: inline-block;
   float: right;
   margin-right: 10px;
+  font-size: 15px;
 }
 
 .timeStamp {
@@ -457,7 +450,10 @@ a {
 }
 
 .post-img {
+  /* images that have been posted*/
   max-height: 500px;
+  max-width: 30%;
+  margin: auto;
 }
 
 .pf-title {
