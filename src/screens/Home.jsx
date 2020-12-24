@@ -1,6 +1,7 @@
 import React, {
   Component,
-  useState
+  useState,
+  useRef
 } from 'react';
 import {
   Link,
@@ -12,8 +13,9 @@ import './css/profile.css'
 import Feed from "./Feed.jsx";
 import Question from '../Question';
 import {
-  Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+  Navbar, Nav, NavItem, NavbarToggler, Collapse, Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
+import Sidebar from 'react-sidebar';
 import firebase from '../firebase.js';
 import { storage } from '../firebase.js';
 import jacob from "../img/jacob.jpg";
@@ -45,6 +47,81 @@ const theme1 = {
     color: '#fff',
   }
 };
+
+const SidebarComponent = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const fileinputref = useRef(null);
+
+  const createClassItems = () => {
+    let items = [];
+    let classes = translate(props.language, "classes");
+    for (let i = 0; i < (classes.length); i++) {
+      items.push(<option key={i}>{classes[i]}</option>);
+    }
+    return items;
+  }
+
+  const toggle = () => setIsOpen(!isOpen);
+  return (
+    <Sidebar
+      sidebar={
+        <section>
+          <div className="sbox">
+            <Button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</Button>
+            <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
+          </div>
+          <div className="sbox">
+            <p>{translate(props.language, "createPost")}</p>
+            <hr style={theme1.line} />
+            <Form onSubmit={props.submitHandler}>
+              <FormGroup>
+                <Label for="text">{translate(props.language, "text")}</Label>
+                <Input type="textarea" name="text" id="text" onChange={props.changeHandler} />
+                {props.errormessage}
+                <br />
+                <input type="file" id="uploadFile" ref={fileinputref} onChange={props.handleFileInput} />
+                <br />
+                {
+                  props.image !== null ?
+                    <img id="previewImage" alt={props.image} width="100px" />
+                    :
+                    null
+                }
+                <br />
+                <Label for="tags"><Badge color="danger">{translate(props.language, "tag")}</Badge></Label>
+                <Input type="select" name="select" id="tags">
+                  {createClassItems()}
+                </Input>
+                <br />
+                <Label id="anonymousBoxLabel" for="anonymousBox">{translate(props.language, "anonymous")}</Label>
+                <span id="spacer1"></span>
+                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={props.handleAnonymousInput} />
+              </FormGroup>
+              <Button color="light" block>{translate(props.language, "submitButton")}</Button>
+            </Form>
+          </div>
+
+          <div className="sbox" id="last">
+            <a href="https://github.com/MV23-Devs/MVHW" className='link-dark'>Github</a>
+            <br />
+            <a href="https://www.instagram.com/mvhs.2023/?hl=en" className='link-dark'>Instagram</a>
+            <br />
+            <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
+            <AboutModal language={props.language}/>
+          </div>
+        </section>
+      }
+      open={isOpen}
+      onSetOpen={setIsOpen}
+      styles={{ sidebar: {background: "#222", zIndex: "10", top: "12%"}}}
+    >
+      <button onClick={() => setIsOpen(true)} style={{marginTop: "5%"}}>
+        Open Sidebar
+      </button>
+    </Sidebar>
+  )
+}
+
 
 const SocialDropdown = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -473,53 +550,15 @@ class Home extends Component {
         <br />
         <br />
 
-        <section className="sidePanel">
-          <div className="sbox">
-            <Button className= "newBtn" id="languageButton" className="newBtn" onClick={this.changeLanguage} >{translate(this.props.language, "language")}</Button>
-            <Button className= "newBtn" color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(this.props.language, "feedback")}</Button>
-          </div>
-          <div className="sbox">
-            <p>{translate(this.props.language, "createPost")}</p>
-            <hr style={theme1.line} />
-            <Form onSubmit={this.submitHandler}>
-              <FormGroup>
-                <Label for="text">{translate(this.props.language, "text")}</Label>
-                <Input type="textarea" name="text" id="text" onChange={this.changeHandler} />
-                {this.state.errormessage}
-                <br />
-                <input type="file" id="uploadFile" ref={this.fileinputref} onChange={this.handleFileInput} />
-                <br />
-                {
-
-                  this.state.image !== null ?
-                    <img id="previewImage" alt={this.state.image} width="100px" />
-                    :
-                    null
-                }
-                <br />
-                <Label for="tags"><Badge color="danger">{translate(this.props.language, "tag")}</Badge></Label>
-                <Input type="select" name="select" id="tags">
-                  {this.createClassItems()}
-                </Input>
-                <br />
-                <Label id="anonymousBoxLabel" for="anonymousBox">{translate(this.props.language, "anonymous")}</Label>
-                <span id="spacer1"></span>
-                <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={this.handleAnonymousInput} />
-              </FormGroup>
-              <Button className= "newBtn" color="light" block>{translate(this.props.language, "submitButton")}</Button>
-            </Form>
-          </div>
-
-          <div className="sbox" id="last">
-            <a href="https://github.com/MV23-Devs/MVHW" className='link-dark'>Github</a>
-            <br />
-            <a href="https://www.instagram.com/mvhs.2023/?hl=en" className='link-dark'>Instagram</a>
-            <br />
-            <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
-            <AboutModal language={this.props.language}/>
-          </div>
-        </section>
-
+        <SidebarComponent
+          changeLanguage={this.changeLanguage} 
+          language={this.props.language} 
+          handleFileInput={this.handleFileInput} 
+          image={this.state.image} 
+          submitHandler={this.submitHandler} 
+          errormessage={this.state.errormessage} 
+          handleAnonymousInput={this.handleAnonymousInput}
+        />
 
         <div className="feed">
           {

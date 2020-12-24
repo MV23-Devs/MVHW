@@ -405,7 +405,7 @@ export default class Profile extends Component {
                                 <li>No bullying or harassment of any kind</li>
                                 <li>No NSFW content will be tolerated.</li>
                             </ol>
-                            <p>Breaking any of the following rules will result in deletion of the post deletion, possible account deletion/ban, and even the possibility of getting in trouble with the school administration.</p>
+                            <p>Breaking any of the following rules will result in deletion of the post, possible account deletion/ban, and even the possibility of getting in trouble with the school administration.</p>
                             <hr style={dark.line} />
                         </div>
                     </div>
