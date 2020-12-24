@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom'
 import {translate} from "../util.js"
 import '../App.css';
+import './css/profile.css'
 import Feed from "./Feed.jsx";
 import Question from '../Question';
 import {
@@ -15,7 +16,6 @@ import {
 } from 'reactstrap';
 import firebase from '../firebase.js';
 import { storage } from '../firebase.js';
-// import { get as _get } from "lodash";
 import jacob from "../img/jacob.jpg";
 import saarang from "../img/saarang.jpg";
 import jason from "../img/jason.jpg";

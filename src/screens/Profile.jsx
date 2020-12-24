@@ -3,14 +3,14 @@ import React, {
     useState
 } from 'react';
 import '../App.css';
-import { Row, Col, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import { Row, Col, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter, ListGroup, ListGroupItem } from 'reactstrap';
 import {
     Link
 } from 'react-router-dom'
 import firebase from '../firebase.js';
 
 import Question from '../Question';
-import {translate} from "../util.js"
+import { translate } from "../util.js"
 
 // the start of cleaning up the firestore pull from database
 // const db = firebase.firestore()
@@ -122,7 +122,7 @@ export default class Profile extends Component {
                         this.setState({ isTutor: true });
                     }
                     if (doc.data().isTeacher === true) {
-                        this.setState({ isTeacher: true})
+                        this.setState({ isTeacher: true })
                     }
 
                 })
@@ -186,11 +186,11 @@ export default class Profile extends Component {
 
     handleInputChange(event) {
         const target = event.target;
-        
+
         if (target.checked && !(this.state.userClasses.includes(target.name))) {
             this.state.userClasses.push(target.name);
             target.value = true;
-        } else if(!target.checked) {
+        } else if (!target.checked) {
             const index = this.state.userClasses.indexOf(target.name);
             if (index > -1) {
                 this.state.userClasses.splice(index, 1);
@@ -244,18 +244,20 @@ export default class Profile extends Component {
                     <div id="checkBoxSelect">
 
                         <Link to="/">{translate(this.props.language, "home")}</Link>
-                        <br/>
+                        <br />
                         {
                             this.state.isTeacher === true && <Link to="/teacher-dashboard">{translate(this.props.language, "teacher")}</Link>
                         }
-                        
-                        <h1 id="pfp-title">{translate(this.props.language, "profile")}</h1>
+
+                        {
+                            this.state.user.auth !== null && <h1 id="pfp-title">{this.state.user.auth.displayName}</h1>
+                        }
 
                         <center>
                             {
-                                this.state.user.auth !== null && <img src={this.state.user.auth.photoURL} alt="pfp" className="pf"/>
+                                this.state.user.auth !== null && <img src={this.state.user.auth.photoURL} alt="pfp" className="pf" />
                             }
-                            
+
                         </center>
                         <div>
                             {
@@ -268,7 +270,19 @@ export default class Profile extends Component {
 
                         </div>
 
-                        <hr style={dark.line} />
+                        <ListGroup id="classList">
+
+                            {
+                                this.state.userClasses.map((classname) => {
+                                    return(
+                                        <ListGroupItem>{classname}</ListGroupItem>
+                                    );
+                                })
+                            }
+                            
+                        </ListGroup>
+
+                        {/* <hr style={dark.line} />
 
                         {
                             this.state.userClasses ?
@@ -302,7 +316,7 @@ export default class Profile extends Component {
                             }
                         </FormGroup>
 
-                        <hr style={dark.line} />
+                        <hr style={dark.line} /> */}
 
                         <div className="posts">
                             <h1 className="pf-title">{translate(this.props.language, "yourPosts")}</h1>
@@ -374,8 +388,8 @@ export default class Profile extends Component {
                             </ul>
                             <hr style={dark.line} />
                             <center>
-                                <h1>{translate(this.props.language, "dangerZone")}</h1>
-                                <DeleteModal language={this.props.language}/>
+                                {/* <h1>{translate(this.props.language, "dangerZone")}</h1>
+                                <DeleteModal language={this.props.language} /> */}
                                 <h1>Terms & Conditions</h1>
                             </center>
                             <p>Welcome to Mountain View Homework hub or MVHW as it is commonly known. There are rules that must all be followed in order to participate in this environment. These rules must be followed:</p>
