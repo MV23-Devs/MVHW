@@ -7,7 +7,7 @@ import {
   Link,
   withRouter
 } from 'react-router-dom'
-import {translate} from "../util.js"
+import { translate } from "../util.js"
 import '../App.css';
 import './css/profile.css'
 import Feed from "./Feed.jsx";
@@ -68,7 +68,7 @@ const SidebarComponent = (props) => {
         <section>
           <div className="sbox">
             <Button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</Button>
-            <Button color="light" style={{marginLeft: "10px"}} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
+            <Button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
           </div>
           <div className="sbox">
             <p>{translate(props.language, "createPost")}</p>
@@ -97,7 +97,7 @@ const SidebarComponent = (props) => {
                 <span id="spacer1"></span>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={props.handleAnonymousInput} />
               </FormGroup>
-              <Button color="light" block>{translate(props.language, "submitButton")}</Button>
+              <Button className="newBtn" color="light" block>{translate(props.language, "submitButton")}</Button>
             </Form>
           </div>
 
@@ -107,15 +107,15 @@ const SidebarComponent = (props) => {
             <a href="https://www.instagram.com/mvhs.2023/?hl=en" className='link-dark'>Instagram</a>
             <br />
             <h6 className="copyright">Copyright (c) 2020 Mountain View 2023 Developers</h6>
-            <AboutModal language={props.language}/>
+            <AboutModal language={props.language} />
           </div>
         </section>
       }
       open={isOpen}
       onSetOpen={setIsOpen}
-      styles={{ sidebar: {background: "#222", zIndex: "10", top: "12%"}}}
+      styles={{sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px"}}}
     >
-      <button onClick={() => setIsOpen(true)} style={{marginTop: "5%"}}>
+      <button onClick={() => setIsOpen(true)} style={{ marginTop: "5%" }}>
         Open Sidebar
       </button>
     </Sidebar>
@@ -137,9 +137,9 @@ const SocialDropdown = (props) => {
         <DropdownItem><a href={props.github}>Github</a></DropdownItem>
         {
           props.linkedin !== null ?
-          <DropdownItem><a href={props.linkedin}>Linkedin</a></DropdownItem>
-          :
-          null
+            <DropdownItem><a href={props.linkedin}>Linkedin</a></DropdownItem>
+            :
+            null
         }
         <DropdownItem><a href={props.instagram}>Instagram</a></DropdownItem>
         <DropdownItem><a href={props.gmail}>Mail</a></DropdownItem>
@@ -182,7 +182,7 @@ const AboutModal = (props) => {
 
   return (
     <div>
-      <Button className= "newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</Button>
+      <Button className="newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</Button>
       <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Us</ModalHeader>
         <ModalBody>
@@ -218,7 +218,7 @@ const AboutModal = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button className= "newBtn" color="secondary" onClick={toggle}>Close</Button>
+          <Button className="newBtn" color="secondary" onClick={toggle}>Close</Button>
         </ModalFooter>
       </Modal>
     </div>
@@ -279,7 +279,7 @@ class Home extends Component {
             let ups = doc.data().usersUpvoted.length
             let downs = doc.data().usersDownvoted.length
             let votes = ups - downs;
-            
+
             let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
             docs.push(q);
             db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
@@ -294,10 +294,10 @@ class Home extends Component {
                 docs.splice(i, 1);
               }
             }
-          } else if (change.type === 'modified'){
+          } else if (change.type === 'modified') {
             let doc = change.doc;
             let votes = doc.data().usersUpvoted.length - doc.data().usersDownvoted.length;
-            for (let i = 0; i < docs.length; i++){
+            for (let i = 0; i < docs.length; i++) {
               if (docs[i].getId() === doc.id) {
                 docs.splice(i, 1, new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username));
               }
@@ -532,16 +532,16 @@ class Home extends Component {
           <p id="title">MVHW</p>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
-          <Button className= "newBtn" color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
-            <Label for="text" style={{marginLeft: "10px"}}>{translate(this.props.language, "classFilter")}:</Label>
-            <Input type="select" name="select" classname= "newBtn" id="tags" style={{width: "unset", display: "unset", marginLeft: "10px"}}onChange={this.filterClass}>
-              {this.createClassItems()}
-            </Input>
+          <Button className="newBtn" color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
+          <Label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}:</Label>
+          <Input type="select" name="select" classname="newBtn" id="tags" style={{ width: "unset", display: "unset", marginLeft: "10px" }} onChange={this.filterClass}>
+            {this.createClassItems()}
+          </Input>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
               :
-              <Button className= "newBtn" color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+              <Button className="newBtn" color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
           }
         </div>
 
@@ -551,12 +551,12 @@ class Home extends Component {
         <br />
 
         <SidebarComponent
-          changeLanguage={this.changeLanguage} 
-          language={this.props.language} 
-          handleFileInput={this.handleFileInput} 
-          image={this.state.image} 
-          submitHandler={this.submitHandler} 
-          errormessage={this.state.errormessage} 
+          changeLanguage={this.changeLanguage}
+          language={this.props.language}
+          handleFileInput={this.handleFileInput}
+          image={this.state.image}
+          submitHandler={this.submitHandler}
+          errormessage={this.state.errormessage}
           handleAnonymousInput={this.handleAnonymousInput}
         />
 
@@ -578,7 +578,7 @@ class Home extends Component {
 
   filterQuestionsBy = () => {
     let temp = (this.state.filterBy === "popularity") ? "none" : "popularity"
-    if(temp === "popularity") {
+    if (temp === "popularity") {
       this.orderByPopularity();
     } else if (temp === "none") {
       //nothing
@@ -588,7 +588,7 @@ class Home extends Component {
   }
 
   orderByPopularity = () => {
-    this.setState({ filteredQuestions: this.state.filteredQuestions.sort((a,b) => b.getUpvotes() - a.getUpvotes())});
+    this.setState({ filteredQuestions: this.state.filteredQuestions.sort((a, b) => b.getUpvotes() - a.getUpvotes()) });
   }
 
   updateFilter = (filteredQuestions) => {
