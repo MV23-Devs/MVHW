@@ -1,0 +1,482 @@
+html,body {
+  height:100vh;
+  outline: none;
+  background-color: #333;
+}
+
+body {
+  background-color: #333;
+}
+
+.date-time {
+  font-size: 10px;
+  display: inline-block;
+  color: #ccc;
+  margin-right: 100px;
+}
+
+.meetingForm {
+  margin: 25%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 50%;
+  background-color: #222;
+  color: #fff;
+  border: #fff 1px solid;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.specialTitle {
+  text-align: center;
+}
+.whiteBar {
+  background-color: #fff;
+}
+.fixDiv {
+  padding-left: 20px;
+}
+#fullQuestion {
+  min-height: 100vh;
+}
+#titleArea2 {
+  /* margin-bottom: -30px; */
+  padding: 10px;
+  height: 80px;
+  width: 100%;
+  background-color: #222;
+  color: #fff;
+}
+#title {
+  text-align: center;
+  /* float: left; */
+  display: inline-block;
+
+  color: black;
+  background: #f6c733;
+  padding: 0px 10px;
+  user-select: none;
+  margin-bottom: none !important;
+  margin-left: 2%;
+  font-size: 25px;
+}
+
+.newBtn {
+  /* width: 100px; */
+  background-color: white;
+  color:black;
+  border:none;
+  border-radius: 5px;
+  font-size: 15px;
+  padding: 7px;
+  padding-left: 10px;
+  padding-right: 10px ;
+}
+
+.footertext {
+  margin: 0;
+}
+
+#pfp-title {
+  text-align: center;
+}
+
+.main {
+  background-color: blue;
+  /* flex: auto; */
+  display: flex;
+}
+
+.feed {
+  padding: 20px;
+  position: absolute;
+  right: 0;
+  width: 75%;
+}
+
+.updown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#uploadFile {
+  border-radius: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  border: #222222;
+  color: white;
+  background-color: #111111;
+  max-width: 100px;
+  outline: none;
+}
+
+#searchBar {
+  margin: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  display: inline-block;
+  padding: 7px;
+  width: 30%;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  border-top: 50px;
+  font-size: 15px;
+}
+
+#titleArea {
+  padding: center;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  position: fixed;
+  height: 12%;
+  margin: none;
+  width: 100%;
+  z-index: 9;
+}
+
+.sidePanel {
+  display: block;
+  color: white;
+  background-color: #222;
+  text-align: left;
+  width: 25%;
+  height: 100%;
+  position: fixed;
+}
+
+.alertcenter {
+  width: 50%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 100;
+}
+
+.alert {
+  border: 1px solid #f6c733;
+  border-radius: 5px;
+  color: #000;
+  background-color: #f6c733;
+}
+
+.closed {
+  display: none;
+}
+
+.notification p {
+  margin: 0;
+}
+
+.open {
+  display: block;
+}
+
+.link-dark {
+  color: white;
+  font-size: 15px;
+}
+
+.link-light {
+  color: black;
+  font-size: 15px;
+}
+
+.link-dark:hover {
+  color: white;
+}
+
+.link-light:hover {
+  color: black;
+}
+
+.sbox {
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.copyright {
+  font-size: 10px;
+}
+
+button {
+
+  outline: none;
+}
+
+.questionBox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: left;
+  padding-bottom: 2px;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+#places {
+  text-align: center;
+  margin: 40%;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  width: 20%;
+  outline: none;
+  color: white;
+}
+
+.tickBoxes {
+  color: white;
+}
+
+#checkBoxSelect {
+  text-align: left;
+  margin: 10%;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  width: 80%;
+  outline: none;
+  color: white;
+}
+
+#anonymousBoxLabel{
+  
+}
+#checkBoxTitle{
+  text-align: center;
+  align-content: center;
+  font-size: 15px;
+}
+
+/* SPACERS */
+
+#spacer1 {
+  padding: 10px;
+}
+
+.tickBoxSurround {
+  display: inline-block;
+  width: 200px;
+}
+
+
+#submitClasses {
+  margin-left: 40%;
+  width: 20%;
+}
+.tickBoxes {
+  
+}
+.upvotes-num {
+  text-align: center;
+  margin: 0;
+}
+
+#answerBox {
+  border: solid;
+  padding: 10px;  
+  border-width: 1px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  outline: none !important;
+  
+}
+
+#replyBox {
+  border: solid;
+  padding: 10px;  
+  border-width: 1px;
+  border-radius: 5px;
+  height: 100px;
+  width: 100%;
+}
+
+.questionBox:hover {
+  cursor: pointer;
+  
+}
+
+.aboutname {
+  font-size: 1em;
+}
+
+.feed-list {
+  list-style-type: none;
+  height: 100%;
+  padding: 0px;
+  margin-left: 5%;
+}
+
+@media(max-width: 400px) {
+  .questionBox {
+    margin: 0;
+    margin-top: 5px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    width: 100%;
+  }
+
+  .feed-list .container li:last-of-type {
+    border-bottom: none;
+  }
+
+  .sidePanel {
+    display: none;
+  }
+
+  #profileMenu {
+    float: right !important;
+  }
+
+  .cardcontainer {
+    flex-direction: column;
+  }
+
+  .container .card {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+}
+
+#socialDrop {
+  float: right !important;
+  margin-top: 0px;
+
+}
+
+#logOut {
+  /* margin: 0; */
+  display: inline-block;
+  
+  float: right;
+  border-radius: 100%;
+  width: 50px;
+}
+
+
+#logIn {
+  margin-right: 5%;
+  /* margin: 0; */
+  /* display: inline-block; */
+  float: right;
+
+}
+
+
+a {
+  font-weight: bold;
+  color: #0070d1;
+}
+
+
+
+.seeFull {
+  display: inline-block;
+  float: right;
+  margin-right: 10px;
+  font-size: 15px;
+}
+
+.timeStamp {
+  display: inline-block;
+  float: left;
+}
+
+.voteButton {
+  text-align: none !important;
+  outline: none !important; 
+  margin-top: 0px !important;
+  
+
+  display: block;
+  border: none;
+  padding: none;
+  padding-left: 10px;
+}
+
+#middleText {
+  text-align: center;
+}
+
+.footer {
+  padding: 30px;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
+
+.links {
+  font-weight: bold;
+  color: #0070d1;
+  text-decoration: none;
+  -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+}
+.links:hover {
+  text-decoration: underline;
+}
+
+.loader {
+  margin: 25%;
+  margin-left: 30%;
+}
+
+.cardcontainer {
+  display: flex;
+  flex-direction: row;
+}
+
+#profileMenu {
+  float: right;
+  margin-top: 45px !important;
+}
+
+.post-img {
+  /* images that have been posted*/
+  max-height: 500px;
+  max-width: 30%;
+  margin: auto;
+}
+
+.pf-title {
+  color: white;
+  text-align: center;
+}
+
+.pf-questionBox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: left;
+  padding-bottom: 2px;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.list-posts {
+  width: 80%;
+  margin: auto;
+}
+
+.containerthread {
+  padding: 10px;
+}

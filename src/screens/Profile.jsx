@@ -282,7 +282,7 @@ export default class Profile extends Component {
                             
                         </ListGroup>
 
-                        {/* <hr style={dark.line} />
+                        <hr style={dark.line} />
 
                         {
                             this.state.userClasses ?
@@ -316,7 +316,7 @@ export default class Profile extends Component {
                             }
                         </FormGroup>
 
-                        <hr style={dark.line} /> */}
+                        <hr style={dark.line} />
 
                         <div className="posts">
                             <h1 className="pf-title">{translate(this.props.language, "yourPosts")}</h1>
