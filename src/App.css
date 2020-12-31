@@ -90,8 +90,15 @@ body {
 .feed {
   padding: 20px;
   position: absolute;
-  right: 0;
-  width: 75%;
+  width: 100%;
+  margin-top: 20px;
+}
+
+#sidebarButton {
+  width: 20%;
+  margin-left: 40%;
+  margin-right: 40%;
+  margin-top: 85px;
 }
 
 .updown {
@@ -257,7 +264,7 @@ button {
 }
 
 #anonymousBoxLabel{
-  
+  color: white;
 }
 #checkBoxTitle{
   text-align: center;

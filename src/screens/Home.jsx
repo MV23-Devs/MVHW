@@ -115,9 +115,9 @@ const SidebarComponent = (props) => {
       onSetOpen={setIsOpen}
       styles={{sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px"}}}
     >
-      <button onClick={() => setIsOpen(true)} style={{ marginTop: "5%" }}>
-        Open Sidebar
-      </button>
+      <Button color="secondary" onClick={() => setIsOpen(true)} id="sidebarButton">
+        Create A Post
+      </Button>
     </Sidebar>
   )
 }
