@@ -8,6 +8,11 @@ body {
   background-color: #333;
 }
 
+#sidebarContainer {
+  background-color: #000;
+  border: #fff;
+}
+
 .date-time {
   font-size: 10px;
   display: inline-block;
@@ -90,16 +95,20 @@ body {
 .feed {
   padding: 20px;
   position: absolute;
-  width: 100%;
+  width: 80%;
   margin-top: 20px;
 }
 
 #sidebarButton {
-  width: 20%;
-  margin-left: 40%;
-  margin-right: 40%;
-  margin-top: 85px;
+  
+  margin-top: 100px;
+  float: right;
+  margin-right: 25px;
+  width: 50px;
+  height: 50px;
+
 }
+
 
 .updown {
   display: flex;
@@ -138,12 +147,12 @@ body {
   padding-bottom: 10px;
   padding-top: 10px;
   position: fixed;
-  height: 70px;
+  /* height: 70px; */
   margin: none;
   width: 100%;
   z-index: 9;
 }
-
+/* 
 .sidePanel {
   display: block;
   color: white;
@@ -152,7 +161,7 @@ body {
   width: 25%;
   height: 100%;
   position: fixed;
-}
+} */
 
 .alertcenter {
   width: 50%;
@@ -378,6 +387,8 @@ button {
   float: right;
   border-radius: 100%;
   width: 50px;
+  margin-right: 25px;
+
 }
 
 

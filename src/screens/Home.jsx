@@ -63,9 +63,10 @@ const SidebarComponent = (props) => {
 
   const toggle = () => setIsOpen(!isOpen);
   return (
+
     <Sidebar
-      sidebar={
-        <section>
+    sidebar={
+      <section>
           <div className="sbox">
             <Button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</Button>
             <Button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
@@ -83,9 +84,9 @@ const SidebarComponent = (props) => {
                 <br />
                 {
                   props.image !== null ?
-                    <img id="previewImage" alt={props.image} width="100px" />
-                    :
-                    null
+                  <img id="previewImage" alt={props.image} width="100px" />
+                  :
+                  null
                 }
                 <br />
                 <Label for="tags"><Badge color="danger">{translate(props.language, "tag")}</Badge></Label>
@@ -114,9 +115,9 @@ const SidebarComponent = (props) => {
       open={isOpen}
       onSetOpen={setIsOpen}
       styles={{sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px"}}}
-    >
+      >
       <Button color="secondary" onClick={() => setIsOpen(true)} id="sidebarButton">
-        Create A Post
+        +
       </Button>
     </Sidebar>
   )
@@ -544,11 +545,6 @@ class Home extends Component {
               <Button className="newBtn" color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
           }
         </div>
-
-        <br />
-        <br />
-        <br />
-        <br />
 
         <SidebarComponent
           changeLanguage={this.changeLanguage}
