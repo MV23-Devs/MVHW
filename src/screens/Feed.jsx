@@ -219,7 +219,7 @@ class QuestionComponent extends Component {
         :
         null
     );
-    // file is image
+    // file is video
     console.log((item.getImgUrl()).includes(".mp4") || (item.getImgUrl()).includes(".mov"))
     if((item.getImgUrl()).includes(".mp4") || (item.getImgUrl()).includes(".mov")) {
       content = (

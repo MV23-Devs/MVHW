@@ -158,6 +158,22 @@ export default class QuestionPage extends Component {
         </ul>
       )
     }
+    // Welcome to Watch Mojo, today we'll be looking at the top 10 anime betrayals
+    let content = (
+      item.getImgUrl() !== "" ?
+        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+        :
+        null
+    );
+    // file is video
+    if((item.getImgUrl()).includes(".mp4") || (item.getImgUrl()).includes(".mov")) {
+      content = (
+      item.getImgUrl() !== "" ?
+        <video src={item.getImgUrl()} className="post-img" />
+        :
+        null
+    );
+    }
     return (
       <React.Fragment>
 
@@ -181,10 +197,7 @@ export default class QuestionPage extends Component {
                     <Link to="/"><Button color="light" className="seeFull">Go Back</Button></Link>
                     <h4>Question: {item.getText()}  {tag}</h4>
                     {
-                      item.getImgUrl() !== "" ?
-                        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                        :
-                        null
+                      content
                     }
                   </div>
                   <hr style={dark.line} />
