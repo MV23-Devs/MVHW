@@ -1,4 +1,4 @@
-import Answer from './Answer.jsx'
+import Answer from './screens/Answer.jsx'
 
 
 export default class Question {

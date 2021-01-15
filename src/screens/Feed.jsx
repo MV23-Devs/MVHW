@@ -491,11 +491,6 @@ export default class Feed extends Component {
     this.setState({ update: 1 });
   }
 
-  deleteA = (item, answer) => {
-    deleteA(item, answer);
-    this.setState({update: 0});
-  }
-
   callBoth = (item) => {
     item.click();
     this.setState({update:0})
