@@ -68,8 +68,7 @@ body {
 
 .newBtn {
   /* width: 100px; */
-  background-color:
-  @gentlemen mtg in 30 min white;
+  background-color:white;
   color:black;
   border:none;
   border-radius: 5px;
@@ -99,7 +98,7 @@ body {
   width: 80%;
   
   margin: auto;
-  margin-left: 15%;
+  margin-left: ;
   margin-top: 100px;
   
 }
@@ -113,6 +112,7 @@ body {
   height: 50px;
 
 }
+
 
 
 .updown {

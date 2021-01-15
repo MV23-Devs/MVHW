@@ -270,17 +270,17 @@ export default class Profile extends Component {
 
                         </div>
 
-                        <ListGroup id="classList">
+                        <div id="classList">
 
                             {
                                 this.state.userClasses.map((classname) => {
-                                    return(
-                                        <ListGroupItem>{classname}</ListGroupItem>
+                                    return (
+                                        <p >{classname}</p>
                                     );
                                 })
                             }
-                            
-                        </ListGroup>
+
+                        </div>
 
                         <hr style={dark.line} />
 
