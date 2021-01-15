@@ -98,7 +98,7 @@ body {
   width: 80%;
   
   margin: auto;
-  margin-left: ;
+  margin-left: 15%;
   margin-top: 100px;
   
 }
@@ -377,6 +377,11 @@ button {
     margin-bottom: 10px;
   }
 
+}
+
+
+.dropdown-item {
+  
 }
 
 #socialDrop {
