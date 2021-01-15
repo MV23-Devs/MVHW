@@ -381,7 +381,7 @@ button {
 
 
 .dropdown-item {
-  
+
 }
 
 #socialDrop {
@@ -484,7 +484,9 @@ a {
   /* images that have been posted*/
   max-height: 500px;
   max-width: 30%;
+  width: 35%;
   margin: auto;
+  outline: none;
 }
 
 .pf-title {

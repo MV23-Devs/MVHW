@@ -224,7 +224,7 @@ class QuestionComponent extends Component {
     if((item.getImgUrl()).includes(".mp4") || (item.getImgUrl()).includes(".mov")) {
       content = (
       item.getImgUrl() !== "" ?
-        <video src={item.getImgUrl()} className="post-img" />
+        <video controls src={item.getImgUrl()} className="post-img" width="400" height="250"/>
         :
         null
     );
