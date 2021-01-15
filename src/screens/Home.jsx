@@ -439,7 +439,7 @@ class Home extends Component {
       if (this.handleImageUpload() !== null) {
         this.handleImageUpload()
           .then(url => {
-            this.fileinputref.current.value = null
+            // this.fileinputref.current.value = null
             this.forceUpdate()
             this.setState({ url });
             firebase.firestore()
