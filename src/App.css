@@ -68,7 +68,8 @@ body {
 
 .newBtn {
   /* width: 100px; */
-  background-color: white;
+  background-color:
+  @gentlemen mtg in 30 min white;
   color:black;
   border:none;
   border-radius: 5px;
@@ -96,7 +97,11 @@ body {
   padding: 20px;
   position: absolute;
   width: 80%;
-  margin-top: 20px;
+  
+  margin: auto;
+  margin-left: 15%;
+  margin-top: 100px;
+  
 }
 
 #sidebarButton {
