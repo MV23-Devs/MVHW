@@ -114,6 +114,7 @@ body {
 }
 
 
+
 .updown {
   display: flex;
   flex-direction: column;
@@ -378,6 +379,11 @@ button {
 
 }
 
+
+.dropdown-item {
+
+}
+
 #socialDrop {
   float: right !important;
   margin-top: 0px;
@@ -478,7 +484,9 @@ a {
   /* images that have been posted*/
   max-height: 500px;
   max-width: 30%;
+  width: 35%;
   margin: auto;
+  outline: none;
 }
 
 .pf-title {

@@ -3,7 +3,7 @@ import React, {
     useState
 } from 'react';
 import '../Profile.css';
-import { Row, Col, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter, ListGroup, ListGroupItem } from 'reactstrap';
+import { Row, Col, FormGroup, Label, Input, Badge, UncontrolledPopover, PopoverBody, Button, Modal, ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
 import {
     Link
 } from 'react-router-dom'
@@ -270,17 +270,17 @@ export default class Profile extends Component {
 
                         </div>
 
-                        <ListGroup id="classList">
+                        <div id="classList">
 
                             {
                                 this.state.userClasses.map((classname) => {
-                                    return(
-                                        <ListGroupItem>{classname}</ListGroupItem>
+                                    return (
+                                        <p >{classname}</p>
                                     );
                                 })
                             }
-                            
-                        </ListGroup>
+
+                        </div>
 
                         <hr style={dark.line} />
 
@@ -406,7 +406,7 @@ export default class Profile extends Component {
                                 <li>No NSFW content will be tolerated.</li>
                             </ol>
                             <p>Breaking any of the following rules will result in deletion of the post, possible account deletion/ban, and even the possibility of getting in trouble with the school administration.</p>
-                            <hr style={dark.line} />
+                            {/* <hr style={dark.line} /> */}
                         </div>
                     </div>
                 </div>

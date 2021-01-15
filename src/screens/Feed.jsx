@@ -6,7 +6,7 @@ import firebase from '../firebase.js';
 import {
   Link,
 } from 'react-router-dom'
-import {translate} from "../util.js"
+import { translate } from "../util.js"
 import { createImportSpecifier } from 'typescript';
 
 const db = firebase.firestore();
@@ -20,22 +20,22 @@ const dark = {
 };
 
 export const Reply = (props) => {
-  const {questionItem, errorMessage, submitHandler} = props;
+  const { questionItem, errorMessage, submitHandler } = props;
   if (questionItem.getReplying() === true) {
     return (
       <React.Fragment>
         <br />
         <br />
-        <Form onSubmit={(e) => {submitHandler(e, questionItem) }}>
+        <Form onSubmit={(e) => { submitHandler(e, questionItem) }}>
           <FormGroup>
-            <Input type="textarea" name="text" id="text"/>
+            <Input type="textarea" name="text" id="text" />
             {errorMessage}
           </FormGroup>
           <Button color="light" block>Post Reply</Button>
         </Form>
       </React.Fragment>
     )
-  }else{
+  } else {
     return null;
   }
 }
@@ -138,57 +138,57 @@ export class RenderUser extends Component {
     }
   }
   */
-  
-  componentDidMount(){
-    this.setState({isMounted: true})
+
+  componentDidMount() {
+    this.setState({ isMounted: true })
   }
-  
-  componentDidUpdate(prevProps){
+
+  componentDidUpdate(prevProps) {
     //console.log("change: ", prevProps.uid !== this.props.uid)
-    if (this.props.uid && ( !this.state.firstUpdate ||  prevProps.uid !== this.props.uid)) {
+    if (this.props.uid && (!this.state.firstUpdate || prevProps.uid !== this.props.uid)) {
       this._asyncRequest = firebase.firestore().collection("users").doc(this.props.uid).get().then(doc => {
         let isTutor, username;
-        if(doc.data()){
+        if (doc.data()) {
           username = doc.data().name;
           if (doc.data().isTutor === true) {
             isTutor = true;
-          }else{
+          } else {
             isTutor = false;
           }
           //doc.id and this.props.uid switching or rotating somehow??
-          
-          
-          
-        }else{
+
+
+
+        } else {
           username = "[deleted-user]";
           isTutor = false;
         }
-        if(this.state.isMounted){
-          this.setState({displayUser: {isTutor, username}})
+        if (this.state.isMounted) {
+          this.setState({ displayUser: { isTutor, username } })
         }
       }).catch(err => {
         console.log(err);
       })
-      this.setState({firstUpdate: true})
+      this.setState({ firstUpdate: true })
     }
   }
-  
-  componentWillUnmount(){
-    if(this._asyncRequest){
-     this.setState({isMounted: false})
+
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this.setState({ isMounted: false })
     }
   }
-  
+
   render() {
     let username = this.props.username;
     if (this.props.currentUser) {
-      if(this.props.currentUser.auth) {
+      if (this.props.currentUser.auth) {
         if (this.props.currentUser.auth.uid === this.props.uid) {
           username = <Badge color='secondary'>you</Badge>
         }
       }
     }
-    if(this.state.displayUser){
+    if (this.state.displayUser) {
       return (
         <React.Fragment>
           <span>{username}</span>
@@ -203,16 +203,32 @@ export class RenderUser extends Component {
           }
         </React.Fragment>
       )
-    }else{
+    } else {
       return null;
     }
   }
 }
 
-class QuestionComponent extends Component{
-  state={}
-  render(){
-    const {i, item, deletedata, tag, upvotes, upvote, downvote, submitHandler} = this.props;
+class QuestionComponent extends Component {
+  state = {}
+  render() {
+    const { i, item, deletedata, tag, upvotes, upvote, downvote, submitHandler } = this.props;
+    let content = (
+      item.getImgUrl() !== "" ?
+        <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
+        :
+        null
+    );
+    // file is video
+    console.log((item.getImgUrl()).includes(".mp4") || (item.getImgUrl()).includes(".mov"))
+    if((item.getImgUrl()).includes(".mp4") || (item.getImgUrl()).includes(".mov")) {
+      content = (
+      item.getImgUrl() !== "" ?
+        <video controls src={item.getImgUrl()} className="post-img" width="400" height="250"/>
+        :
+        null
+    );
+    }
     return (
       <li style={dark} className="questionBox">
         <Row>
@@ -223,24 +239,21 @@ class QuestionComponent extends Component{
           </Col>
           <Col xs="11">
             <div style={dark} onClick={(e) => this.props.callBoth(item)}>
-              <RenderUser uid={item.getUser().uid} currentUser={this.props.user} username={item.getUsername()}/>
+              <RenderUser uid={item.getUser().uid} currentUser={this.props.user} username={item.getUsername()} />
               <h6 className="date-time">{item.getTimeStamp()}</h6>
               <Link to={`question/${item.getId()}`}><Button color="light" className="seeFull">{translate(this.props.language, "seeFullThread")}</Button></Link>
               <h4>Question: {item.getText()}  {tag}</h4>
               {
-                item.getImgUrl() !== "" ?
-                  <img src={item.getImgUrl()} alt={item.getImgUrl()} className="post-img" />
-                  :
-                  null
+                content
               }
               {this.props.renderAnswer(item)}
             </div>
             <hr style={dark.line} />
-            <span className="links" onClick={(e) => this.props.openReply(item) }>{translate(this.props.language, "reply")}</span>
+            <span className="links" onClick={(e) => this.props.openReply(item)}>{translate(this.props.language, "reply")}</span>
             {deletedata}
 
 
-            <Reply questionItem={item} submitHandler={submitHandler} errorMessage={this.state.errormessage}/>
+            <Reply questionItem={item} submitHandler={submitHandler} errorMessage={this.state.errormessage} />
           </Col>
         </Row>
       </li>
@@ -263,7 +276,7 @@ export default class Feed extends Component {
             {
               this.props.filteredQuestions.map(
                 (item, i) => {
-                  
+
                   let color = '';
                   switch (item.getTags()) {
                     case 'Math':
@@ -310,7 +323,7 @@ export default class Feed extends Component {
                   }
 
                   return (
-                    <QuestionComponent 
+                    <QuestionComponent
                       key={i}
                       i={i}
                       item={item}
@@ -373,7 +386,7 @@ export default class Feed extends Component {
   }
 
 
-  upvote = (isUpvote, i)  => {
+  upvote = (isUpvote, i) => {
     if (this.props.user.auth.uid) {
       firebase.firestore().collection("questions").doc(this.props.filteredQuestions[i].getId()).get().then(doc => {
         let addTo = isUpvote ? doc.data().usersUpvoted : doc.data().usersDownvoted;
@@ -493,7 +506,7 @@ export default class Feed extends Component {
 
   callBoth = (item) => {
     item.click();
-    this.setState({update:0})
+    this.setState({ update: 0 })
   }
 
   openReply = (item) => {
@@ -515,7 +528,7 @@ export default class Feed extends Component {
           <Form onSubmit={this.submitHandler}>
             <FormGroup>
               <Label for="text">Text:</Label>
-              <Input type="textarea" name="text" id="text"/>
+              <Input type="textarea" name="text" id="text" />
               {this.state.errormessage}
               <br />
               <Label for="tags"><Badge color="info">Optional</Badge> Tag:</Label>

@@ -65,8 +65,8 @@ const SidebarComponent = (props) => {
   return (
 
     <Sidebar
-    sidebar={
-      <section>
+      sidebar={
+        <section>
           <div className="sbox">
             <Button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</Button>
             <Button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
@@ -84,9 +84,9 @@ const SidebarComponent = (props) => {
                 <br />
                 {
                   props.image !== null ?
-                  <img id="previewImage" alt={props.image} width="100px" />
-                  :
-                  null
+                    <img id="previewImage" alt={props.image} width="100px" />
+                    :
+                    null
                 }
                 <br />
                 <Label for="tags"><Badge color="danger">{translate(props.language, "tag")}</Badge></Label>
@@ -114,8 +114,8 @@ const SidebarComponent = (props) => {
       }
       open={isOpen}
       onSetOpen={setIsOpen}
-      styles={{sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px"}}}
-      >
+      styles={{ sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px" } }}
+    >
       <Button color="secondary" onClick={() => setIsOpen(true)} id="sidebarButton">
         +
       </Button>
@@ -367,6 +367,7 @@ class Home extends Component {
     e.preventDefault();
     if (e.target.files[0] !== null) {
       const image = e.target.files[0];
+      console.log(image)
       this.setState(() => ({ image }));
       this.readURL(e.target);
     }
@@ -389,16 +390,16 @@ class Home extends Component {
     this.setState({ anonymousPost: target.checked })
   }
 
-  handleImageUpload = () => {
+  handleImageUpload = async() => {
     if (this.state.image !== null) {
       const { image } = this.state;
-      storage.ref(`images/${image.name}`).put(image);
-      return (
-        storage
-          .ref("images")
-          .child(image.name)
-          .getDownloadURL()
-      )
+      await storage.ref(`images/${image.name}`).put(image)
+        return (
+          storage
+            .ref("images")
+            .child(image.name)
+            .getDownloadURL()
+        )
     }
     return null;
   };
@@ -435,10 +436,11 @@ class Home extends Component {
       } else {
         name = this.state.user.name;
       }
-      if (this.handleImageUpload() !== null) {
+      if (this.state.image !== null) {
         this.handleImageUpload()
           .then(url => {
-            this.fileinputref.current.value = null
+            console.log(this.fileinputref)
+            // this.fileinputref.current.value = null
             this.forceUpdate()
             this.setState({ url });
             firebase.firestore()

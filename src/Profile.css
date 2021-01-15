@@ -2,11 +2,17 @@ html,body {
   height:100vh;
   outline: none;
   background-color: #333;
+  min-width: 500px;
 }
 
 body {
   background-color: #333;
 }
+
+li {
+  background-color: none;
+}
+
 
 .date-time {
   font-size: 10px;
@@ -79,6 +85,11 @@ body {
 
 #pfp-title {
   text-align: center;
+}
+
+.pf {
+  
+  border-radius: 100%;
 }
 
 .main {
@@ -283,6 +294,30 @@ a {
 .list-posts {
   width: 80%;
   margin: auto;
+}
+
+
+
+
+.list-group {
+  background-color: none;
+
+}
+
+#classList {
+  background-color: none;
+}
+
+.classListItems {
+  background-color: none;
+  color: black;
+}
+
+
+.list-group-item {
+  background-color: none;
+  color: white;
+  margin: 10px;
 }
 
 .containerthread {
