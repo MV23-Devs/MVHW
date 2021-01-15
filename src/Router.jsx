@@ -43,6 +43,8 @@ export default class AppRouter extends Component {
         this.setState({language: this.state.language === "en" ? "es" : "en"});
     }
 
+    // Here in my garage, just bought this new lamborghini here
+
     render() {
 
             this.getAllPosts();
