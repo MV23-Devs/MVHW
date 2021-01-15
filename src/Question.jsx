@@ -2,20 +2,26 @@ import Answer from './screens/Answer.jsx'
 
 
 export default class Question {
-    constructor(questionText, user, time, id, upvotes = 0, tags = null, img_url = "", name) {
-        this.questionText = questionText
-        this.img_url = img_url;
+    constructor(doc) {
+        console.log("doc", doc)
+        console.log("data", doc.data())
+        //questionText, user, time, id, upvotes = 0, tags = null, img_url = "", name
+        this.questionText = doc.data().title
+        this.user = JSON.parse(doc.data().auth)
+        this.date = new Date(doc.data().time);
+        this.time = doc.data().time
+        this.id = doc.id;
+        this.upvotes = doc.data().usersUpvoted.length - doc.data().usersDownvoted.length;
+        this.tags = doc.data().tags;
+        this.img_url = doc.data().img_url;
+        this.name = doc.data().username
+
         this.isReplying = false;
         this.isReplyingInner = false;
-        this.user = user
-        this.name = name
-        this.id = id
-        this.upvotes = upvotes;
         this.answers = [];
         this.answersRaw = 0;
-        this.tags = tags;
         this.isClicked = false;
-        this.time = new Date(time);
+        
     }
 
     hasUpvoted(uid) {
@@ -75,20 +81,24 @@ export default class Question {
         this.isReplyingInner = (this.isReplyingInner === true ? false : true)
     }
     getReplyingInner() {
-        return this.isReplyingInner
+        return this.isReplyingInner;
     }
 
     getClicked() {
-        return this.isClicked
+        return this.isClicked;
     }
-    getTime() {
-        return this.time
+    getDate() {
+        return this.date;
+    }
+    getTimeMilliseconds(){
+        return this.time;
     }
     getTimeStamp() {
-        return "" + this.time.getMonth() + "/" + this.time.getDate() + "/" + this.time.getFullYear();
+        return "" + (this.date.getMonth() + 1) + "/" + this.date.getDate() + "/" + this.date.getFullYear();
+
     }
     getFirstAnswer() {
-        let topAns = new Answer("There are no answers to this question yet", "bot", "bot", this.getTime(), 0, null)
+        let topAns = new Answer("There are no answers to this question yet", "bot", "bot", this.getDate(), 0, null)
 
         if (this.answers.length === 0) {
             return topAns

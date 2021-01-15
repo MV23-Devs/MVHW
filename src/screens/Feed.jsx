@@ -549,10 +549,10 @@ export default class Feed extends Component {
           author: JSON.stringify(this.props.user.auth),
           upvotes: 0,
           downvotes: 0,
-          timestamp: item.getTime(),
+          timestamp: (new Date()).getTime(),
         }).then(doc => {
 
-          item.addAnswer(val, JSON.stringify(this.props.user.auth), item.getTime(), doc.id);
+          item.addAnswer(val, JSON.stringify(this.props.user.auth), (new Date()).getTime(), doc.id);
         })
       }
 

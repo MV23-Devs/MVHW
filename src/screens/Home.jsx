@@ -247,7 +247,7 @@ class Home extends Component {
         auth: null,
         name: 'Anonymous',
       },
-      filterBy: "popularity",
+      filterBy: "recent",
       anonymousPost: false,
     };
 
@@ -277,11 +277,8 @@ class Home extends Component {
           if (change.type === 'added') {
             let doc = change.doc;
 
-            let ups = doc.data().usersUpvoted.length
-            let downs = doc.data().usersDownvoted.length
-            let votes = ups - downs;
-
-            let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
+            //doc.data().title, JSON.parse(doc.data().auth), doc.data().time, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username
+            let q = new Question(doc);
             docs.push(q);
             db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
@@ -300,14 +297,16 @@ class Home extends Component {
             let votes = doc.data().usersUpvoted.length - doc.data().usersDownvoted.length;
             for (let i = 0; i < docs.length; i++) {
               if (docs[i].getId() === doc.id) {
-                docs.splice(i, 1, new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username));
+                docs.splice(i, 1, new Question(doc));
               }
             }
           }
         })
         this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
         if (this.state.filterBy === "popularity") {
-          this.orderByPopularity()
+          this.orderByPopularity();
+        } else if(this.state.filterBy === "recent"){
+          this.orderByTimeStamp();
         }
       })
   }
@@ -429,7 +428,7 @@ class Home extends Component {
     } else {
       this.setState({ errormessage: '' });
 
-      let date = (new Date()).toString();
+      let time = new Date().getTime();
       let name = "";
       if (anonymous === true) {
         name = "Anonymous";
@@ -451,7 +450,7 @@ class Home extends Component {
                 auth: JSON.stringify(this.state.user.auth),
                 usersUpvoted: [],
                 usersDownvoted: [],
-                timestamp: date,
+                time,
                 tags: t,
               }).then((docRef) => {
                 firebase.firestore()
@@ -459,14 +458,14 @@ class Home extends Component {
                   .add({
                     title: val,
                     img_url: this.state.url,
-                    timestamp: date,
+                    time,
                     tags: t,
                     original: docRef.id,
                   }).then((docRef) => {
-                    firebase.database().ref('audit log').push(date + ": created a new post");
+                    firebase.database().ref('audit log').push(time + ": created a new post");
                     this.setState({ image: null });
                   });
-                firebase.database().ref('audit log').push(date + ": created a new post");
+                firebase.database().ref('audit log').push(time + ": created a new post");
                 this.setState({ image: null });
               });
           });
@@ -480,7 +479,7 @@ class Home extends Component {
             auth: JSON.stringify(this.state.user.auth),
             usersUpvoted: [],
             usersDownvoted: [],
-            timestamp: date,
+            time,
             tags: t,
           }).then((docRef) => {
             firebase.firestore()
@@ -488,14 +487,14 @@ class Home extends Component {
               .add({
                 title: val,
                 img_url: this.state.url,
-                timestamp: date,
+                time,
                 tags: t,
                 original: docRef.id,
               }).then((docRef) => {
-                firebase.database().ref('audit log').push(date + ": created a new post");
+                firebase.database().ref('audit log').push(time + ": created a new post");
                 this.setState({ image: null });
               });
-            firebase.database().ref('audit log').push(date + ": created a new post");
+            firebase.database().ref('audit log').push(time + ": created a new post");
           });
       }
 
@@ -535,7 +534,7 @@ class Home extends Component {
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
           <Button className="newBtn" color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
           <Label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}:</Label>
-          <Input type="select" name="select" classname="newBtn" id="tags" style={{ width: "unset", display: "unset", marginLeft: "10px" }} onChange={this.filterClass}>
+          <Input type="select" name="select" className="newBtn" id="tags" style={{ width: "unset", display: "unset", marginLeft: "10px" }} onChange={this.filterClass}>
             {this.createClassItems()}
           </Input>
           {
@@ -558,9 +557,6 @@ class Home extends Component {
 
         <div className="feed">
           {
-            console.log(this.state.user)
-          }
-          {
             this.state.loading_data ?
               <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
               :
@@ -573,14 +569,27 @@ class Home extends Component {
   }
 
   filterQuestionsBy = () => {
-    let temp = (this.state.filterBy === "popularity") ? "none" : "popularity"
+    let options = ["recent", "popularity", "none"];
+    let tempIndex = options.indexOf(this.state.filterBy)+1;
+    if(tempIndex >= options.length){
+      tempIndex = 0;
+    }
+    let temp = options[tempIndex];
+    
     if (temp === "popularity") {
       this.orderByPopularity();
-    } else if (temp === "none") {
+    } else if(temp === "recent"){
+      this.orderByTimeStamp();
+    }else if (temp === "none") {
       //nothing
     }
     this.setState({ filterBy: temp });
+    console.log(this.state.filterBy);
     this.setState({ update: 0 });
+  }
+
+  orderByTimeStamp = () => {
+    this.setState({ filteredQuestions: this.state.filteredQuestions.sort((a, b) => b.getTimeMilliseconds() - a.getTimeMilliseconds()) });
   }
 
   orderByPopularity = () => {
