@@ -163,7 +163,8 @@ export default class Profile extends Component {
                                             downs = doc.data().usersDownvoted.length
                                             votes = 0 - downs;
                                         }
-                                        docs.push(new Question(raw.title, JSON.parse(raw.auth), raw.timestamp, doc.id, votes, raw.tags, raw.img_url, raw.username));
+                                        //raw.title, JSON.parse(raw.auth), raw.timestamp, doc.id, votes, raw.tags, raw.img_url, raw.username
+                                        docs.push(new Question(doc));
                                         this.setState({ posts: docs })
                                     }
                                 })
