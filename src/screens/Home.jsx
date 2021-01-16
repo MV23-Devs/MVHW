@@ -9,11 +9,10 @@ import {
 } from 'react-router-dom'
 import { translate } from "../util.js"
 import '../App.css';
-import './css/profile.css'
 import Feed from "./Feed.jsx";
 import Question from '../Question';
 import {
-  Navbar, Nav, NavItem, NavbarToggler, Collapse, Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+  Card, CardImg, CardBody, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 import Sidebar from 'react-sidebar';
 import firebase from '../firebase.js';
@@ -68,8 +67,8 @@ const SidebarComponent = (props) => {
       sidebar={
         <section>
           <div className="sbox">
-            <Button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</Button>
-            <Button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
+            <button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</button>
+            <button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</button>
           </div>
           <div className="sbox">
             <p>{translate(props.language, "createPost")}</p>
@@ -98,7 +97,7 @@ const SidebarComponent = (props) => {
                 <span id="spacer1"></span>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={props.handleAnonymousInput} />
               </FormGroup>
-              <Button className="newBtn" color="light" block>{translate(props.language, "submitButton")}</Button>
+              <button className="newBtn" color="light" block>{translate(props.language, "submitButton")}</button>
             </Form>
           </div>
 
@@ -116,9 +115,9 @@ const SidebarComponent = (props) => {
       onSetOpen={setIsOpen}
       styles={{ sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px" } }}
     >
-      <Button color="secondary" onClick={() => setIsOpen(true)} id="sidebarButton">
+      <button color="secondary" onClick={() => setIsOpen(true)} id="sidebarButton">
         +
-      </Button>
+      </button>
     </Sidebar>
   )
 }
@@ -183,7 +182,7 @@ const AboutModal = (props) => {
 
   return (
     <div>
-      <Button className="newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</Button>
+      <button className="newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</button>
       <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Us</ModalHeader>
         <ModalBody>
@@ -219,7 +218,7 @@ const AboutModal = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button className="newBtn" color="secondary" onClick={toggle}>Close</Button>
+          <button className="newBtn" color="secondary" onClick={toggle}>Close</button>
         </ModalFooter>
       </Modal>
     </div>
@@ -391,16 +390,16 @@ class Home extends Component {
     this.setState({ anonymousPost: target.checked })
   }
 
-  handleImageUpload = async() => {
+  handleImageUpload = async () => {
     if (this.state.image !== null) {
       const { image } = this.state;
       await storage.ref(`images/${image.name}`).put(image)
-        return (
-          storage
-            .ref("images")
-            .child(image.name)
-            .getDownloadURL()
-        )
+      return (
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+      )
     }
     return null;
   };
@@ -531,12 +530,12 @@ class Home extends Component {
 
         <div className="height"></div>
 
-        <div id="titleArea" style={theme1.header}>
+        <div id="titleArea">
           <p id="title">MVHW</p>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
-          <Button className="newBtn" color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
-          <Label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}:</Label>
+          <button className="newBtn" /*color="light"*/ onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</button>
+          <label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}:</label>
           <Input type="select" name="select" classname="newBtn" id="tags" style={{ width: "unset", display: "unset", marginLeft: "10px" }} onChange={this.filterClass}>
             {this.createClassItems()}
           </Input>
@@ -544,7 +543,7 @@ class Home extends Component {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
               :
-              <Button className="newBtn" color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+              <button className="newBtn" /*color='light'*/ id="logIn" onClick={this.signinwithGoogle}>Sign In</button>
           }
         </div>
 
@@ -566,8 +565,8 @@ class Home extends Component {
             this.state.loading_data ?
               <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
               :
-              <Feed language={this.props.language} theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
-          }
+            <Feed language={this.props.language} theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
+            }
         </div>
 
       </React.Fragment>
