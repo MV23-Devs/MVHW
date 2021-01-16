@@ -535,7 +535,7 @@ class Home extends Component {
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
           <button className="newBtn" /*color="light"*/ onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</button>
-          <label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}:</label>
+          <label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}: </label>
           <Input type="select" name="select" id="tags" /*style={{ width: "unset", display: "unset", marginLeft: "10px" }}*/ onChange={this.filterClass}>
             {this.createClassItems()}
           </Input>
