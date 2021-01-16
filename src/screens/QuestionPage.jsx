@@ -39,7 +39,8 @@ export default class QuestionPage extends Component {
     firebase.firestore().collection("questions").doc(this.state.id).onSnapshot(doc => {
       let data = doc.data();
       if (data) {
-        let q = new Question(data.title, JSON.parse(data.auth), data.timestamp, doc.id, data.usersUpvoted.length - data.usersDownvoted.length, data.tags, data.img_url, data.username);
+        //data.title, JSON.parse(data.auth), data.timestamp, doc.id, data.usersUpvoted.length - data.usersDownvoted.length, data.tags, data.img_url, data.username
+        let q = new Question(doc);
         firebase.firestore().collection("questions").doc(this.state.id).collection("replies").onSnapshot(querySnapshot => {
           querySnapshot.docs.forEach(doc => {
             q.addAnswer(doc.data().title, JSON.parse(doc.data().author), JSON.parse(doc.data().author).displayName, doc.data().timestamp, doc.id, doc.data().author.uid)
@@ -270,10 +271,10 @@ export default class QuestionPage extends Component {
           author: JSON.stringify(this.state.user),
           upvotes: 0,
           downvotes: 0,
-          timestamp: item.getTime(),
+          timestamp: (new Date()).getTime(),
         }).then(doc => {
 
-          item.addAnswer(val, JSON.stringify(this.state.user), item.getTime(), doc.id);
+          item.addAnswer(val, JSON.stringify(this.state.user), (new Date()).getTime(), doc.id);
         })
       }
       // this.setState({ update: 0 });
