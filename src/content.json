@@ -20,8 +20,8 @@
         "es": "Filtrar por Clase"
     },
     "classes": {
-        "en": ["None", "Trig H", "Statistics"],
-        "es": ["Nada", "Trig H", "Statísticas"]
+        "en": ["None", "Biology", "AP Bio"],
+        "es": ["Nada", "Biología", "AP Bio"]
     },
     "createPost": {
         "en": "Create a Post",

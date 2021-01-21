@@ -8,9 +8,14 @@ body {
   background-color: #333;
 }
 
+Sidebar {
+  position: fixed;
+}
+
 #sidebarContainer {
   background-color: #000;
   border: #fff;
+  position: fixed;
 }
 
 .date-time {
@@ -83,9 +88,15 @@ body {
   margin-left: 20px;
   margin-top: 2px !important;
   padding: 2px;
+<<<<<<< HEAD
   /* margin-top: 2px; */
   text-align: bottom;
   vertical-align: center;
+=======
+  margin-top: 2px;
+
+  text-align: center;
+>>>>>>> 90d0471 (aligned class selector)
   /*padding-left: 10px;
   padding-right: 10px ; */
 
@@ -106,12 +117,18 @@ body {
 }
 
 #tags {
+<<<<<<< HEAD
   vertical-align: center;
 
   width: 100px;
   display: inline;
   height: 37px;
   outline: none;
+=======
+  width: 100px;
+  display: inline;
+  height: 37px;
+>>>>>>> 90d0471 (aligned class selector)
 }
 
 
@@ -256,6 +273,7 @@ body {
   color: white;
   border: 1px black;
   border-radius: 5px;
+  /* position: fixed; */
 }
 
 .copyright {
