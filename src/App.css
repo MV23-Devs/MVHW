@@ -8,9 +8,14 @@ body {
   background-color: #333;
 }
 
+Sidebar {
+  position: fixed;
+}
+
 #sidebarContainer {
   background-color: #000;
   border: #fff;
+  position: fixed;
 }
 
 .date-time {
@@ -256,6 +261,7 @@ body {
   color: white;
   border: 1px black;
   border-radius: 5px;
+  /* position: fixed; */
 }
 
 .copyright {
