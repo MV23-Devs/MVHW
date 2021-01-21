@@ -9,11 +9,10 @@ import {
 } from 'react-router-dom'
 import { translate } from "../util.js"
 import '../App.css';
-import './css/profile.css'
 import Feed from "./Feed.jsx";
 import Question from '../Question';
 import {
-  Navbar, Nav, NavItem, NavbarToggler, Collapse, Card, CardImg, CardBody, Button, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+  Card, CardImg, CardBody, Form, FormGroup, Label, Input, FormText, Badge, Spinner, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 import Sidebar from 'react-sidebar';
 import firebase from '../firebase.js';
@@ -68,8 +67,8 @@ const SidebarComponent = (props) => {
       sidebar={
         <section>
           <div className="sbox">
-            <Button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</Button>
-            <Button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</Button>
+            <button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</button>
+            <button className="newBtn" color="light" style={{ marginLeft: "10px" }} onClick={() => window.open("https://tinyurl.com/y5rhw7gw", '_blank')}>{translate(props.language, "feedback")}</button>
           </div>
           <div className="sbox">
             <p>{translate(props.language, "createPost")}</p>
@@ -98,7 +97,7 @@ const SidebarComponent = (props) => {
                 <span id="spacer1"></span>
                 <input type="checkbox" id="anonymousBox" name="anonymousBox" onChange={props.handleAnonymousInput} />
               </FormGroup>
-              <Button className="newBtn" color="light" block>{translate(props.language, "submitButton")}</Button>
+              <button className="newBtn" color="light" block>{translate(props.language, "submitButton")}</button>
             </Form>
           </div>
 
@@ -116,9 +115,9 @@ const SidebarComponent = (props) => {
       onSetOpen={setIsOpen}
       styles={{ sidebar: { background: "#222", zIndex: "10", right: "80%", top: "80px", border: "0px black", borderRadius: "20px" } }}
     >
-      <Button color="light" onClick={() => setIsOpen(true)} id="sidebarButton">
+      <button color="secondary" onClick={() => setIsOpen(true)} id="sidebarButton">
         +
-      </Button>
+      </button>
     </Sidebar>
   )
 }
@@ -183,7 +182,7 @@ const AboutModal = (props) => {
 
   return (
     <div>
-      <Button className="newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</Button>
+      <button className="newBtn" color="light" block onClick={toggle}>{translate(language, "who")}</button>
       <Modal returnFocusAfterClose={false} isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Us</ModalHeader>
         <ModalBody>
@@ -219,7 +218,7 @@ const AboutModal = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button className="newBtn" color="secondary" onClick={toggle}>Close</Button>
+          <button className="newBtn" color="secondary" onClick={toggle}>Close</button>
         </ModalFooter>
       </Modal>
     </div>
@@ -247,7 +246,7 @@ class Home extends Component {
         auth: null,
         name: 'Anonymous',
       },
-      filterBy: "popularity",
+      filterBy: "recent",
       anonymousPost: false,
     };
 
@@ -277,11 +276,8 @@ class Home extends Component {
           if (change.type === 'added') {
             let doc = change.doc;
 
-            let ups = doc.data().usersUpvoted.length
-            let downs = doc.data().usersDownvoted.length
-            let votes = ups - downs;
-
-            let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
+            //doc.data().title, JSON.parse(doc.data().auth), doc.data().time, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username
+            let q = new Question(doc);
             docs.push(q);
             db.collection("questions").doc(doc.id).collection("replies").onSnapshot(querySnapshot => {
               querySnapshot.docs.forEach(doc => {
@@ -300,14 +296,16 @@ class Home extends Component {
             let votes = doc.data().usersUpvoted.length - doc.data().usersDownvoted.length;
             for (let i = 0; i < docs.length; i++) {
               if (docs[i].getId() === doc.id) {
-                docs.splice(i, 1, new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username));
+                docs.splice(i, 1, new Question(doc));
               }
             }
           }
         })
         this.setState({ questions: docs, filteredQuestions: docs, loading_data: false })
         if (this.state.filterBy === "popularity") {
-          this.orderByPopularity()
+          this.orderByPopularity();
+        } else if(this.state.filterBy === "recent"){
+          this.orderByTimeStamp();
         }
       })
   }
@@ -391,16 +389,16 @@ class Home extends Component {
     this.setState({ anonymousPost: target.checked })
   }
 
-  handleImageUpload = async() => {
+  handleImageUpload = async () => {
     if (this.state.image !== null) {
       const { image } = this.state;
       await storage.ref(`images/${image.name}`).put(image)
-        return (
-          storage
-            .ref("images")
-            .child(image.name)
-            .getDownloadURL()
-        )
+      return (
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+      )
     }
     return null;
   };
@@ -430,7 +428,7 @@ class Home extends Component {
     } else {
       this.setState({ errormessage: '' });
 
-      let date = (new Date()).toString();
+      let time = new Date().getTime();
       let name = "";
       if (anonymous === true) {
         name = "Anonymous";
@@ -453,7 +451,7 @@ class Home extends Component {
                 auth: JSON.stringify(this.state.user.auth),
                 usersUpvoted: [],
                 usersDownvoted: [],
-                timestamp: date,
+                time,
                 tags: t,
               }).then((docRef) => {
                 firebase.firestore()
@@ -461,14 +459,14 @@ class Home extends Component {
                   .add({
                     title: val,
                     img_url: this.state.url,
-                    timestamp: date,
+                    time,
                     tags: t,
                     original: docRef.id,
                   }).then((docRef) => {
-                    firebase.database().ref('audit log').push(date + ": created a new post");
+                    firebase.database().ref('audit log').push(time + ": created a new post");
                     this.setState({ image: null });
                   });
-                firebase.database().ref('audit log').push(date + ": created a new post");
+                firebase.database().ref('audit log').push(time + ": created a new post");
                 this.setState({ image: null });
               });
           });
@@ -482,7 +480,7 @@ class Home extends Component {
             auth: JSON.stringify(this.state.user.auth),
             usersUpvoted: [],
             usersDownvoted: [],
-            timestamp: date,
+            time,
             tags: t,
           }).then((docRef) => {
             firebase.firestore()
@@ -490,14 +488,14 @@ class Home extends Component {
               .add({
                 title: val,
                 img_url: this.state.url,
-                timestamp: date,
+                time,
                 tags: t,
                 original: docRef.id,
               }).then((docRef) => {
-                firebase.database().ref('audit log').push(date + ": created a new post");
+                firebase.database().ref('audit log').push(time + ": created a new post");
                 this.setState({ image: null });
               });
-            firebase.database().ref('audit log').push(date + ": created a new post");
+            firebase.database().ref('audit log').push(time + ": created a new post");
           });
       }
 
@@ -531,20 +529,20 @@ class Home extends Component {
 
         <div className="height"></div>
 
-        <div id="titleArea" style={theme1.header}>
+        <div id="titleArea">
           <p id="title">MVHW</p>
           <input type="search" name="Search" id="searchBar" placeholder="Search" onChange={this.handleSearch} />
           {/* <Button id="tutorButton" className="newBtn" style={{marginRight: "10px"}}href="/tutoring" >{translate(this.props.language, "tutoring")}</Button> */}
-          <Button className="newBtn" color="light" onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</Button>
-          <Label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}:</Label>
-          <Input type="select" name="select" classname="newBtn" id="tags" style={{ width: "unset", display: "unset", marginLeft: "10px" }} onChange={this.filterClass}>
+          <button className="newBtn" /*color="light"*/ onClick={this.filterQuestionsBy}>{translate(this.props.language, "currentFilter")} {translate(this.props.language, this.state.filterBy)}</button>
+          <label for="text" style={{ marginLeft: "10px" }}>{translate(this.props.language, "classFilter")}: </label>
+          <Input type="select" name="select" id="tags" /*style={{ width: "unset", display: "unset", marginLeft: "10px" }}*/ onChange={this.filterClass}>
             {this.createClassItems()}
           </Input>
           {
             this.state.user.auth !== null ?
               <ProfilePictureDropdown signout={this.signoutwithGoogle}><img src={this.state.user.auth.photoURL} alt={this.state.user.name} id="logOut" /></ProfilePictureDropdown>
               :
-              <Button className="newBtn" color='light' id="logIn" onClick={this.signinwithGoogle}>Sign In</Button>
+              <button className="newBtn" /*color='light'*/ id="logIn" onClick={this.signinwithGoogle}>Sign In</button>
           }
         </div>
 
@@ -560,14 +558,11 @@ class Home extends Component {
 
         <div className="feed">
           {
-            console.log(this.state.user)
-          }
-          {
             this.state.loading_data ?
               <Spinner className="loader" style={{ width: '5rem', height: '5rem' }} color="warning" />
               :
-              <Feed language={this.props.language} theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
-          }
+            <Feed language={this.props.language} theme={theme1} user={this.state.user} filteredQuestions={this.state.filteredQuestions} />
+            }
         </div>
 
       </React.Fragment>
@@ -575,14 +570,27 @@ class Home extends Component {
   }
 
   filterQuestionsBy = () => {
-    let temp = (this.state.filterBy === "popularity") ? "none" : "popularity"
+    let options = ["recent", "popularity", "none"];
+    let tempIndex = options.indexOf(this.state.filterBy)+1;
+    if(tempIndex >= options.length){
+      tempIndex = 0;
+    }
+    let temp = options[tempIndex];
+    
     if (temp === "popularity") {
       this.orderByPopularity();
-    } else if (temp === "none") {
+    } else if(temp === "recent"){
+      this.orderByTimeStamp();
+    }else if (temp === "none") {
       //nothing
     }
     this.setState({ filterBy: temp });
+    console.log(this.state.filterBy);
     this.setState({ update: 0 });
+  }
+
+  orderByTimeStamp = () => {
+    this.setState({ filteredQuestions: this.state.filteredQuestions.sort((a, b) => b.getTimeMilliseconds() - a.getTimeMilliseconds()) });
   }
 
   orderByPopularity = () => {

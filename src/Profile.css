@@ -54,8 +54,8 @@ li {
   color: #fff;
 }
 #title {
-  text-align: center;
-  /* float: left; */
+  /* text-align: center;
+  float: left;
   display: inline-block;
 
   color: black;
@@ -64,11 +64,11 @@ li {
   user-select: none;
   margin-bottom: none !important;
   margin-left: 2%;
-  font-size: 25px;
+  font-size: 25px; */
 }
 
-.newBtn {
-  /* width: 100px; */
+/* .newBtn { */
+  /* width: 100px;
   background-color: white;
   color:black;
   border:none;
@@ -77,7 +77,7 @@ li {
   padding: 7px;
   padding-left: 10px;
   padding-right: 10px ;
-}
+} */
 
 .footertext {
   margin: 0;

@@ -161,8 +161,8 @@ export default class Profile extends Component {
                                 let ups = doc.data().usersUpvoted.length
                                 let downs = doc.data().usersDownvoted.length
                                 let votes = ups - downs;
-
-                                let q = new Question(doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username);
+                                //doc.data().title, JSON.parse(doc.data().auth), doc.data().timestamp, doc.id, votes, doc.data().tags, doc.data().img_url, doc.data().username
+                                let q = new Question(doc);
                                 if (empty) {
                                     docs.push(q);
                                 } else {
@@ -213,7 +213,8 @@ export default class Profile extends Component {
                                             downs = doc.data().usersDownvoted.length
                                             votes = 0 - downs;
                                         }
-                                        docs.push(new Question(raw.title, JSON.parse(raw.auth), raw.timestamp, doc.id, votes, raw.tags, raw.img_url, raw.username));
+                                        //raw.title, JSON.parse(raw.auth), raw.timestamp, doc.id, votes, raw.tags, raw.img_url, raw.username
+                                        docs.push(new Question(doc));
                                         this.setState({ posts: docs })
                                     }
                                 })
@@ -375,7 +376,7 @@ export default class Profile extends Component {
                             <ul className="list-posts">
                                 {
                                     this.state.questions.map((item, i) => {
-                                        if (this.state.selected.includes(item.getTags()) && allow > 0 && (new Date()).getMonth() === item.getTime().getMonth()) {
+                                        if (this.state.selected.includes(item.getTags()) && allow > 0) {
                                             allow--;
                                             let user = <h5>User: <Badge color="secondary">you</Badge></h5>;
                                             let color = '';

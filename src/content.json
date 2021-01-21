@@ -11,6 +11,10 @@
         "en": "Popularity",
         "es": "Popularidad"
     },
+    "recent": {
+        "en": "Recent",
+        "es": "Reciente"
+    },
     "classFilter": {
         "en": "Filter by Class",
         "es": "Filtrar por Clase"
