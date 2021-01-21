@@ -88,15 +88,9 @@ Sidebar {
   margin-left: 20px;
   margin-top: 2px !important;
   padding: 2px;
-<<<<<<< HEAD
   /* margin-top: 2px; */
   text-align: bottom;
   vertical-align: center;
-=======
-  margin-top: 2px;
-
-  text-align: center;
->>>>>>> 90d0471 (aligned class selector)
   /*padding-left: 10px;
   padding-right: 10px ; */
 
@@ -117,18 +111,12 @@ Sidebar {
 }
 
 #tags {
-<<<<<<< HEAD
   vertical-align: center;
 
   width: 100px;
   display: inline;
   height: 37px;
   outline: none;
-=======
-  width: 100px;
-  display: inline;
-  height: 37px;
->>>>>>> 90d0471 (aligned class selector)
 }
 
 
