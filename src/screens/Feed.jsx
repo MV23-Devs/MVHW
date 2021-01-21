@@ -552,6 +552,22 @@ export default class Feed extends Component {
       this.setState({ errormessage: err });
     } else {
       this.setState({ errormessage: '' });
+     console.log(this.props.user);
+     // email.js called
+      var templateParams = {
+        to_name: item.getUsername(),
+        from_name: this.props.user.name,
+        question_text: item.getText(),
+        reply_text: event.target["text"].value,
+        to_email: item.getUser().email
+      };
+    
+      window.emailjs.send('gmail', 'template_0xj519p', templateParams)
+        .then(function(response) {
+          console.log('SUCCESS!', response.status, response.text);
+        }, function(error) {
+          console.log('FAILED...', error);
+        });
 
 
       // used Reply Database code
