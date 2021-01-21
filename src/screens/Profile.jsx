@@ -8,7 +8,7 @@ import {
     Link
 } from 'react-router-dom'
 import firebase from '../firebase.js';
-
+import classes from "../classes.json"
 import Question from '../Question';
 import { translate } from "../util.js"
 
@@ -96,7 +96,7 @@ const dark = {
 export default class Profile extends Component {
     constructor(props) {
         super(props)
-        this.classes = ["Trigonometry Honors", "Statistics"];
+        this.classes = classes.classes;
         this.state = {
             userClasses: [],
             user: {
@@ -334,6 +334,9 @@ export default class Profile extends Component {
                                                 break;
                                             case 'Statistics':
                                                 color = 'warning';
+                                                break;
+                                            case "Biology":
+                                                color = "success";
                                                 break;
                                             default:
                                                 color = 'secondary';
