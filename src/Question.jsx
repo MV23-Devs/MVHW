@@ -1,5 +1,6 @@
 import Answer from './screens/Answer.jsx'
 
+//code
 
 export default class Question {
     constructor(doc) {
