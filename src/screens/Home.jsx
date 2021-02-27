@@ -64,7 +64,7 @@ const SidebarComponent = (props) => {
   return (
 
     <Sidebar
-      sidebar={
+      sidebar={  
         <section>
           <div className="sbox">
             <button id="languageButton" className="newBtn" onClick={props.changeLanguage} >{translate(props.language, "language")}</button>
