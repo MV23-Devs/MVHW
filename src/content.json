@@ -20,7 +20,7 @@
         "es": "Filtrar por Clase"
     },
     "classes": {
-        "en": ["None", "Bio Honors", "AP Bio"],
+        "en": ["None", "Chem Honors", "AP Chem"],
         "es": ["Nada", "Honores Biología", "AP Bio"]
     },
     "createPost": {

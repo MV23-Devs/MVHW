@@ -184,7 +184,7 @@ export class RenderUser extends Component {
     if (this.props.currentUser) {
       if (this.props.currentUser.auth) {
         if (this.props.currentUser.auth.uid === this.props.uid) {
-          username = <Badge color='secondary'>you</Badge>
+          // username = <Badge color='secondary'>you</Badge>
         }
       }
     }
